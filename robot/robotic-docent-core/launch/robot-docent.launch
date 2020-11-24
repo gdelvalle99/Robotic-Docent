@@ -1,2 +1,9 @@
 <launch>
+    <!-- Start the template publisher ROS node.-->
+    <node name="node_1" pkg="robotic-docent-core" type="template-publisher-script.py"
+        output="screen"/>
+
+    <!-- Start the template subscriber ROS node.-->
+    <node name="node_2" pkg="robotic-docent-core" type="template-subscriber-script.py"
+        output="screen"/>
 </launch>

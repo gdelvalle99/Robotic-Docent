@@ -10,7 +10,7 @@ project(robotic-docent-core)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  std_mgs
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
