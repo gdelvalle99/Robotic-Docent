@@ -1,5 +1,5 @@
 # Import Flask along with SQLAlchemy
-from flask import Flask, request
+from flask import Flask, request, send_file, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -14,6 +14,10 @@ load_dotenv(dotenv_path)
 # Import models and forms to for interacting with the database
 from Models import db, Museum, Floor
 from validationModels import MuseumModel, FloorModel
+
+# Image Packages
+import io
+import PIL.Image as Image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
@@ -56,11 +60,11 @@ def create_museum():
         try:
             db.session.add(museum)
             db.session.commit()
-            return 'We did it!'
+            return {success: True, msg: "Successfully created a new floor"}
         except SQLAlchemyError as e:
             print(type(e), e)
-            return e
-    return 'Hello, World!'
+            return {success: False, msg: e}
+    return {success: False, msg: "404 - No Route Found"}
 
 # Expects json with values {museum_name: str, level: str }
 # Returns
@@ -76,7 +80,7 @@ def create_floor():
             )
         except ValueError as e:
             print(e)
-            return e
+            return {success: False, msg: e}
 
         floor = Floor(
             museum_name=model.museum_name,
@@ -87,11 +91,61 @@ def create_floor():
         try:
             db.session.add(floor)
             db.session.commit()
-            return 'We did it!'
+            return {success: True, msg: "Successfully created a new floor"}
         except SQLAlchemyError as e:
             print(type(e), e)
-            return e
-    return 'Hello, World!'
+            return {success: False, msg: e}
+    return {success: False, msg: "404 No Existing Route"}
+
+# Expects formdata with values [floor_id: int, photo: png ]
+# Returns a success message if was able to save map
+@app.route('/floor/map', methods=['GET','POST'])
+def floor_map():
+    if request.method == 'POST':
+        # Validate Data
+        id = int(request.form['floor_id']) or 0
+        if('map' not in request.files):
+            return "there's no map file"
+
+        try:
+            floor = db.session.query(Floor).filter(Floor.id==id).first()
+            if(floor is None):
+                raise ValueError("Floor ID doesn't match")
+
+            # Save to database
+            floor.map = request.files['map'].read()
+            db.session.commit()
+            return {success: False, msg: "Successfully updated the floor map"}
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {success: False, msg:e}
+
+    # Get Request
+    return {success: False, msg: "404 No Existing Route"}
+
+# Expects formdata with values [floor_id: int]
+# Returns a png image
+@app.route('/floor/update', methods=['POST'])
+def floor_update():
+    if request.method == 'POST':
+        # Validate Data
+        id = int(request.form['floor_id']) or 0
+
+        try:
+            floor = db.session.query(Floor).filter(Floor.id==id).first()
+            if(floor is None):
+                raise ValueError("Floor ID doesn't match")
+
+            # Create a response and send the image
+            response = make_response(floor.map)
+            response.headers.set('Content-Type', 'image/png')
+            return response
+            
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {success: False, msg: e}
+
+    return {success: False, msg: "404 No Existing Route"}
 
 if __name__ == '__main__':
     app.run()
