@@ -1,9 +1,19 @@
 <launch>
+    <param name="/use_sim_time" value="true"/>
+    <include file="$(find navigation_stage)/move_base_config/move_base.xml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find robotic-docent-core)/stage_config/maps/museum-map.pgm">
+        <param name="frame_id" value="/map" />
+    </node>
+
     <!-- Start the template publisher ROS node.-->
-    <node name="node_1" pkg="robotic-docent-core" type="template-publisher-script.py"
+    <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic-docent-core)/stage_config/worlds/museum.world"
         output="screen"/>
 
     <!-- Start the template subscriber ROS node.-->
-    <node name="node_2" pkg="robotic-docent-core" type="template-subscriber-script.py"
-        output="screen"/>
+    <node name="move_docent" pkg="robotic-docent-core" type="transform-script.py" 
+        output="screen" />
+    <node name="mapping_1" pkg="gmapping" type="slam_gmapping" args="scan:=base_scan" 
+        output="screen" />
+    <include file="$(find navigation_stage)/move_base_config/amcl_node.xml"/>  
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find navigation_stage)/single_robot.rviz" />
 </launch>
