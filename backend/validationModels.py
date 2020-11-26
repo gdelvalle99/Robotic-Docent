@@ -23,3 +23,19 @@ class MuseumModel(BaseModel):
         if v <= 0 or v>20:
             raise ValueError('Floor count is not in valid range(1-20)')
         return v
+
+class FloorModel(BaseModel):
+    museum_name: str
+    level: str
+
+    @validator('museum_name')
+    def name_length(cls, v):
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Museum name must be within 1-128 characters')
+        return v
+
+    @validator('level')
+    def floor_count_valid(cls, v):
+        if len(v) <= 0 or len(v)>8:
+            raise ValueError('Level must be within 1-8 characters')
+        return v

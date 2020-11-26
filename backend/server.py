@@ -12,8 +12,8 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 # Import models and forms to for interacting with the database
-from Models import db, Museum
-from validationModels import MuseumModel
+from Models import db, Museum, Floor
+from validationModels import MuseumModel, FloorModel
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
@@ -29,6 +29,8 @@ db = SQLAlchemy(app)
 def hello_world():
     return 'Hello, World!'
 
+# Expects json with values {name: str, floor_count: int}
+# Returns
 @app.route('/museum/new', methods=['POST'])
 def create_museum():
     if request.method == 'POST':
@@ -60,6 +62,36 @@ def create_museum():
             return e
     return 'Hello, World!'
 
+# Expects json with values {museum_name: str, level: str }
+# Returns
+@app.route('/floor/new', methods=['POST'])
+def create_floor():
+    if request.method == 'POST':
+        # Validate Data
+        try:
+            data = request.get_json()
+            model = FloorModel(
+                museum_name=data['museum_name'],
+                level=data['level'],
+            )
+        except ValueError as e:
+            print(e)
+            return e
+
+        floor = Floor(
+            museum_name=model.museum_name,
+            level=model.level,
+        )
+
+        # Save to database
+        try:
+            db.session.add(floor)
+            db.session.commit()
+            return 'We did it!'
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return e
+    return 'Hello, World!'
 
 if __name__ == '__main__':
     app.run()

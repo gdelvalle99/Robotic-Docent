@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import SQLAlchemyError
 import datetime
 
 db = SQLAlchemy()
@@ -47,6 +48,25 @@ class Floor(BaseModel, db.Model):
     museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
     level = db.Column(db.String)
     map = db.Column(db.LargeBinary)
+
+    def __init__(self, museum_name, level):
+        try:
+            self.map = None
+
+            # Set the museum ID
+            museum = db.session.query(Museum).filter(Museum.name==museum_name).first()
+            if(museum is None):
+                raise ValueError("The museum does not exist")
+            self.museum_id = museum.id
+
+            # Check to see if level exists
+            existing_level = db.session.query(Floor).filter(Floor.level==level).first()
+            if(existing_level is not None):
+                raise ValueError(museum_name+" already has that floor "+level)
+            self.level = level
+
+        except SQLAlchemyError as e:
+            raise(e)
 
 
 class Exhibit(BaseModel, db.Model):
