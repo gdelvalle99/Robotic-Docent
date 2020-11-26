@@ -1,5 +1,5 @@
 # Import Flask along with SQLAlchemy
-from flask import Flask, request, send_file, make_response
+from flask import Flask, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -12,8 +12,8 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 # Import models and forms to for interacting with the database
-from Models import db, Museum, Floor
-from validationModels import MuseumModel, FloorModel
+from Models import db, Museum, Floor, Exhibit
+from validation import MuseumValidate, FloorValidate, ExhibitValidate
 
 # Image Packages
 import io
@@ -41,7 +41,7 @@ def create_museum():
         # Validate Data
         try:
             data = request.get_json()
-            model = MuseumModel(
+            model = MuseumValidate(
                 name=data['name'],
                 floor_count=data['floor_count']
             )
@@ -60,11 +60,11 @@ def create_museum():
         try:
             db.session.add(museum)
             db.session.commit()
-            return {success: True, msg: "Successfully created a new floor"}
+            return {"success": True, "msg": "Successfully created a new floor"}
         except SQLAlchemyError as e:
             print(type(e), e)
-            return {success: False, msg: e}
-    return {success: False, msg: "404 - No Route Found"}
+            return {"success": False, "msg": str(e)}
+    return {"success": False, "msg": "404 - No Route Found"}
 
 # Expects json with values {museum_name: str, level: str }
 # Returns
@@ -74,13 +74,13 @@ def create_floor():
         # Validate Data
         try:
             data = request.get_json()
-            model = FloorModel(
+            model = FloorValidate(
                 museum_name=data['museum_name'],
                 level=data['level'],
             )
         except ValueError as e:
             print(e)
-            return {success: False, msg: e}
+            return {"success": False, "msg": str(e)}
 
         floor = Floor(
             museum_name=model.museum_name,
@@ -91,11 +91,11 @@ def create_floor():
         try:
             db.session.add(floor)
             db.session.commit()
-            return {success: True, msg: "Successfully created a new floor"}
+            return {"success": True, "msg": "Successfully created a new floor"}
         except SQLAlchemyError as e:
             print(type(e), e)
-            return {success: False, msg: e}
-    return {success: False, msg: "404 No Existing Route"}
+            return {"success": False, "msg": str(e)}
+    return {"success": False, "msg": "404 No Existing Route"}
 
 # Expects formdata with values [floor_id: int, photo: png ]
 # Returns a success message if was able to save map
@@ -115,13 +115,13 @@ def floor_map():
             # Save to database
             floor.map = request.files['map'].read()
             db.session.commit()
-            return {success: False, msg: "Successfully updated the floor map"}
+            return {"success": False, "msg": "Successfully updated the floor map"}
         except SQLAlchemyError as e:
             print(type(e), e)
-            return {success: False, msg:e}
+            return {"success": False, "msg":e}
 
     # Get Request
-    return {success: False, msg: "404 No Existing Route"}
+    return {"success": False, "msg": "404 No Existing Route"}
 
 # Expects formdata with values [floor_id: int]
 # Returns a png image
@@ -143,9 +143,49 @@ def floor_update():
             
         except SQLAlchemyError as e:
             print(type(e), e)
-            return {success: False, msg: e}
+            return {"success": False, "msg": str(e)}
 
-    return {success: False, msg: "404 No Existing Route"}
+    return {"success": False, "msg": "404 No Existing Route"}
+
+# Expects json with values [floor_id: int]
+# Returns a json object
+@app.route('/exhibit/new', methods=['POST'])
+def create_exhibit():
+    if request.method == 'POST':
+        # Validate Data
+        try:
+            data = request.get_json()
+            model = ExhibitValidate(
+                floor_id=data['floor_id'],
+                title=data['title'],
+                subtitle=data['subtitle'],
+                description=data['description'],
+                start_date=data['start_date'],
+                theme=data['theme']
+            )
+        except ValueError as e:
+            print(e)
+            return {"success": False, "msg": str(e)}
+
+        exhibit = Exhibit(
+            floor_id=model.floor_id,
+            title=model.title,
+            subtitle=model.subtitle,
+            description=model.description,
+            start_date=model.start_date,
+            theme=model.theme             
+        )
+
+        try:
+            db.session.add(exhibit)
+            db.session.commit()
+            return {"success": True, "msg": "Successfully created a new floor"}  
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
 
 if __name__ == '__main__':
     app.run()

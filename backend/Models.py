@@ -84,6 +84,26 @@ class Exhibit(BaseModel, db.Model):
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))
 
+    def __init__(self,floor_id,title,subtitle,description,start_date,theme):
+        try:
+
+            # Check to see if floor exists
+            existing_level = db.session.query(Floor).filter(Floor.id==floor_id).first()
+            if(existing_level is None):
+                raise ValueError("That floor does not exist")
+            self.floor_id = floor_id
+
+            self.title = title
+            self.subtitle = subtitle
+            self.description = description
+            self.start_date = start_date
+            self.end_date = None
+            self.theme = theme
+            self.questions = []
+            self.answers = []
+        except SQLAlchemyError as e:
+            raise(e)
+
 
 class Piece(BaseModel, db.Model):
     """Model for the stations table"""
