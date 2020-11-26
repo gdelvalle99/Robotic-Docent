@@ -12,8 +12,8 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 # Import models and forms to for interacting with the database
-from Models import db, Museum, Floor, Exhibit
-from validation import MuseumValidate, FloorValidate, ExhibitValidate
+from Models import db, Museum, Floor, Exhibit, Piece
+from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
 
 # Image Packages
 import io
@@ -179,7 +179,53 @@ def create_exhibit():
         try:
             db.session.add(exhibit)
             db.session.commit()
-            return {"success": True, "msg": "Successfully created a new floor"}  
+            return {"success": True, "msg": "Successfully created a new exhibit"}  
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
+# Expects json with values [floor_id: int]
+# Returns a json object
+@app.route('/piece/new', methods=['POST'])
+def create_piece():
+    if request.method == 'POST':
+        # Validate Data
+        try:
+            data = request.get_json()
+            model = PieceValidate(
+                exhibit_id=data['exhibit_id'],
+                title=data['title'],
+                author=data['author'],
+                description=data['description'],
+                origin=data['origin'],
+                era=data['era'],
+                acquisition_date=data['acquisition_date'],
+                dimension=data['dimension'],
+                coordinates=data['coordinates']
+            )
+        except ValueError as e:
+            print(e)
+            return {"success": False, "msg": str(e)}
+
+        piece = Piece(
+            exhibit_id=model.exhibit_id,
+            title=model.title,
+            author=model.author,
+            description=model.description,
+            origin=model.origin,
+            era=model.era,
+            acquisition_date=model.acquisition_date,
+            dimension=model.dimension,
+            coordinates=model.coordinates
+        )
+
+        # Save piece into database
+        try:
+            db.session.add(piece)
+            db.session.commit()
+            return {"success": True, "msg": "Successfully created a new piece"}  
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg": str(e)}

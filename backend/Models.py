@@ -125,6 +125,30 @@ class Piece(BaseModel, db.Model):
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))
 
+    def __init__(self,exhibit_id,title,author,description,origin,era,acquisition_date,dimension,coordinates):
+        try:
+            # Check to see if exhibit exists
+            existing_level = db.session.query(Exhibit).filter(Exhibit.id==exhibit_id).first()
+            if(existing_level is None):
+                raise ValueError("That exhibit does not exist")
+            self.exhibit_id = exhibit_id
+
+            self.title = title
+            self.author = author
+            self.description = description
+            self.origin = origin
+            self.era = era
+            self.start_date = None
+            self.end_date = None
+            self.acquisition_date = acquisition_date
+            self.dimension = dimension
+            self.coordinates = coordinates
+            self.notes = []
+            self.questions = []
+            self.answers = []
+        except SQLAlchemyError as e:
+            raise(e)
+
 
 class Tour(BaseModel, db.Model):
     """Model for the stations table"""

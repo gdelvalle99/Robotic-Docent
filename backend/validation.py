@@ -1,11 +1,5 @@
-# from flask_wtf import FlaskForm
-# from wtforms import BooleanField, IntegerField, StringField, validators
-
-# class MuseumForm(FlaskForm):
-#     name = StringField('Name', [validators.Length(min=3, max=128)])
-#     floor_count = IntegerField('Floor Count', [validators.NumberRange(min=1)])
-
 from pydantic import BaseModel, ValidationError, validator
+from typing import List
 import datetime
 
 
@@ -84,4 +78,70 @@ class ExhibitValidate(BaseModel):
     def floor_count_valid(cls, v):
         if len(v) <= 0 or len(v)>64:
             raise ValueError('Theme must be within 1-64 characters')
+        return v
+
+class PieceValidate(BaseModel):
+    exhibit_id: int
+    title: str
+    author: str
+    description: str
+    origin: str
+    era: str
+    acquisition_date: datetime.date
+    dimension: List[float]
+    coordinates: List[int]
+
+    @validator('exhibit_id')
+    def valid_id(cls, v):
+        if v <= 0:
+            raise ValueError('Exhibit ID is not valid')
+        return v
+
+    @validator('title')
+    def title_valid(cls, v):
+        if len(v) <= 0 or len(v)>32:
+            raise ValueError('Title must be within 1-32 characters')
+        return v
+    
+    @validator('author')
+    def author_length(cls, v):
+        if len(v) <= 0 or len(v) > 64:
+            raise ValueError('Author must be within 1-64 characters')
+        return v
+
+    @validator('description')
+    def description_valid(cls, v):
+        if len(v) <= 0 or len(v)>128:
+            raise ValueError('Description must be within 1-128 characters')
+        return v
+
+    @validator('origin')
+    def origin_valid(cls, v):
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Origin must be within 1-128 characters')
+        return v
+
+    @validator('era')
+    def era_valid(cls, v):
+        if len(v) <= 0 or len(v)>64:
+            raise ValueError('Era must be within 1-64 characters')
+        return v
+
+    @validator('acquisition_date')
+    def date_valid(cls, v):
+        old_date = datetime.date(1800,1,1)
+        if v < old_date:
+            raise ValueError('Acquisition date must be valid')
+        return v
+
+    @validator('dimension')
+    def dimension_length(cls, v):
+        if len(v) != 3:
+            raise ValueError('Dimensions must have 3 components (length, width, height)')
+        return v
+
+    @validator('coordinates')
+    def coordinate_length(cls, v):
+        if len(v) != 2:
+            raise ValueError('Coordinates must lie on a 2D plane (x,y) ')
         return v
