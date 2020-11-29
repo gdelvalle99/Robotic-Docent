@@ -16,12 +16,7 @@ export default function Editor() {
                 </ExpansionPanel>
             </div>
             <div className="editor-map">
-                <div>Hi there</div>
-                <div>Hi there</div>
-                <div>Hi there</div>
-                <div>Hi there</div>
-                <div>Hi there</div>
-                <div>Hi there</div>
+                { /* Put map component here */ }
             </div>
         </div>
     );
