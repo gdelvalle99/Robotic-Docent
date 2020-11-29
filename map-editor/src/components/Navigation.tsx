@@ -5,8 +5,6 @@ import Home from '../pages/Home';
 import Analytics from '../pages/Analytics';
 import Editor from '../pages/Editor';
 
-
-//Navigation Bar function
 export default function NavigationBar() {
     return (
         <Router>
