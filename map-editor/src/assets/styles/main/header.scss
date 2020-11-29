@@ -1,0 +1,45 @@
+.navigation-bar-container {
+
+}
+
+.navigation-bar {
+    background-color: $primary-color;
+    display: flex;
+
+
+    .navigation-bar-title-container {
+        display: flex;
+
+        a {
+            text-decoration: none;
+        }
+
+        .navigation-bar-title {
+            margin: 2rem;
+        }
+
+        .navigation-bar-title-version {
+            color: $accent-secondary;
+            margin: 1rem;
+        }
+    }
+
+    .navigation-button-container {
+        margin-top: auto;
+        margin-bottom: auto;
+        height: 30%;
+    }
+
+    .navigation-button {
+        color: $white;
+        background-color: $secondary-color;
+        height: 30%;
+        margin: 1rem;
+        text-transform: none;
+        font-family: $headline-font-family;
+    }
+
+    .navigation-button:hover {
+        background-color: $accent-secondary;
+    }
+}
