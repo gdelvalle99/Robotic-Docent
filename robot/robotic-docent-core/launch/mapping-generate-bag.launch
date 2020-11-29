@@ -1,0 +1,12 @@
+<launch>
+    <!-- Start the template publisher ROS node.-->
+    <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic-docent-core)/stage_config/worlds/museum.world"
+        output="screen"/>
+
+    <node name="joystick_1" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="base_controller /command:=cmd_vel"
+        output="screen"/>
+
+    <node name="bagging_1" pkg="rosbag" type="record" args="-O $(find robotic-docent-core)/docent-laser-data /base_scan /tf"
+        output="screen"/>
+    
+</launch>
