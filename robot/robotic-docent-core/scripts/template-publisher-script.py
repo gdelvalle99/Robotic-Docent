@@ -39,6 +39,8 @@
 import rospy
 from std_msgs.msg import String
 
+# This is placeholder for now, not using this yet
+
 def simplePublisher():
     simple_publisher = rospy.Publisher('topic_1', String, queue_size = 10)
     rospy.init_node('node_1', anonymous=False)

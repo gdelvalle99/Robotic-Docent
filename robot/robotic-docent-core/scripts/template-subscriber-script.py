@@ -38,6 +38,8 @@
 import rospy
 from std_msgs.msg import String
 
+# This is placeholder for now, not using this yet
+
 # Topic callback function.
 def stringListenerCallback(data):
     rospy.loginfo('%s', data.data)
