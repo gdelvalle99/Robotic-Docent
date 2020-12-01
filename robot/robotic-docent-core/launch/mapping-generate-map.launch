@@ -1,6 +1,5 @@
 <launch>
-    <node name="mapping_1" pkg="gmapping" type="slam_gmapping" args="scan:=base_scan" 
-        output="screen" />
+    <include file="$(find robotic-docent-core)/move_base_config/slam_gmapping.xml"/>  
     <node name="rosbag_play_1" pkg="rosbag" type="play" args="--clock $(find robotic-docent-core)/docent-laser-data.bag" 
         output="screen" />
 </launch>

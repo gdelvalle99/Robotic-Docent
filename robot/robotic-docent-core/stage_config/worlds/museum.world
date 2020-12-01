@@ -45,11 +45,11 @@ define erratic position
 (
   #size [0.415 0.392 0.25]
   size [0.350 0.350 0.250]
-  origin [-0.050 0.000 0.000 0.000]
+  origin [0 0 0.000 0.000]
   gui_nose 1
   drive "omni"
-  topurg(pose [ 0.050 0.000 0.000 0.000 ])
-  cam(pose [ 0.050 0.000 0.000 0.000 ] )
+  topurg(pose [ 0 0 0.000 0.000 ])
+  cam(pose [ 0 0 0.000 0.000 ] )
 )
 
 define floorplan model
@@ -79,7 +79,7 @@ window
 ( 
   size [ 745 448 ] 
 
-  rotate [ 0.000 -1.560 ]
+  rotate [ 0.000 0 ]
   scale 28.806 
 )
 
@@ -87,10 +87,10 @@ window
 floorplan
 ( 
   name "map"
-  bitmap "../maps/roomba-stage.png"
-  size [20.000 15.000 0.800]
-  pose [0 0 0 0]
+  bitmap "../maps/museum-map.png"
+  size [12 9 0.800]
+  origin [-1 0.5 0 88]
 )
 
 # throw in a robot
-erratic( pose [ 2 2 0 135 ] color "blue")
+erratic( pose [ 2 0 0 89.000 ] color "blue")
