@@ -1,11 +1,24 @@
-h1{
+.map-editor-body {
+    height: 100vh;
+}
+
+h1 {
     font-family: $title-font-family;
     color: $white;
     font-weight: $font-weight-bold;
     font-size: 1.5 rem;
 }
 
-body{
+html, body {
     font-family: $paragraph-font-family;
     font-size: 1rem;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    margin: 0;
+    padding: 0;
 }

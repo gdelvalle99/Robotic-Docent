@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, ReactEventHandler } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Button } from '@material-ui/core';
 import Home from '../pages/Home';
 import Analytics from '../pages/Analytics';
-import Editor from '../pages/Editor';
+import { Editor } from '../pages/Editor';
 
-export default function NavigationBar() {
+export const NavigationBar: React.SFC = (props) => {
     return (
         <Router>
-            <div className="navigation-bar-container">
+            <div className="navigation-container">
                 <nav className="navigation-bar">
                     <div className="navigation-bar-title-container">
                         <a href="/">
@@ -32,4 +32,4 @@ export default function NavigationBar() {
             </div>
         </Router>
     );
-}
+};
