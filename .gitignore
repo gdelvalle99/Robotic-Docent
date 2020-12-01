@@ -4,3 +4,8 @@ env.sh
 
 # pyc are not necessary
 *.pyc
+
+# Created for Microsoft(R) Visual Studio.
+/.vs/slnx.sqlite
+*.opendb
+*.db

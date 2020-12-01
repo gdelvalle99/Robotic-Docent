@@ -1,0 +1,29 @@
+.editor-page {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.editor-sidebar {
+    width: 30%;
+    float: left;
+    background-color: $white;
+    border-right: 2px solid $accent-black; 
+}
+
+.MuiExpansionPanel-root {
+    width: 90%;
+    margin: 1rem;
+}
+
+.ExpansionPanel:expanded {
+    margin: auto;
+}
+
+.Mui-expanded {
+    width: 95%;
+}
+
+.editor-map {
+}
