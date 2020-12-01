@@ -1,7 +1,6 @@
 .editor-page {
-    height: 100%;
     display: flex;
-    flex-wrap: wrap;
+    height: 100%;
 }
 
 
@@ -12,18 +11,7 @@
     border-right: 2px solid $accent-black; 
 }
 
-.MuiExpansionPanel-root {
-    width: 90%;
-    margin: 1rem;
-}
-
-.ExpansionPanel:expanded {
-    margin: auto;
-}
-
-.Mui-expanded {
-    width: 95%;
-}
-
 .editor-map {
+    width: 70%;
+    float: right;
 }

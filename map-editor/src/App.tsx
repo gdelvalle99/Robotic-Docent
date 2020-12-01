@@ -1,11 +1,12 @@
 import React from 'react';
-import NavigationBar from './components/Navigation';
+import { NavigationBar } from './components/Navigation';
 import './assets/styles/site.scss';
 
-//Main app
 function App() {
     return (
-        <NavigationBar />
+        <div className="map-editor-body">
+            <NavigationBar />
+        </div>
   );
 }
 
