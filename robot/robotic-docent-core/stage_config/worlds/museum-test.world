@@ -4,6 +4,20 @@ define block model
   gui_nose 0
 )
 
+define cam camera
+(
+  # laser properties
+  resolution [ 32 32 ]
+  range [ 0.2 8.0 ]
+  fov [ 70.0 40.0 ]
+  pantilt [ 0.0 0.0 ]
+
+  # model properties
+  size [ 0.1 0.07 0.05 ]
+  color "black"
+  watts 100.0 # TODO find watts for sony pan-tilt camera
+)
+
 define topurg ranger
 (
   sensor(
@@ -23,6 +37,7 @@ define pr2 position
   gui_nose 1
   drive "omni"
   topurg(pose [ 0.275 0 0 0 ])
+  cam(pose [ 0.050 0.000 0.000 0.000 ] )
 )
 
 define floorplan model
@@ -67,3 +82,4 @@ floorplan
 
 # throw in a robot
 pr2( pose [ -26.068 12.140 0 87.363 ] name "pr2" color "blue")
+block( pose [ -25.251 10.586 0 180.000 ] color "red")

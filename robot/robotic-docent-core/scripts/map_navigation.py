@@ -9,29 +9,9 @@ from geometry_msgs.msg import Point
 
 
 class map_navigation:
-  def choose(self):
-    choice='q'
-    rospy.loginfo("|-------------------------------|")
-    rospy.loginfo("|PRESSE A KEY:")
-    rospy.loginfo("|'0' ")
-    rospy.loginfo("|'1' ")
-    rospy.loginfo("|'2' ")
-    rospy.loginfo("|'3' ")
-    rospy.loginfo("|'q': Quit ")
-    rospy.loginfo("|-------------------------------|")
-    choice = input()
-    return choice
-
-  def __init__(self):
+  def __init__(self, x, y):
     # declare the coordinates of interest
-    self.xLoc1 = 12
-    self.yLoc1 = 26
-    self.xLoc2 = 10
-    self.yLoc2 = 13
-    self.xLoc3 = 41
-    self.yLoc3 = 17
-    self.xLoc4 = 48
-    self.yLoc4 = 41
+  
     self.goalReached = False
     # initiliaze
     rospy.init_node('map_navigation', anonymous=False)
@@ -41,20 +21,12 @@ class map_navigation:
     choiceY = input()
     self.goalReached = self.moveToGoal(choiceX, choiceY)
 
-    while choiceX != '':
-      rospy.loginfo("Choose a x coordinate")
-      choiceX = input()
-      rospy.loginfo("Choose a y coordinate")
-      choiceY = input()
-      self.goalReached = self.moveToGoal(choiceX, choiceY)
+    rospy.loginfo("Choose a x coordinate")
+    choiceX = input()
+    rospy.loginfo("Choose a y coordinate")
+    choiceY = input()
+    self.goalReached = self.moveToGoal(choiceX, choiceY)
 
-      if (choiceX!=''):
-        if (self.goalReached):
-          rospy.loginfo("Congratulations!")
-          #rospy.spin()
-
-        else:
-          rospy.loginfo("Hard Luck!")
 
 
   def shutdown(self):
@@ -89,14 +61,6 @@ class map_navigation:
       ac.send_goal(goal)
 
       ac.wait_for_result(rospy.Duration(60))
-
-      if(ac.get_state() ==  GoalStatus.SUCCEEDED):
-              rospy.loginfo("You have reached the destination")
-              return True
-
-      else:
-              rospy.loginfo("The robot failed to reach the destination")
-              return False
 
 if __name__ == '__main__':
     try:

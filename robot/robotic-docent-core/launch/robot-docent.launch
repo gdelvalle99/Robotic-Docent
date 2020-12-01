@@ -1,7 +1,7 @@
 <launch>
     <param name="/use_sim_time" value="true"/>
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find robotic-docent-core)/stage_config/maps/museum-test.pgm 0.025">
-    </node>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find robotic-docent-core)/stage_config/maps/museum-test.pgm .025"
+        respawn="true"/>
 
     <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic-docent-core)/stage_config/worlds/museum-test.world"
         output="screen"/>
