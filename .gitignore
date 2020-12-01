@@ -1,7 +1,11 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+# dotenv environment variables file
+.env
+env.sh
 
+# pyc are not necessary
+*.pyc
+
+# Created for Microsoft(R) Visual Studio.
 /.vs/slnx.sqlite
 *.opendb
 *.db
