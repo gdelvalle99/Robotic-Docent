@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { Map } from "../components/Map";
 
 interface Exhibit {
     name: string;
@@ -16,7 +17,7 @@ interface Exhibit {
     }
 }
 
-export const Editor: React.SFC<Exhibit> = (props) => {
+export const Editor: React.FC<Exhibit> = (props) => {
 
     const [exhibits, setExhibits] = useState<Exhibit[]>([]);
 
@@ -50,9 +51,7 @@ export const Editor: React.SFC<Exhibit> = (props) => {
                     </ExpansionPanel>
                 ))}
             </div>
-            <div className="editor-map">
-                { /* Put map component here */ }
-            </div>
+                    <Map/>
         </div>
     );
 }
