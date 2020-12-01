@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.inspection import inspect
 import datetime
 
 db = SQLAlchemy()
@@ -25,6 +26,10 @@ class BaseModel(db.Model):
             column: value if not isinstance(value, datetime.date) else value.strftime('%Y-%m-%d')
             for column, value in self._to_dict().items()
         }
+
+    def serialize(self):
+       return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
 
 
 class Museum(BaseModel, db.Model):
@@ -103,7 +108,6 @@ class Exhibit(BaseModel, db.Model):
             self.answers = []
         except SQLAlchemyError as e:
             raise(e)
-
 
 class Piece(BaseModel, db.Model):
     """Model for the stations table"""

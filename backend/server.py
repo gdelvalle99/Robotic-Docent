@@ -147,6 +147,20 @@ def floor_update():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
+# 
+# 
+@app.route('/floor/exhibits', methods=['GET'])
+def get_exhibits():
+    id = request.args.get('id', default = 2, type = int)
+    try:
+        exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
+        serialized_exhibits = [i.serialize() for i in exhibits]
+        # return {"success": True, "exhibits": serialized_exhibits[0]}
+        return {"success": True, "exhibits": serialized_exhibits}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+
 # Expects json with values [floor_id: int]
 # Returns a json object
 @app.route('/exhibit/new', methods=['POST'])
@@ -232,6 +246,18 @@ def create_piece():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
+# 
+# 
+@app.route('/exhibit/pieces', methods=['GET'])
+def get_exhibit_pieces():
+    id = request.args.get('id', default = 1, type = int)
+    try:
+        pieces = db.session.query(Piece).filter(Piece.exhibit_id==id).all()
+        serialized_pieces= [i.serialize() for i in pieces]
+        return {"success": True, "pieces": serialized_pieces}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
 
 if __name__ == '__main__':
     app.run()
