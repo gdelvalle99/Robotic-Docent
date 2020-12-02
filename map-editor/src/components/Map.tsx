@@ -44,9 +44,17 @@ export const Map: React.FC = (props) => {
         <div className="map-portion">
             {/* <div style={{display: 'flex', justifyContent:'center'}}> */}
             {/* {image && <Image className="uwu" imageStyle={{width:"80%", height:"80%"}} src={image}/>} */}
-            {image && <img src={image} className="millie" alt="iwi"/>}
-            {/* </div> */}
-            
+            {image && <img src={image} className="map-image" alt="iwi"/>}
+            {/* <svg className='exhibits' viewBox="0 0 200 250">
+                    <polygon
+                        style={{opacity: '20%', fill: 'green'}}
+                        points="18,126 59,127 57,165 16,165"
+                    />
+                    <polygon
+                        style={{opacity: '20%', fill: 'blue'}}
+                        points="120,97 165,97.2 165,158 125,157"
+                    />
+            </svg> */}
             <Fab color="primary" aria-label="add" className="bottom-right" onClick={handleOpenClick}>
                 <Add fontSize='large'/>
             </Fab>

@@ -20,17 +20,22 @@
     background-size: cover;
 }
 
-.millie {
+.map-image {
+    display: block;
     padding: 2.5% 2.5%;
     width: 80%;
     height: 80%;
     transition: filterBrightness 2250ms cubic-bezier(0.4, 0, 0.2, 1) 0s, filterSaturate 3000ms cubic-bezier(0.4, 0, 0.2, 1) 0s, opacity 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0s
 }
 
-.map-portiony { /* <= optional, for responsiveness */
-   display: block;
-   max-width: 90%;
-   height: auto;
+.map-portion .exhibits svg {
+    position: absolute;
+    padding: 2.5% 2.5%;
+  //   max-width: 90%;
+    width: 80%;
+    height: 80%;
+    top: 0;
+    left: 0%;
 }
 
 .bottom-right {
@@ -39,11 +44,4 @@
     right: 20px;
     top: auto;
     left: auto;
-}
-
-.map-portion .exhibits svg {
-  position: absolute;
-  max-width: 90%;
-  top: 0;
-  left: 5%;
 }
