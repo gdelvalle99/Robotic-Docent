@@ -259,5 +259,12 @@ def get_exhibit_pieces():
         print(type(e), e)
         return {"success": False, "msg": str(e)}
 
+@app.route('/tour/start', methods=['POST'])
+def start_tour():
+    if request.get_json()['start_tour'] == True:
+        # send request to memo's code
+        return {"success": True}
+    return {"success": False, "msg": "Could not start Tour"}
+
 if __name__ == '__main__':
     app.run()
