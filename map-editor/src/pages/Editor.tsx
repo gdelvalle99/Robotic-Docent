@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { ExhibitSidebar } from '../components/ExhibitSidebar';
 
-interface Exhibit {
-    name: string;
-    coordinates: number[];
+export interface Exhibit {
+    id: number;
+    floor_id: number;
+    title: string;
+    subtitle?: string;
     description?: string;
+    start_date?: Date;
+    end_date?: Date;
+    theme?: string;
     questions?: string[];
     answers?: string[];
-    pieces?: {
-        name: string;
-        coordinates: number[];
+    pieces?: [{
+        id: number;
+        exhibit_id: number;
+        title: string;
+        author?: string;
         description?: string;
+        origin?: string;
+        era?: string;
+        start_date?: Date;
+        end_date?: Date;
+        acquisition_date?: Date;
+        dimension: number[];
+        coordinates: number[];
+        notes: string;
         questions?: string[];
         answers?: string[];
-    }
+    }]
 }
 
 export const Editor: React.SFC<Exhibit> = (props) => {
@@ -39,19 +54,10 @@ export const Editor: React.SFC<Exhibit> = (props) => {
     return (
         <div className="editor-page">
             <div className="editor-sidebar">
-                {exhibits.map(exhibit => (
-                    <ExpansionPanel square={false}>
-                        <ExpansionPanelSummary>
-                            {exhibit.name}
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            {exhibit.description}
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                ))}
+                <ExhibitSidebar exhibits={exhibits} />
             </div>
             <div className="editor-map">
-                { /* Put map component here */ }
+                { /* Put map component here */}
             </div>
         </div>
     );

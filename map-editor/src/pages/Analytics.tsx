@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Analytics() {
+export const Analytics = () => {
     return (
         <div>
             This is Analytics
