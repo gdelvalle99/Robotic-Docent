@@ -1,0 +1,47 @@
+.map-portion {
+    width: 100%;
+    position: relative;
+    display: flex; /* <= shrinks container to image size */
+    justify-content: center;
+    // align-items: center;
+    // margin-top: 10%;
+    // height: auto;
+    // align-items: stretch;
+    // flex-direction:column;
+}
+  
+.uwu {
+    // max-width: 80%;
+    max-height: 60%;
+    padding: 2.5% 2.5%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.map-image {
+    display: block;
+    padding: 2.5% 2.5%;
+    width: 80%;
+    height: 80%;
+    transition: filterBrightness 2250ms cubic-bezier(0.4, 0, 0.2, 1) 0s, filterSaturate 3000ms cubic-bezier(0.4, 0, 0.2, 1) 0s, opacity 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0s
+}
+
+.map-portion .exhibits svg {
+    position: absolute;
+    padding: 2.5% 2.5%;
+  //   max-width: 90%;
+    width: 80%;
+    height: 80%;
+    top: 0;
+    left: 0%;
+}
+
+.bottom-right {
+    position: fixed !important;
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    left: auto;
+}

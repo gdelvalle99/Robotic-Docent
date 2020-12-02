@@ -115,7 +115,7 @@ def floor_map():
             # Save to database
             floor.map = request.files['map'].read()
             db.session.commit()
-            return {"success": False, "msg": "Successfully updated the floor map"}
+            return {"success": True, "msg": "Successfully updated the floor map"}
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg":e}
@@ -258,6 +258,13 @@ def get_exhibit_pieces():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
+
+@app.route('/tour/start', methods=['POST'])
+def start_tour():
+    if request.get_json()['start_tour'] == True:
+        # send request to memo's code
+        return {"success": True}
+    return {"success": False, "msg": "Could not start Tour"}
 
 if __name__ == '__main__':
     app.run()
