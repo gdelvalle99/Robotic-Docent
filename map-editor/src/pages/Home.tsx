@@ -34,7 +34,7 @@ export default function Home() {
         })
         .catch(e=>console.log(e))
     }
-
+    
     return (
         <div style={{height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Fab variant="extended" size="large" style={{height: 'auto', width: '400px', padding: '50px'}} onClick={handleClick}>

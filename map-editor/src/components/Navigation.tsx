@@ -1,8 +1,8 @@
 import React, { useState, ReactEventHandler } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Button } from '@material-ui/core';
-import Home from '../pages/Home';
-import Analytics from '../pages/Analytics';
+import { Home } from '../pages/Home';
+import { Analytics } from '../pages/Analytics';
 import { Editor } from '../pages/Editor';
 
 export const NavigationBar: React.SFC = (props) => {
