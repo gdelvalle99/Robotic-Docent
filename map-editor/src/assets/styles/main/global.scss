@@ -9,16 +9,14 @@ h1 {
     font-size: 1.5 rem;
 }
 
+h2, h3, h4, h5, h6 {
+    font-family: $headline-font-family;
+    color: $black;
+}
+
 html, body {
     font-family: $paragraph-font-family;
     font-size: 1rem;
     height: 100%;
     width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-div {
-    margin: 0;
-    padding: 0;
 }
