@@ -3,6 +3,7 @@
 
 import Tkinter
 import rospy
+import requests
 #Base = declarative_base()
 """
 class Tour(Base):
@@ -37,43 +38,21 @@ rospy.init_node('tour_exhibits', anonymous=False)
 
 root = Tkinter.Tk() 
 
+url = "http://a15c4f97336c.ngrok.io/"
+exhibits_url = url + 'floor/exhibits'
+pieces_url = url + 'exhibit/pieces'
 
-query = {0:
-            {
-                'coordinates': {
-                                    'x':9.97,
-                                    'y':13.07
-                                },
-                'script':'This is exhibit 1'
-            },
-        1:{
-                'coordinates': {
-                                    'x':23.48,
-                                    'y':17.04
-                                },
-                'script':'This is exhibit 2'
-            },
-        2:{
-                'coordinates': {
-                                    'x':42.47,
-                                    'y':17.19
-                                },
-                'script':'This is exhibit 3'
-            },
-        3:{
-                'coordinates': {
-                                    'x':48.07,
-                                    'y':41.53
-                                },
-                'script':'This is exhibit 4'
-            }
-}
+r = requests.get(exhibits_url)
+r_json = r.json()
 
+r2 = requests.get(pieces_url, params={"id":r_json["exhibits"][0]["id"]})
+query = r2.json()
+query = query["pieces"]
 # specify size of window. 
-root.geometry("250x170") 
+root.geometry("400x400") 
 
 # Create text widget and specify size. 
-T = Tkinter.Text(root, height = 5, width = 52) 
+T = Tkinter.Text(root, height = 10, width = 100) 
 
 map_controller = map_navigation(query)
 # Create label 
