@@ -2,30 +2,13 @@
 from flask import Flask, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
-
-# Import OS and read .env files
-import os
-from os.path import join, dirname
-from dotenv import load_dotenv
-# app.config.from_object(os.environ['APP_SETTINGS'])
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+from __init__ import create_app
 
 # Import models and forms to for interacting with the database
-from Models import db, Museum, Floor, Exhibit, Piece
+from Models import Museum, Floor, Exhibit, Piece, Test
 from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
 
-# Image Packages
-import io
-import PIL.Image as Image
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-
-# Set up Database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app = create_app()
 db = SQLAlchemy(app)
 
 
@@ -263,8 +246,21 @@ def get_exhibit_pieces():
 def start_tour():
     if request.get_json()['start_tour'] == True:
         # send request to memo's code
+        
         return {"success": True}
     return {"success": False, "msg": "Could not start Tour"}
+
+@app.route('/test/pls')
+def nyan():
+    print("Henlo")
+    test = Test(name="poo")
+    try:
+        db.session.add(test)
+        db.session.commit()
+        return {"success": True, "msg": "Successfully created a new floor"}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
 
 if __name__ == '__main__':
     app.run()

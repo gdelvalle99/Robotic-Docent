@@ -111,8 +111,8 @@ class PieceValidate(BaseModel):
 
     @validator('description')
     def description_valid(cls, v):
-        if len(v) <= 0 or len(v)>128:
-            raise ValueError('Description must be within 1-128 characters')
+        if len(v) <= 0 or len(v)>1024:
+            raise ValueError('Description must be within 1-1024 characters')
         return v
 
     @validator('origin')
