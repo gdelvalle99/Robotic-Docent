@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-// import Image from 'material-ui-image'
 import {Fab, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle, Select, MenuItem, InputLabel} from '@material-ui/core'
-import Add from '@material-ui/icons/Add'
-import {mapLink} from '../links'
+import Add from '@material-ui/icons/Add';
+import {mapLink} from '../links';
 
-export const Map: React.FC = (props) => {
+export const Map = (props) => {
 
-    const [image, setImage] = useState<string>("");
-    const [open, setOpen] = useState<boolean>(false);
+    const [image, setImage] = useState("");
+    const [open, setOpen] = useState(false);
 
     const handleClose = () => {
         setOpen(false);

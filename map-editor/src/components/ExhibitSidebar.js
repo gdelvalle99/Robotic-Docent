@@ -3,10 +3,6 @@ import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@m
 import { Exhibit } from '../pages/Editor';
 import { ExhibitSidebarItem } from '../components/ExhibitSidebarItem';
 
-interface ExhibitProps {
-    exhibits: Exhibit[];
-}
-
 export const ExhibitSidebar: React.FC<ExhibitProps> = ({ exhibits }: ExhibitProps) => {
 
     return (
