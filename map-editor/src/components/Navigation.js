@@ -5,7 +5,7 @@ import Home from '../pages/Home';
 import { Analytics } from '../pages/Analytics';
 import { Editor } from '../pages/Editor';
 
-export const NavigationBar: React.FC = (props) => {
+export const NavigationBar = (props) => {
     return (
         <Router>
             <div className="navigation-container">

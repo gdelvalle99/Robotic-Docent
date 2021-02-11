@@ -3,7 +3,7 @@ import { Accordion, AccordionSummary, AccordionDetails, TextField, createStyles,
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Exhibit } from '../pages/Editor';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
     createStyles({
         root: {
             '& .MuiTextField-root': {
@@ -13,39 +13,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export const ExhibitSidebarItem: React.FC<Exhibit> = (exhibit: Exhibit) => {
+export const ExhibitSidebarItem = (exhibit) => {
     const classes = useStyles();
 
 
-    const [exhibitInfo, setExhibitInfo] = useState<Exhibit>({
-        id: 0,
-        floor_id: 0,
-        title: '',
-        subtitle: '',
-        description: '',
-        start_date: new Date(),
-        end_date: new Date(),
-        theme: '',
-        questions: [],
-        answers: [],
-        pieces: [{
-            id: 0,
-            exhibit_id: 0,
-            title: '',
-            author: '',
-            description: '',
-            origin: '',
-            era: '',
-            start_date: new Date(),
-            end_date: new Date(),
-            acquisition_date: new Date(),
-            dimension: [],
-            coordinates: [],
-            notes: '',
-            questions: [],
-            answers: []
-        }]
-    });
+    const [exhibitInfo, setExhibitInfo] = useState("");
 
     return (
         <Accordion square={false}>
@@ -64,13 +36,13 @@ export const ExhibitSidebarItem: React.FC<Exhibit> = (exhibit: Exhibit) => {
                         <TextField label="Start Date" type="date" defaultValue={exhibit.start_date} InputLabelProps={{ shrink: true }} fullWidth/>
                         <TextField label="End Date" type="date" defaultValue={exhibit.end_date} InputLabelProps={{ shrink: true }} fullWidth/>
                         <TextField label="Theme" multiline defaultValue={exhibit.theme} fullWidth />
-                        {exhibit.questions!.map(question => {
+                        {exhibit.questions.map(question => {
                             return (
                                 <TextField label="Question" defaultValue={question} fullWidth />
                             );
                         })}
 
-                        {exhibit.answers!.map(answer => {
+                        {exhibit.answers.map(answer => {
                             return (
                                 <TextField label="Answer" defaultValue={answer} fullWidth />
                             );

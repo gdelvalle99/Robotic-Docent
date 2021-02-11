@@ -1,18 +1,19 @@
 import React, {useState} from "react";
 import Fab from '@material-ui/core/Fab';
-import {Button, Dialog, DialogActions, DialogTitle} from '@material-ui/core'
+import {Button, Dialog, DialogActions, DialogTitle} from '@material-ui/core';
 import NavigationIcon from '@material-ui/icons/Navigation';
-import {demoLink} from '../links'
+import {demoLink} from '../links';
 
 export default function Home() {
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState(false);
 
     const handleClose = () => {
         setOpen(false);
     }
 
     const handleClick = () => {
-        const data = {start_tour: true};
+        const data = {};
+        console.log(JSON.stringify(data));
 
         fetch(demoLink
             , {
@@ -24,10 +25,16 @@ export default function Home() {
                 },
                 body: JSON.stringify(data)
             }
-        ).catch(e=>console.log(e))
-        setOpen(true);
+        ).then(response => {
+            return response.json()
+        }).then(responseJSON => {
+            if(responseJSON.success){
+                setOpen(true)
+            }
+        })
+        .catch(e=>console.log(e))
     }
-    
+
     return (
         <div style={{height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Fab variant="extended" size="large" style={{height: 'auto', width: '400px', padding: '50px'}} onClick={handleClick}>
