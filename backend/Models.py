@@ -83,11 +83,10 @@ class Exhibit(BaseModel, db.Model):
     description = db.Column(db.String)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    theme = db.Column(db.String)
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))
 
-    def __init__(self,floor_id,title,subtitle,description,start_date,theme):
+    def __init__(self,floor_id,title,subtitle,description,start_date):
         try:
             # Check to see if floor exists
             existing_level = db.session.query(Floor).filter(Floor.id==floor_id).first()
@@ -100,7 +99,6 @@ class Exhibit(BaseModel, db.Model):
             self.description = description
             self.start_date = start_date
             self.end_date = None
-            self.theme = theme
             self.questions = []
             self.answers = []
         except SQLAlchemyError as e:
@@ -120,7 +118,7 @@ class Piece(BaseModel, db.Model):
     end_date = db.Column(db.Date)
     acquisition_date = db.Column(db.Date)
     dimension = db.Column(db.ARRAY(db.Float))
-    coordinates = db.Column(db.ARRAY(db.Integer))
+    coordinates = db.Column(db.ARRAY(db.Float))
     notes = db.Column(db.ARRAY(db.String))
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))

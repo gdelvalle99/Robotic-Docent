@@ -158,7 +158,6 @@ def create_exhibit():
                 subtitle=data['subtitle'],
                 description=data['description'],
                 start_date=data['start_date'],
-                theme=data['theme']
             )
         except ValueError as e:
             print(e)
@@ -170,7 +169,6 @@ def create_exhibit():
             subtitle=model.subtitle,
             description=model.description,
             start_date=model.start_date,
-            theme=model.theme             
         )
 
         try:
@@ -249,18 +247,6 @@ def start_tour():
         
         return {"success": True}
     return {"success": False, "msg": "Could not start Tour"}
-
-@app.route('/test/pls')
-def nyan():
-    print("Henlo")
-    test = Test(name="poo")
-    try:
-        db.session.add(test)
-        db.session.commit()
-        return {"success": True, "msg": "Successfully created a new floor"}
-    except SQLAlchemyError as e:
-        print(type(e), e)
-        return {"success": False, "msg": str(e)}
 
 if __name__ == '__main__':
     app.run()
