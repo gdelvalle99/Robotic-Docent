@@ -41,7 +41,6 @@ class ExhibitValidate(BaseModel):
     subtitle: str
     description: str
     start_date: datetime.date
-    theme: str
 
     @validator('floor_id')
     def id_valid(cls, v):
@@ -72,12 +71,6 @@ class ExhibitValidate(BaseModel):
         old_date = datetime.date(1800,1,1)
         if v < old_date:
             raise ValueError('Start date must be valid')
-        return v
-
-    @validator('theme')
-    def floor_count_valid(cls, v):
-        if len(v) <= 0 or len(v)>64:
-            raise ValueError('Theme must be within 1-64 characters')
         return v
 
 class PieceValidate(BaseModel):
@@ -111,8 +104,8 @@ class PieceValidate(BaseModel):
 
     @validator('description')
     def description_valid(cls, v):
-        if len(v) <= 0 or len(v)>128:
-            raise ValueError('Description must be within 1-128 characters')
+        if len(v) <= 0 or len(v)>1024:
+            raise ValueError('Description must be within 1-1024 characters')
         return v
 
     @validator('origin')

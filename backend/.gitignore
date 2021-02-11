@@ -5,3 +5,6 @@ env
 
 # pyc are not necessary
 *.pyc
+
+# migrations is a personal file
+migrations

@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.inspection import inspect
+from sqlalchemy.dialects.postgresql import UUID
 import datetime
+import uuid
 
 db = SQLAlchemy()
-
 
 class BaseModel(db.Model):
     """Base data model for all objects"""
@@ -33,10 +34,9 @@ class BaseModel(db.Model):
 
 
 class Museum(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'museums'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     name = db.Column(db.String)
     floor_count = db.Column(db.SmallInteger)
 
@@ -46,10 +46,9 @@ class Museum(BaseModel, db.Model):
 
 
 class Floor(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'floors'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
     level = db.Column(db.String)
     map = db.Column(db.LargeBinary)
@@ -75,23 +74,20 @@ class Floor(BaseModel, db.Model):
 
 
 class Exhibit(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'exhibits'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     floor_id = db.Column(db.Integer, db.ForeignKey('floors.id'))
     title = db.Column(db.String)
     subtitle = db.Column(db.String)
     description = db.Column(db.String)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    theme = db.Column(db.String)
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))
 
-    def __init__(self,floor_id,title,subtitle,description,start_date,theme):
+    def __init__(self,floor_id,title,subtitle,description,start_date):
         try:
-
             # Check to see if floor exists
             existing_level = db.session.query(Floor).filter(Floor.id==floor_id).first()
             if(existing_level is None):
@@ -103,17 +99,15 @@ class Exhibit(BaseModel, db.Model):
             self.description = description
             self.start_date = start_date
             self.end_date = None
-            self.theme = theme
             self.questions = []
             self.answers = []
         except SQLAlchemyError as e:
             raise(e)
 
 class Piece(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'pieces'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     exhibit_id = db.Column(db.Integer, db.ForeignKey('exhibits.id'))
     title = db.Column(db.String)
     author = db.Column(db.String)
@@ -124,7 +118,7 @@ class Piece(BaseModel, db.Model):
     end_date = db.Column(db.Date)
     acquisition_date = db.Column(db.Date)
     dimension = db.Column(db.ARRAY(db.Float))
-    coordinates = db.Column(db.ARRAY(db.Integer))
+    coordinates = db.Column(db.ARRAY(db.Float))
     notes = db.Column(db.ARRAY(db.String))
     questions = db.Column(db.ARRAY(db.String))
     answers = db.Column(db.ARRAY(db.String))
@@ -155,10 +149,9 @@ class Piece(BaseModel, db.Model):
 
 
 class Tour(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'tours'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
     robot_id = db.Column(db.Integer, db.ForeignKey('robots.id'))
     tour_date = db.Column(db.Date)
@@ -169,10 +162,9 @@ class Tour(BaseModel, db.Model):
 
 
 class Robot(BaseModel, db.Model):
-    """Model for the stations table"""
     __tablename__ = 'robots'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
     museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
     model = db.Column(db.String)
     tour_count = db.Column(db.BigInteger)

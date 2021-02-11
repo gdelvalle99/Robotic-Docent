@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Fab from '@material-ui/core/Fab';
 import {Button, Dialog, DialogActions, DialogTitle} from '@material-ui/core'
 import NavigationIcon from '@material-ui/icons/Navigation';
-import {tourLink} from '../links'
+import {demoLink} from '../links'
 
 export default function Home() {
     const [open, setOpen] = useState<boolean>(false);
@@ -13,9 +13,8 @@ export default function Home() {
 
     const handleClick = () => {
         const data = {start_tour: true};
-        console.log(JSON.stringify(data))
 
-        fetch(tourLink
+        fetch(demoLink
             , {
                 method: 'POST',
                 mode: 'cors',
@@ -25,14 +24,8 @@ export default function Home() {
                 },
                 body: JSON.stringify(data)
             }
-        ).then(response => {
-            return response.json()
-        }).then(responseJSON => {
-            if(responseJSON.success){
-                setOpen(true)
-            }
-        })
-        .catch(e=>console.log(e))
+        ).catch(e=>console.log(e))
+        setOpen(true);
     }
     
     return (

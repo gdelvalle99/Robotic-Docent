@@ -2,30 +2,13 @@
 from flask import Flask, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
-
-# Import OS and read .env files
-import os
-from os.path import join, dirname
-from dotenv import load_dotenv
-# app.config.from_object(os.environ['APP_SETTINGS'])
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+from __init__ import create_app
 
 # Import models and forms to for interacting with the database
-from Models import db, Museum, Floor, Exhibit, Piece
+from Models import Museum, Floor, Exhibit, Piece, Test
 from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
 
-# Image Packages
-import io
-import PIL.Image as Image
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-
-# Set up Database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app = create_app()
 db = SQLAlchemy(app)
 
 
@@ -34,7 +17,7 @@ def hello_world():
     return 'Hello, World!'
 
 # Expects json with values {name: str, floor_count: int}
-# Returns
+# Returns a success message depending on if new museum could be made
 @app.route('/museum/new', methods=['POST'])
 def create_museum():
     if request.method == 'POST':
@@ -48,8 +31,6 @@ def create_museum():
         except ValueError as e:
             print(e)
             return e
-
-        print(model.name, model.floor_count)
 
         museum = Museum(
             name=model.name,
@@ -67,7 +48,7 @@ def create_museum():
     return {"success": False, "msg": "404 - No Route Found"}
 
 # Expects json with values {museum_name: str, level: str }
-# Returns
+# Returns a success message depending on if a new level could be made
 @app.route('/floor/new', methods=['POST'])
 def create_floor():
     if request.method == 'POST':
@@ -97,7 +78,7 @@ def create_floor():
             return {"success": False, "msg": str(e)}
     return {"success": False, "msg": "404 No Existing Route"}
 
-# Expects formdata with values [floor_id: int, photo: png ]
+# Expects formdata with values [floor_id: int, map: png ]
 # Returns a success message if was able to save map
 @app.route('/floor/map', methods=['GET','POST'])
 def floor_map():
@@ -124,8 +105,8 @@ def floor_map():
     return {"success": False, "msg": "404 No Existing Route"}
 
 # Expects formdata with values [floor_id: int]
-# Returns a png image
-@app.route('/floor/update', methods=['POST'])
+# Returns a png image of the map
+@app.route('/floor/retrieve/map', methods=['POST'])
 def floor_update():
     if request.method == 'POST':
         # Validate Data
@@ -147,15 +128,14 @@ def floor_update():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# 
-# 
+# DUMMY ROUTE FOR NOW, ONLY RETREIVES EXHIBITS FOR FLOORS WITH ID 2, SHOULD CHANGE
+# Returns a json object with a list of exhibits given a set floor
 @app.route('/floor/exhibits', methods=['GET'])
 def get_exhibits():
     id = request.args.get('id', default = 2, type = int)
     try:
         exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
         serialized_exhibits = [i.serialize() for i in exhibits]
-        # return {"success": True, "exhibits": serialized_exhibits[0]}
         return {"success": True, "exhibits": serialized_exhibits}
     except SQLAlchemyError as e:
         print(type(e), e)
@@ -175,7 +155,6 @@ def create_exhibit():
                 subtitle=data['subtitle'],
                 description=data['description'],
                 start_date=data['start_date'],
-                theme=data['theme']
             )
         except ValueError as e:
             print(e)
@@ -187,7 +166,6 @@ def create_exhibit():
             subtitle=model.subtitle,
             description=model.description,
             start_date=model.start_date,
-            theme=model.theme             
         )
 
         try:
@@ -246,8 +224,8 @@ def create_piece():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# 
-# 
+# DUMMY ROUTE FOR NOW, ONLY RETREIVES PIECES FOR EXHIBITS WITH ID 1, SHOULD CHANGE
+# Returns a json object with a list of exhibits given a set floor
 @app.route('/exhibit/pieces', methods=['GET'])
 def get_exhibit_pieces():
     id = request.args.get('id', default = 1, type = int)
@@ -258,13 +236,6 @@ def get_exhibit_pieces():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
-
-@app.route('/tour/start', methods=['POST'])
-def start_tour():
-    if request.get_json()['start_tour'] == True:
-        # send request to memo's code
-        return {"success": True}
-    return {"success": False, "msg": "Could not start Tour"}
 
 if __name__ == '__main__':
     app.run()
