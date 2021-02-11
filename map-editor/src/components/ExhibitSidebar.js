@@ -3,7 +3,7 @@ import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@m
 import { Exhibit } from '../pages/Editor';
 import { ExhibitSidebarItem } from '../components/ExhibitSidebarItem';
 
-export const ExhibitSidebar: React.FC<ExhibitProps> = ({ exhibits }: ExhibitProps) => {
+export const ExhibitSidebar = ({ exhibits }) => {
 
     return (
         <div className="exhibit-sidebar-container">
