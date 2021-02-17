@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Fab, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle, Select, MenuItem, InputLabel} from '@material-ui/core'
 import Add from '@material-ui/icons/Add';
+import axios from 'axios';
 import {mapLink} from '../links';
 
 export const Map = (props) => {
@@ -20,15 +21,7 @@ export const Map = (props) => {
         const formData = new FormData();
         formData.append('floor_id', '1');
 
-        fetch(mapLink
-            , {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                },
-                body: formData
-            }
+        axios.post(mapLink, formData
         ).then(response => {
             return response.blob()
         }).then(blob => {
