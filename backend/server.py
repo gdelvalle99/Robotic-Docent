@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from __init__ import create_app
 
 # Import models and forms to for interacting with the database
-from Models import Museum, Floor, Exhibit, Piece, Test
+from Models import Museum, Floor, Exhibit, Piece
 from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
 
 app = create_app()
@@ -128,11 +128,11 @@ def floor_update():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# DUMMY ROUTE FOR NOW, ONLY RETREIVES EXHIBITS FOR FLOORS WITH ID 2, SHOULD CHANGE
+# Expects json with values [floor_id: int]
 # Returns a json object with a list of exhibits given a set floor
-@app.route('/floor/exhibits', methods=['GET'])
+@app.route('/floor/exhibits', methods=['POST'])
 def get_exhibits():
-    id = request.args.get('id', default = 2, type = int)
+    id = request.args.get('id', default = 1, type = int)
     try:
         exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
         serialized_exhibits = [i.serialize() for i in exhibits]
@@ -224,9 +224,9 @@ def create_piece():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# DUMMY ROUTE FOR NOW, ONLY RETREIVES PIECES FOR EXHIBITS WITH ID 1, SHOULD CHANGE
+# Expects json with values [exhibit_id: int]
 # Returns a json object with a list of exhibits given a set floor
-@app.route('/exhibit/pieces', methods=['GET'])
+@app.route('/exhibit/pieces', methods=['POST'])
 def get_exhibit_pieces():
     id = request.args.get('id', default = 1, type = int)
     try:

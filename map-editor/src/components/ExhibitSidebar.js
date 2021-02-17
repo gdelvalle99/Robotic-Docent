@@ -9,7 +9,7 @@ export const ExhibitSidebar = ({ exhibits }) => {
         <div className="exhibit-sidebar-container">
             {exhibits.map(exhibit => {
                 return (
-                    <ExhibitSidebarItem id={exhibit.id} floor_id={exhibit.floor_id} title={exhibit.title} subtitle={exhibit.subtitle} description={exhibit.description} start_date={exhibit.start_date} end_date={exhibit.end_date} theme={exhibit.theme} questions={exhibit.questions} answers={exhibit.answers} pieces={exhibit.pieces} />
+                    <ExhibitSidebarItem id={exhibit.id} floor_id={exhibit.floor_id} title={exhibit.title} subtitle={exhibit.subtitle} description={exhibit.description} start_date={exhibit.start_date} end_date={exhibit.end_date} theme={exhibit.theme} questions={exhibit.questions} answers={exhibit.answers} />
                     );
             })}
         </div>
