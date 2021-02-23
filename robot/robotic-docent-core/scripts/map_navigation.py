@@ -13,7 +13,7 @@ class map_navigation:
     # initiliaze
     self.query = query
     self.queryIndex = 0
-    # rospy.init_node('map_navigation', anonymous=False)
+    rospy.init_node('map_navigation', anonymous=False)
 
 
 
@@ -46,23 +46,10 @@ class map_navigation:
 
       rospy.loginfo("Sending goal location ...")
       ac.send_goal(goal)
-
-      text.delete("1.0", Tkinter.END)
-      text.insert(Tkinter.END, "Waiting")
       ac.wait_for_result(rospy.Duration(60))
-      text.delete("1.0", Tkinter.END)
-      script = "The author of this piece is " + self.query[self.queryIndex]["author"] + ( (
-        ".\n The title of this piece is " + self.query[self.queryIndex]["title"] +(
-        ".\nThe acquisition date is " + self.query[self.queryIndex]["acquisition_date"] + (
-          ".\n Description: " + self.query[self.queryIndex]["description"] ))))
-      text.insert(Tkinter.END, script)
 
   def nextGoal(self, root, text):
       #define a client for to send goal requests to the move_base server through a SimpleActionClient
-      if(self.queryIndex == len(self.query)):
-        text.delete("1.0", Tkinter.END)
-        text.insert(Tkinter.END, "No previous exhibit!")
-        return
       
       ac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
       
@@ -87,14 +74,7 @@ class map_navigation:
 
       rospy.loginfo("Sending goal location ...")
       ac.send_goal(goal)
-      text.delete("1.0", Tkinter.END)
-      text.insert(Tkinter.END, "Waiting")
       ac.wait_for_result(rospy.Duration(60))
-      text.delete("1.0", Tkinter.END)
-      script = "The author of this piece is " + self.query[self.queryIndex]["author"] + ( (
-        ".\n The title of this piece is " + self.query[self.queryIndex]["title"] +(
-        ".\nThe acquisition date is " + self.query[self.queryIndex]["acquisition_date"] + (
-          ".\n Description: " + self.query[self.queryIndex]["description"] ))))    
-      text.insert(Tkinter.END, script)
-      self.queryIndex += 1
 
+if __name__ == "main":
+  pass
