@@ -170,3 +170,15 @@ class Robot(BaseModel, db.Model):
     tour_count = db.Column(db.BigInteger)
     interaction_count = db.Column(db.BigInteger)
     question_count = db.Column(db.BigInteger)
+
+class User(BaseModel, db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
+    museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
+    username = db.Column(db.String, unique=True)
+    password_hash = db.Column(db.String)
+    permission_level = db.Column(db.Integer)
+    last_login = db.Column(db.Date)
+    last_edit = db.Column(db.Date)
+
