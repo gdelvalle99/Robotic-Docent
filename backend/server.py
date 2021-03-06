@@ -239,6 +239,21 @@ def get_exhibit_pieces():
 
 @app.route('/user/login', methods=['POST'])
 def user_login():
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            username = data['username']
+            password = data['password']
+            user = db.session.query(User).filter(User.username==username).one()
+            if(user is None or not user.check_password(password)):
+                raise ValueError("Username and Password Combo Do Not Match")
+            return {"success": True, "msg": "Login was successful!"}
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+        except ValueError as e:
+            return {"success": False, "msg": str(e)}
+
     return
 
 @app.route('/user/create', methods=['POST'])

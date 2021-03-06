@@ -2,8 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.inspection import inspect
 from sqlalchemy.dialects.postgresql import UUID
-# from sqlalchemy_utils import UUIDType
-# from sqlalchemy_utils import UUIDType
 from datetime import datetime
 import hashlib
 import random
