@@ -5,8 +5,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from __init__ import create_app
 
 # Import models and forms to for interacting with the database
-from Models import Museum, Floor, Exhibit, Piece, Test
-from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
+from Models import Museum, Floor, Exhibit, Piece, User
+from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate, UserValidate
 
 app = create_app()
 db = SQLAlchemy(app)
@@ -41,7 +41,7 @@ def create_museum():
         try:
             db.session.add(museum)
             db.session.commit()
-            return {"success": True, "msg": "Successfully created a new floor"}
+            return {"success": True, "msg": "Successfully created a new museum"}
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg": str(e)}
@@ -236,6 +236,45 @@ def get_exhibit_pieces():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
+
+@app.route('/user/login', methods=['POST'])
+def user_login():
+    return
+
+@app.route('/user/create', methods=['POST'])
+def user_create():
+    if request.method == 'POST':
+        # Validate Data
+        try:
+            data = request.get_json()
+            model = UserValidate(
+                username=data['username'],
+                password=data['password'],
+                permission_level=data['permission_level'],
+                museum_id=data['museum_id'],
+            )
+        except ValueError as e:
+            print(e)
+            return {"success": False, "msg": str(e)}
+
+        user = User(
+            username=model.username,
+            password=model.password,
+            permission_level=model.permission_level,
+            museum_id=model.museum_id,
+        )
+
+        # Save piece into database
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return {"success": True, "msg": "Successfully created a new user"}  
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
 
 if __name__ == '__main__':
     app.run()
