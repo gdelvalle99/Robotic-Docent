@@ -64,11 +64,14 @@ export default class QAGenerator extends React.Component {
     }
 
     updateList = async () => {
-      newQA = await axios.get(`${ROOT_URL}/permissions/${this.props.activeUserId}`); 
-      if(newQA != this.state.oldQA){
-        this.clearRows()
-        array.forEach(newQA => {
-          this.addRow(newQA.Q, newQA.A)
+      var newQA = await axios.get(`http://127.0.0.1:5001/server/qa`);
+      console.log(newQA) 
+      if(newQA !== this.state.oldQA){
+        var QAs = newQA.data;
+        console.log(QAs)
+        this.clearRows();
+        QAs.QAList.forEach(QA => {
+          this.addRow(QA.question, QA.answer)
         });
         this.setState({
           oldQA: newQA
