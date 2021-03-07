@@ -36,7 +36,7 @@ class FloorValidate(BaseModel):
         return v
 
 class ExhibitValidate(BaseModel):
-    floor_id: int
+    floor_id: str
     title: str
     subtitle: str
     description: str
@@ -44,7 +44,7 @@ class ExhibitValidate(BaseModel):
 
     @validator('floor_id')
     def id_valid(cls, v):
-        if v <= 0:
+        if len(v) <= 0 or len(v) > 128:
             raise ValueError('Floor ID is not valid')
         return v
 
@@ -74,7 +74,7 @@ class ExhibitValidate(BaseModel):
         return v
 
 class PieceValidate(BaseModel):
-    exhibit_id: int
+    exhibit_id: str
     title: str
     author: str
     description: str
@@ -82,11 +82,11 @@ class PieceValidate(BaseModel):
     era: str
     acquisition_date: datetime.date
     dimension: List[float]
-    coordinates: List[int]
+    coordinates: List[float]
 
     @validator('exhibit_id')
     def valid_id(cls, v):
-        if v <= 0:
+        if len(v) <= 0 or len(v) > 128:
             raise ValueError('Exhibit ID is not valid')
         return v
 
