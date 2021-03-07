@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from __init__ import create_app
 
 # Import models and forms to for interacting with the database
-from Models import Museum, Floor, Exhibit, Piece, Test
+from Models import Museum, Floor, Exhibit, Piece
 from validation import MuseumValidate, FloorValidate, ExhibitValidate, PieceValidate
 
 app = create_app()
@@ -140,6 +140,61 @@ def get_exhibits():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
+
+# Route in progress. Retrieves the list of tours for a day given a museum and floor
+# returns start times and tour ids as a json object
+@app.route('/museum/tour', methods=['GET'])
+def get_tours():
+    floor_id = request.args.get('floor_id', default = floor_id, type = int)
+    museum_id = request.args.get('museum_id', default = museum_id, type = int)
+    try:
+        tours = db.session.query(Tour).filter(Tour.floor_id==floor_id, (
+            Tour.museum_id==museum_id).select(Tour.tour_id, Tour.start_time))
+        serialized_tour = [i.serialize() for i in tour]
+        return {"success": True, "tours": serialized_tour}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, msg: str(e)}
+
+# Route in progress. Returns the next piece in the tour
+@app.route('/museum/tour/piece', methods=['GET'])
+def get_tour_piece():
+    tour_id = request.args.get('tour_id', default = tour_id, type = int)
+    piece_count = request.args.get('piece_count', default = piece_count, type = int)
+    try:
+        piece_id = db.session.query(Tour).filter(Tour.id == tour_id).select(Tour.pieces)
+        piece_id = piece_id[piece_count]
+        piece = db.session.query(Piece).filter(Piece.id == piece_id)
+        serialized_piece = [i.serialize() for i in piece]
+        return {"success": True, "piece": serialized_piece}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, msg: str(e)}
+
+# Route in progress. Returns exhibit that belongs to the current
+# piece
+@app.route('/museum/piece/exhibit', methods=['GET'])
+def get_piece_exhibit():
+    exhibit_id = request.args.get('exhibit_id', default = exhibit_id , type = int)
+    try:
+        exhibit = db.session.query(Exhibit).filter(Exhibit.id == exhibit_id)
+        serialized_exhibit = [i.serialize() for i in exhibit]
+        return {"success": True, "exhibit": serialized_exhibit}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, msg: str(e)}
+
+# Route in progress. Returns all info about a tour.
+@app.route('/museum/tour/info', methods=['GET'])
+def get_tour_info():
+    tour_id = request.args.get('tour_id', default=tour_id, type = int)
+    try:
+        tours = db.session.query(Tour).filter(Tour.id==tour_id).all()
+        serialized_tour = [i.serialize() for i in tour]
+        return {"success": True, "tours": serialized_tour}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, msg: str(e)}
 
 # Expects json with values [floor_id: int]
 # Returns a json object
