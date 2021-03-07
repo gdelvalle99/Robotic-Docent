@@ -1,34 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import { Map } from "../components/Map";
 import { ExhibitSidebar } from '../components/ExhibitSidebar';
+import { exhibitLink } from "../links";
+import axios from 'axios';
 
-export const Editor = (props) => {
+export const Editor = () => {
 
-    const [exhibits, setExhibits] = useState([]);
+    const [exhibitsList, setExhibitsList] = useState([]);
 
-    const getExhibits = async () => {
-        let r = await fetch('testdata.json'
-            , {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            }
-        ).then(function (response) {
-            return response.json();
-        })
-        setExhibits(r);
+    const getExhibitsList = () => {
+        const values = {
+            "floor_id": 1
+        }
+
+        let r = axios.post(exhibitLink, values).
+            then(function (response) {
+                return response;
+            }).then(item => {
+                const e = item.data;
+                setExhibitsList(e);
+            }).catch(e=>console.log(e))
     }
 
-    useEffect(() => { getExhibits(); }, []);
+    useEffect(() => { getExhibitsList(); }, []);
 
     return (
         <div className="editor-page">
             <div className="editor-sidebar">
-                <ExhibitSidebar exhibits={exhibits} />
+                <ExhibitSidebar exhibitsList={exhibitsList} />
             </div>
-                    <Map/>
+            <div className="editor-map">
+                <Map/>
+            </div>
         </div>
     );
 }

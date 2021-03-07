@@ -1,10 +1,13 @@
-import React, {useState} from "react";
-import Fab from '@material-ui/core/Fab';
-import {Button, Dialog, DialogActions, DialogTitle} from '@material-ui/core';
+import React, { useState } from "react";
+import { Fab } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { demoLink } from '../links';
 import NavigationIcon from '@material-ui/icons/Navigation';
-import {demoLink} from '../links';
 
-export default function Home() {
+export const Home = () => {
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
