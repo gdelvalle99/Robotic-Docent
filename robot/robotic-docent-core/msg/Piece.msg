@@ -1,0 +1,9 @@
+uint32 exhibit_id
+string title
+string author
+string description
+string origin
+string era
+string start_date
+string end_date
+string acquisition_date

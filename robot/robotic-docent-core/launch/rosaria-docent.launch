@@ -1,0 +1,25 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find robotic-docent-core)/stage_config/maps/museum-test.pgm .025"
+        respawn="true"/>
+
+    <include file="$(find robotic-docent-core)/move_base_config/amcl_node.xml"/> 
+    <include file="$(find robotic-docent-core)/move_base_config/move_base.xml"/>
+
+    <node name="rosaria" pkg="rosaria" type="RosAria" />
+    <!-- Lidar config -->
+    <node name="urg_node" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value=""/>
+    <param name="serial_port" value="/dev/ttyACM0"/>
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="laser"/>
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-1.5707963"/>
+    <param name="angle_max" value="1.5707963"/>
+  </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotic-docent-core)/single_robot.rviz" />
+
+</launch>

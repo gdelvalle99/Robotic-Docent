@@ -1,85 +1,59 @@
 #!/usr/bin/env python
 
-
-import Tkinter
 import rospy
+from std_msgs.msg import String
 import requests
-#Base = declarative_base()
-"""
-class Tour(Base):
-    db = rospy.get_param('database')
-    tour_name = rospy.get_param('tour')
-    engine = create_engine(f'postgresql://localhost/{db}')
-    __tablename__ = 'tour'
-    id = Column(Integer, primary_key =  True)
-    name = Column(String)
+from datetime import datetime
+import actionlib
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from math import radians, degrees
+from actionlib_msgs.msg import *
+from geometry_msgs.msg import Point
+from robotic_docent_core.msg import Piece
+rospy.init_node('main_docent')
 
-    address = Column(String)
-    email = Column(String)
+def initialize():
+    init_publisher = rospy.Publisher('start_up', String, queue_size=1)
+    params = [None, None]
+    # Make a request for the tour
+    tours = requests.get('http://localhost:5000/museum/tour', params=params)
 
-# This is pseudocode for querying stuff
-Session = sessionmaker(bind = engine)
-session = Session()
-pieces = Tour.query.filter(exhibit=exhibit).all()
+    init_publisher.publish("Success!")
 
-for piece in pieces:
-    map_navigation(piece.coordinates[0], piece.coordinates[1])
-    show_piece(piece)
-"""
+    return tours
 
-# Wait for user to start the tour
+def tour(tour_id):
+    current_piece = 0
 
-# Spawn dialog window
+    status_publisher = rospy.Publisher('status', String, queue_size=1)
+    client = actionlib.SimpleActionClient('robot_docent', Piece)
 
-# declare the window
-from map_navigation import map_navigation
+    piece_msg = Piece()
+    piece_msg.description = "Thanks for joining us today. We will be starting the tour soon."
+    status_publisher.publish("Starting up tour.")
+    
+    tour_info = requests.get('http://localhost:5000/tour/info', params=params)
+    client.send_goal_and_wait(piece_msg)
 
-rospy.init_node('tour_exhibits', anonymous=False)
+    
 
-root = Tkinter.Tk() 
+if __name__ = "main":
+    try:
+        tours = initialize()
+        while len(tours) > 0:
+            current_tour = tours[0]
+            if current_tour.time() == datetime.now().time():
+                tour(current_tour.tour_id)
 
-url = "http://a15c4f97336c.ngrok.io/"
-exhibits_url = url + 'floor/exhibits'
-pieces_url = url + 'exhibit/pieces'
+    except:
+        pass
 
-r = requests.get(exhibits_url)
-r_json = r.json()
-
-r2 = requests.get(pieces_url, params={"id":r_json["exhibits"][0]["id"]})
-query = r2.json()
-query = query["pieces"]
-# specify size of window. 
-root.geometry("400x400") 
-
-# Create text widget and specify size. 
-T = Tkinter.Text(root, height = 10, width = 100) 
-
-map_controller = map_navigation(query)
-# Create label 
-l = Tkinter.Label(root, text = "Museum Docent") 
-l.config(font =("Courier", 14)) 
-
-
-
-# Create button for next text. 
-b1 = Tkinter.Button(root, text = "Next", command=lambda: map_controller.nextGoal(root, T)) 
-
-# Create an Exit button. 
-b2 = Tkinter.Button(root, text = "Exit", 
-			command = root.destroy) 
-
-b3 = Tkinter.Button(root, text= "Previous", command = lambda: map_controller.previousGoal(root, T))
-
-l.pack() 
-T.pack() 
-b1.pack() 
-b2.pack()
-b3.pack() 
-
-# Insert The Fact. 
-T.insert(Tkinter.END, "Starting tour..") 
-
-Tkinter.mainloop() 
-
-
-
+# General workflow:
+# When robot is booted, query database for tours of the day
+# Constantly check if the time is correct
+# If time == tour time, then execute script:
+# Let the audience know that the tour will start in a set amount of time (state : start mode)
+# Query first piece. Robot starts motion. (state : moving mode. cannot be interacted with.)
+# If robot can't reach location, have it stand still (state : error. cannot be interacted with. calls attendant)
+# When robot gets to first piece, robot starts lecturing (state : lecturing. cannot be interacted with.)
+# 
