@@ -1,6 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import React from 'react';
+import _ from "lodash";
 
 const QuestionPingButton = function(props){
     const {text, onClick} = props;
@@ -65,16 +66,14 @@ export default class QAGenerator extends React.Component {
 
     updateList = async () => {
       var newQA = await axios.get(`http://127.0.0.1:5001/server/qa`);
-      console.log(newQA) 
-      if(newQA !== this.state.oldQA){
+      if(!_.isEqual(newQA.data, this.state.oldQA)){
         var QAs = newQA.data;
-        console.log(QAs)
         this.clearRows();
         QAs.QAList.forEach(QA => {
           this.addRow(QA.question, QA.answer)
         });
         this.setState({
-          oldQA: newQA
+          oldQA: newQA.data
         });
       }
     }
