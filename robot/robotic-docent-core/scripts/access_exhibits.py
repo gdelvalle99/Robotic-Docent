@@ -9,14 +9,15 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from math import radians, degrees
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Point
-from robotic_docent_core.msg import Piece
-rospy.init_node('main_docent')
+import Piece
+
+
 
 def initialize():
     init_publisher = rospy.Publisher('start_up', String, queue_size=1)
     params = [None, None]
     # Make a request for the tour
-    tours = requests.get('http://localhost:5000/museum/tour', params=params)
+    tours = requests.get('http://localhost:5000/server/tour', params=params)
 
     init_publisher.publish("Success!")
 
@@ -26,18 +27,34 @@ def tour(tour_id):
     current_piece = 0
 
     status_publisher = rospy.Publisher('status', String, queue_size=1)
-    client = actionlib.SimpleActionClient('robot_docent', Piece)
+    start_client = actionlib.SimpleActionClient('start_state', String())
+    move_client = actionlib.SimpleActionClient('move_state', Piece)
+    present_client = actionlib.SimpleActionClient('present_state', Piece)
+    interactive_client = actionlib.SimpleActionClient('interactive_state', Piece)
 
+    # Start state
     piece_msg = Piece()
-    piece_msg.description = "Thanks for joining us today. We will be starting the tour soon."
+    start_msg = "Hello! The tour will be starting soon."
     status_publisher.publish("Starting up tour.")
     
+    params = {"tour_id": tour_id}
     tour_info = requests.get('http://localhost:5000/tour/info', params=params)
-    client.send_goal_and_wait(piece_msg)
+    tour_length = len(tour_info['pieces'])
+    start_client.send_goal_and_wait(start_msg)
+
+    # Loop for exhibits
+    for step in range(tour_length):
+        move_client.send_goal_and_wait(piece_msg)
+        present_client.send_goal_and_wait(piece_msg)
+        interactive_client.send_goal_and_wait(piece_msg)
+    # move state
+    # present state
+    # interactive state
 
     
 
-if __name__ = "main":
+if __name__ == "main":
+    rospy.init_node('main_docent')
     try:
         tours = initialize()
         while len(tours) > 0:

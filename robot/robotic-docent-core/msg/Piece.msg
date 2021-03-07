@@ -1,4 +1,4 @@
-uint32 exhibit_id
+string exhibit_id
 string title
 string author
 string description
@@ -7,3 +7,5 @@ string era
 string start_date
 string end_date
 string acquisition_date
+string[] questions
+string[] answers

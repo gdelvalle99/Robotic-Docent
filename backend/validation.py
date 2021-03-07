@@ -36,7 +36,7 @@ class FloorValidate(BaseModel):
         return v
 
 class ExhibitValidate(BaseModel):
-    floor_id: int
+    floor_id: str
     title: str
     subtitle: str
     description: str
@@ -44,10 +44,12 @@ class ExhibitValidate(BaseModel):
 
     @validator('floor_id')
     def id_valid(cls, v):
-        if v <= 0:
-            raise ValueError('Floor ID is not valid')
+        print(len(v))
+        print(v)
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Museum ID must be within 1-128 characters')
         return v
-
+    
     @validator('title')
     def title_valid(cls, v):
         if len(v) <= 0 or len(v)>32:
@@ -74,7 +76,7 @@ class ExhibitValidate(BaseModel):
         return v
 
 class PieceValidate(BaseModel):
-    exhibit_id: int
+    exhibit_id: str
     title: str
     author: str
     description: str
@@ -86,8 +88,8 @@ class PieceValidate(BaseModel):
 
     @validator('exhibit_id')
     def valid_id(cls, v):
-        if v <= 0:
-            raise ValueError('Exhibit ID is not valid')
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Museum name must be within 1-128 characters')
         return v
 
     @validator('title')
@@ -137,4 +139,43 @@ class PieceValidate(BaseModel):
     def coordinate_length(cls, v):
         if len(v) != 2:
             raise ValueError('Coordinates must lie on a 2D plane (x,y) ')
+        return v
+
+class UserValidate(BaseModel):
+    username: str
+    password: str
+    permission_level: int
+    museum_id: str
+
+    @validator('username')
+    def username_length(cls, v):
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Username must be within 1-128 characters')
+        return v
+
+    @validator('password')
+    def password_valid(cls, v):
+        if len(v) < 8 or len(v) > 32:
+            raise ValueError('Password must be within 8-32 characters')
+
+        # Below can be refactored into a single loop
+        if not any(i.isdigit() for i in v):
+            raise ValueError('Password must include at least one number')
+        if not any(i.isupper() for i in v):
+            raise ValueError('Password must include at least one captial letter')
+        if not any(i.islower() for i in v):
+            raise ValueError('Password must include at least one lowercase letter')
+        return v
+
+    @validator('permission_level')
+    def permission_level_valid(cls, v):
+        valid_levels = [0,1,2,3]
+        if v not in valid_levels:
+            raise ValueError('Permission level must be within one of the various levels: {}'.format(valid_levels))
+        return v
+
+    @validator('museum_id')
+    def museum_id_valid(cls, v):
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Museum ID must be within 1-128 characters')
         return v

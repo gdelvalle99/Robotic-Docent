@@ -13,7 +13,6 @@ class map_navigation:
     # initiliaze
     self.query = query
     self.queryIndex = 0
-    rospy.init_node('map_navigation', anonymous=False)
 
 
 
@@ -22,14 +21,9 @@ class map_navigation:
       rospy.sleep()
 
   def previousGoal(self, root, text):
-      if(self.queryIndex == 0):
-        text.delete("1.0", Tkinter.END)
-        text.insert(Tkinter.END, "No previous exhibit!")
-        return
       ac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
       while(not ac.wait_for_server(rospy.Duration.from_sec(5.0))):
               rospy.loginfo("Waiting for the move_base action server to come up")
-      self.queryIndex -= 1
       goal = MoveBaseGoal()
 
       #set up the frame parameters
@@ -76,5 +70,4 @@ class map_navigation:
       ac.send_goal(goal)
       ac.wait_for_result(rospy.Duration(60))
 
-if __name__ == "main":
-  pass
+rospy.init_node('map_navigation', anonymous=False)
