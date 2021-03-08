@@ -1,7 +1,8 @@
 # Import Flask along with SQLAlchemy
-from flask import Flask, request, make_response
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
+from flask_cors import CORS
 
 # Import OS and read .env files
 import os
@@ -45,5 +46,10 @@ def create_app():
     app.register_blueprint(museum)
     app.register_blueprint(piece)
     app.register_blueprint(user)
+
+    # Enable CORS
+    # cors = CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    app.config['CORS_HEADERS'] = 'Content-Type'
     
     return app
