@@ -1,6 +1,7 @@
 from flask import current_app, request, Blueprint
 from ..Models import Museum
 from ..validation import MuseumValidate
+from .helpers.valid_login import valid_login
 from sqlalchemy.exc import SQLAlchemyError
 
 museum = Blueprint('museum', __name__, url_prefix="/museum")
@@ -12,6 +13,10 @@ def record(state):
     if db is None:
         raise Exception("This blueprint expects you to provide "
                         "database access through museuem.db")
+
+@museum.before_request
+def before_request():
+    valid_login(request)
 
 # Expects json with values {name: str, floor_count: int}
 # Returns a success message depending on if new museum could be made

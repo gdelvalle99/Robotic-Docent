@@ -1,6 +1,7 @@
 from flask import current_app, request, make_response, Blueprint
 from ..Models import Floor, Exhibit
 from ..validation import FloorValidate
+from .helpers.valid_login import valid_login
 from sqlalchemy.exc import SQLAlchemyError
 
 floor = Blueprint('floor', __name__, url_prefix="/floor")
@@ -12,6 +13,10 @@ def record(state):
     if db is None:
         raise Exception("This blueprint expects you to provide "
                         "database access through floor.db")
+
+@floor.before_request
+def before_request():
+    valid_login(request)
 
 # Expects json with values {museum_name: str, level: str }
 # Returns a success message depending on if a new level could be made

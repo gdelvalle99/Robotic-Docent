@@ -1,5 +1,5 @@
 # Import Flask along with SQLAlchemy
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from flask_cors import CORS
@@ -49,7 +49,12 @@ def create_app():
 
     # Enable CORS
     # cors = CORS(app)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, expose_headers='Authorization')
     app.config['CORS_HEADERS'] = 'Content-Type'
+
+    # Enable Error Handling
+    @app.errorhandler(401)
+    def resource_not_authorized(e):
+        return jsonify(error=str(e)), 401
     
     return app

@@ -25,11 +25,12 @@ def user_login():
             user = db.session.query(User).filter(User.username==username).one()
             if(user is None or not user.check_password(password)):
                 raise ValueError("Username and Password Combo Do Not Match")
-            return {"success": True, "msg": "Login was successful!"}
+
+            token = user.encode_auth_token(user.id, current_app.config['SECRET_KEY'])
+            return {"success": True, "msg": "Login was successful!", "auth_token": token}
         except SQLAlchemyError as e:
-            print(type(e), e)
-            return {"success": False, "msg": str(e)}
-        except ValueError as e:
+            return {"success": False, "msg": "Username and Password Combo Do Not Match"}
+        except Exception as e:
             return {"success": False, "msg": str(e)}
 
-    return
+    return {"success": False, "msg": "Something is broken"}

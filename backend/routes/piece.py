@@ -1,6 +1,7 @@
 from flask import current_app, request, Blueprint
 from ..Models import Piece
 from ..validation import PieceValidate
+from .helpers.valid_login import valid_login
 from sqlalchemy.exc import SQLAlchemyError
 
 piece = Blueprint('piece', __name__, url_prefix="/piece")
@@ -12,6 +13,10 @@ def record(state):
     if db is None:
         raise Exception("This blueprint expects you to provide "
                         "database access through floor.db")
+
+@piece.before_request
+def before_request():
+    valid_login(request)
 
 # Expects json with values [exhibit_id: int]
 # Returns a json object
