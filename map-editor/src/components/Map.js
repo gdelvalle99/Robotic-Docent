@@ -18,14 +18,16 @@ export const Map = (props) => {
 
     const getImage = () => {
         const formData = new FormData();
-        formData.append('floor_id', '1');
+        formData.append('floor_id', 'eeef652e-5759-45c8-91ab-045ca40c721a'); // just for testing
 
+        const token = localStorage.getItem('auth_token') || "";
         fetch(mapLink
             , {
                 method: 'POST',
-                mode: 'cors',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
+                    "Authentification": token,
+                    "credentials": true
                 },
                 body: formData
             }
