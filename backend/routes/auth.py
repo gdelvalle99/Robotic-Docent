@@ -34,3 +34,11 @@ def user_login():
             return {"success": False, "msg": str(e)}
 
     return {"success": False, "msg": "Something is broken"}
+
+@auth.route('/validate', methods=['GET'])
+def validate_token():
+    s = current_app.config.get('SECRET_KEY')
+    auth = User.decode_auth_token(request.headers['Authentification'], s)
+    if not auth['success']:
+        return {"success": False, "msg": auth["msg"]}
+    return {"success": True, "msg": "User is logged in!"}
