@@ -48,9 +48,9 @@ export const Map = (props) => {
         }).catch(e=>console.log(e))
   }
 
-  /*
+    /*
 
-  Axios methods aren't working since the response type is json and cant be converted to blob
+    Axios methods aren't working since the response type is json and cant be converted to blob
 
     const getImage =  () => {
         const formData = new FormData();

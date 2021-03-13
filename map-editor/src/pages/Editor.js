@@ -6,9 +6,9 @@ import axios from 'axios';
 
 export const Editor = () => {
 
-    const [exhibitsList, setExhibitsList] = useState([]);
+    const [exhibitListContainer, setExhibitListContainer] = useState([]);
 
-    const getExhibitsList = () => {
+    const getExhibitListContainer = () => {
         const values = {
             "floor_id": 1
         }
@@ -18,16 +18,17 @@ export const Editor = () => {
                 return response;
             }).then(item => {
                 const e = item.data;
-                setExhibitsList(e);
+                setExhibitListContainer(e);
             }).catch(e=>console.log(e))
+
     }
 
-    useEffect(() => { getExhibitsList(); }, []);
+    useEffect(() => { getExhibitListContainer(); }, []);
 
     return (
         <div className="editor-page">
             <div className="editor-sidebar">
-                <ExhibitSidebar exhibitsList={exhibitsList} />
+                <ExhibitSidebar exhibitListContainer={exhibitListContainer} />
             </div>
             <div className="editor-map">
                 <Map/>
