@@ -2,7 +2,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.inspection import inspect
 from sqlalchemy.dialects.postgresql import UUID
-import datetime
+from datetime import datetime, timedelta
+import hashlib
+import jwt
+import random
+import string
 import uuid
 
 db = SQLAlchemy()
@@ -49,7 +53,7 @@ class Floor(BaseModel, db.Model):
     __tablename__ = 'floors'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
-    museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
+    museum_id = db.Column(UUID(as_uuid=True), db.ForeignKey('museums.id'))
     level = db.Column(db.String)
     map = db.Column(db.LargeBinary)
 
@@ -77,7 +81,7 @@ class Exhibit(BaseModel, db.Model):
     __tablename__ = 'exhibits'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
-    floor_id = db.Column(db.Integer, db.ForeignKey('floors.id'))
+    floor_id = db.Column(UUID(as_uuid=True), db.ForeignKey('floors.id'))
     title = db.Column(db.String)
     subtitle = db.Column(db.String)
     description = db.Column(db.String)
@@ -108,7 +112,7 @@ class Piece(BaseModel, db.Model):
     __tablename__ = 'pieces'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
-    exhibit_id = db.Column(db.Integer, db.ForeignKey('exhibits.id'))
+    exhibit_id = db.Column(UUID(as_uuid=True), db.ForeignKey('exhibits.id'))
     title = db.Column(db.String)
     author = db.Column(db.String)
     description = db.Column(db.String)
@@ -152,8 +156,8 @@ class Tour(BaseModel, db.Model):
     __tablename__ = 'tours'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
-    museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
-    robot_id = db.Column(db.Integer, db.ForeignKey('robots.id'))
+    museum_id = db.Column(UUID(as_uuid=True), db.ForeignKey('museums.id'))
+    robot_id = db.Column(UUID(as_uuid=True), db.ForeignKey('robots.id'))
     tour_date = db.Column(db.Date)
     start_time = db.Column(db.Time)
     duration = db.Column(db.Interval)
@@ -165,8 +169,66 @@ class Robot(BaseModel, db.Model):
     __tablename__ = 'robots'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
-    museum_id = db.Column(db.Integer, db.ForeignKey('museums.id'))
+    museum_id = db.Column(UUID(as_uuid=True), db.ForeignKey('museums.id'))
     model = db.Column(db.String)
     tour_count = db.Column(db.BigInteger)
     interaction_count = db.Column(db.BigInteger)
     question_count = db.Column(db.BigInteger)
+
+class User(BaseModel, db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
+    museum_id = db.Column(UUID(as_uuid=True), db.ForeignKey('museums.id'))
+    username = db.Column(db.String, unique=True)
+    password_hash = db.Column(db.String)
+    permission_level = db.Column(db.Integer)
+    last_login = db.Column(db.Date)
+    last_edit = db.Column(db.Date)
+
+    def generate_password(self, password=None):
+        if(password is None):
+            choices = string.ascii_letters + string.digits
+            password = ''.join(random.choice(choices) for i in range(14))
+        
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    def set_password(self, password):
+        self.password_hash = self.generate_password(password)
+
+    def check_password(self, password):
+        return self.password_hash == self.generate_password(password)
+
+    def encode_auth_token(self, user_id, secret):
+        try:
+            payload = {
+                'exp': datetime.utcnow() + timedelta(hours=12),
+                'iat': datetime.utcnow(),
+                'sub': str(user_id)
+            }
+            return jwt.encode(
+                payload,
+                secret,
+                algorithm='HS256'
+            )
+        except Exception as e:
+            print("There was an error")
+            return e
+
+    @staticmethod
+    def decode_auth_token(auth_token, secret):
+
+        try:
+            payload = jwt.decode(auth_token, secret, algorithms='HS256')
+            return {"success": True, "data": payload['sub']}
+        except jwt.ExpiredSignatureError:
+            return {"success": False, "msg":'Signature expired. Please log in again.'}
+        except jwt.InvalidTokenError:
+            return {"success": False, "msg":'Invalid token. Please log in again.'}
+
+    def __init__(self, username, password, permission_level, museum_id):
+        self.username = username
+        self.set_password(password)
+        self.permission_level = permission_level
+        self.museum_id = museum_id
+        self.last_login = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
