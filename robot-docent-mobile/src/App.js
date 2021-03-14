@@ -6,6 +6,7 @@ import QAGenerator from './questionare'
 function App() {
   return (
     <div className="App">
+      <heading>Robot Docent Mobile</heading>
       <header className="App-header">
         <QAGenerator />     
       </header>

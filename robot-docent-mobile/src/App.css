@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #335db1;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -41,6 +41,18 @@ box {
   display:inline-block;
   width:300px;
   height:100px;
-  background-color:rgb(235, 235, 235);
-  border:1px solid #0d10ad;
+  background-color:rgb(248, 248, 248);
+  border:4px solid #000000;
+}
+
+heading {
+  display:inline-block;
+  width:100%;
+  height:40px;
+  background-color:rgb(0, 0, 0);
+  color:rgb(255, 255, 255);
+  text-align: center;
+  font-size: 25px;
+  border:4px solid #000000;
+  justify-content: top;
 }

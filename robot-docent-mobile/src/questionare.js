@@ -2,12 +2,23 @@ import './App.css';
 import axios from 'axios';
 import React from 'react';
 import _ from "lodash";
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  padding: 10px 60px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  cursor: pointer;
+`;
 
 const QuestionPingButton = function(props){
     const {text, onClick} = props;
     return(
         <div>
-            <button onClick={onClick}>{text}</button>
+            <Button onClick={onClick}>{text}</Button>
         </div>
     );
 }
@@ -15,7 +26,7 @@ const Row = function(props){
     const {question, answer, onClick, showAnswerFlag} = props;
     return (
       <div>
-        <button onClick={onClick}>{question}</button>
+        <Button onClick={onClick}>{question}</Button>
         {showAnswerFlag && (
             <box>{answer}</box>
         )}
