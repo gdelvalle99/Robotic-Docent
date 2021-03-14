@@ -1,9 +1,11 @@
+
+//Main Editor Page
 .editor-page {
     display: flex;
     height: 100%;
 }
 
-
+//Editor Sidebar
 .editor-sidebar {
     width: 30%;
     float: left;
@@ -28,9 +30,36 @@
     background-color: $primary-color;
 }
 
+//Editor Map
 .editor-map {
     width: 70%;
     float: right;
+}
+
+.exhibit-sidebar-add-button {
+    .MuiButton-root {
+        width: 95%;
+        padding: 2rem;
+        margin-right: auto;
+    }
+}
+
+//Editor Exhibit Modal Items
+.MuiDialogContent-root::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: $accent-white;
+}
+
+.MuiDialogContent-root::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+    background-color: $accent-white;
+}
+
+.MuiDialogContent-root::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: $primary-color;
 }
 
 .exhibit-item-summary {
@@ -40,4 +69,69 @@
 .exhibit-item-details {
     display: flex;
     flex-wrap: wrap;
+}
+
+.exhibit-item-title {
+    input {
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding-left: 1%;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.exhibit-item-subtitle {
+    input {
+        font-size: 0.75rem;
+        padding: 1%;
+    }
+}
+
+.exhibit-item-content-container {
+    .MuiTextField-root {
+        margin-top: 0.75rem;
+    }
+}
+
+.exhibit-item-description {
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: $accent-white;
+    }
+}
+
+.exhibit-item-dates {
+    display: inline-flex;
+    .MuiTextField-root {
+        margin: 1rem;
+    }
+}
+
+//Editor Exhibit Items Question Set
+.exhibit-item-qna-cards-container {
+    width: 100%;
+    display: flex;
+
+    .MuiButtonBase-root {
+        width: 31%;
+    }
+}
+
+.exhibit-item-qna-card {
+    transition: width 0.25s;
+    .MuiCard-root:hover {
+        cursor: pointer;
+    }
+}
+
+.exhibit-item-qna-width-30 {
+    width: 33%;
+}
+
+.exhibit-item-qna-width-100 {
+    width: 100%;
+}
+
+.MuiCardHeader-root {
+    height: 6rem;
 }

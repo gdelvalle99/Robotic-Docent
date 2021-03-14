@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {Fab, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle, Select, MenuItem, InputLabel} from '@material-ui/core'
+import { Fab } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Select } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
+import { InputLabel } from '@material-ui/core';
+import { mapLink } from '../links';
 import Add from '@material-ui/icons/Add';
-import {mapLink} from '../links';
+import axios from 'axios';
 
 export const Map = (props) => {
 
@@ -15,7 +25,7 @@ export const Map = (props) => {
     const handleOpenClick = () => {
         setOpen(true);
     }
-
+ 
     const getImage = () => {
         const formData = new FormData();
         formData.append('floor_id', 'eeef652e-5759-45c8-91ab-045ca40c721a'); // just for testing
@@ -37,7 +47,36 @@ export const Map = (props) => {
             const link = URL.createObjectURL(blob)
             setImage(link)
         }).catch(e=>console.log(e))
+  }
+
+    /*
+
+    Axios methods aren't working since the response type is json and cant be converted to blob
+
+    const getImage =  () => {
+        const formData = new FormData();
+        formData.append('floor_id', '1');
+
+        const options = {
+          url: mapLink,
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Accept': 'application/json, text/plain, *//*',
+          },
+          data: formData
+        }
+
+        axios(options).
+          then(response => {
+              console.log(response)
+              return response.blob()
+          }).then(blob => {
+              const link = URL.createObjectURL(blob)
+              setImage(link)
+          }).catch(e=>console.log(e))
     }
+    */
 
     useEffect(() => { getImage(); }, []);
 
@@ -151,3 +190,5 @@ export const Map = (props) => {
         </div>
     );
 }
+
+export default Map;
