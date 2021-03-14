@@ -76,8 +76,10 @@ export default class QAGenerator extends React.Component {
     }
 
     updateList = async () => {
-      var newQA = await axios.get(`http://127.0.0.1:5001/server/qa`);
-      if(!_.isEqual(newQA.data, this.state.oldQA)){
+      var newQA = await axios.get(`http://127.0.0.1:5001/server/qa`).
+        catch( newQA => newQA);
+      const robot_not_found = newQA instanceof Error;
+      if(!robot_not_found && !_.isEqual(newQA.data, this.state.oldQA)){
         var QAs = newQA.data;
         this.clearRows();
         QAs.QAList.forEach(QA => {
