@@ -6,12 +6,14 @@ import requests
 import json
 import actionlib
 from robotic_docent_core.msg import Piece, MotionAction, MotionGoal, PresentAction, PresentGoal
+from std_msgs.msg import String
 
 app = Flask(__name__)
 
 web_server = 'http://59dd7ccff6fa.ngrok.io/'
 web_server_local = 'http://127.0.0.1:5001'
 rospy.init_node("server")
+
 
 # Route for all tours of the day
 @app.route('/server/tour', methods=['GET'])
@@ -21,10 +23,10 @@ def museum_tours():
     
     params = {"floor_id": floor_id, "museum_id": museum_id}
     try:
-        museum_tours = requests.get(web_server + '/museum/tour', params=params)
+        museum_tours = requests.get(web_server + '/tour', params=params)
         return museum_tours
     except:
-        return {"success": False, msg: "Couldn't reach server"}
+        return {"success": False, "msg": "Couldn't reach server"}
 
 # Route for a piece
 @app.route('/server/piece', methods=['GET'])
@@ -34,10 +36,10 @@ def tour_piece():
 
     params = {"tour_id": tour_id, "piece_count": piece_count}
     try:
-        tour_piece = requests.get(web_server + '/museum/tour/piece', params=params)
+        tour_piece = requests.get(web_server + '/tour/piece', params=params)
         return tour_piece
     except:
-        return {"success": False, msg: "Couldn't reach server"}
+        return {"success": False, "msg": "Couldn't reach server"}
 
 # Route for an exhibit
 @app.route('/server/exhibit', methods=['GET'])
@@ -46,10 +48,10 @@ def tour_exhibit():
     exhibit_id = request.args.get('exhibit_id', default = "" , type = str)
     params = {"exhibit_id": exhibit_id}
     try:
-        tour_exhibit = requests.get(web_server + '/museum/piece/exhibit', params=params)
+        tour_exhibit = requests.get(web_server + '/piece/exhibit', params=params)
         return tour_exhibit.json()
     except:
-        return {"success": False, msg: "Couldn't reach server"}
+        return {"success": False, "msg": "Couldn't reach server"}
 
 # Route for tour info
 @app.route('/server/tour/info', methods=['GET'])
@@ -57,10 +59,10 @@ def tour_info():
     tour_id = request.args.get('tour_id', default="", type = str)
     params= {"tour_id": tour_id}
     try:
-        tour_info = requests.get(web_server + '/museum/tour/info', params=params)
+        tour_info = requests.get(web_server + '/tour/info', params=params)
         return tour_exhibit.json()
     except:
-        return {"success": False, msg: "Couldn't reach server"}
+        return {"success": False, "msg": "Couldn't reach server"}
 
 @app.route('/server/qa', methods=['GET'])
 def send_questions():
@@ -72,15 +74,28 @@ def send_questions():
 @app.route('/start_tour', methods=['GET'])
 def start_tour():
     tour_id = request.args.get('tour_id', default="", type = str)
+    publisher = rospy.Publisher("start_tour_publisher", String, queue_size=1)
     try:
+        ac = actionlib.SimpleActionClient("tour_functionality", PresentAction)
+        while(not ac.wait_for_server(rospy.Duration.from_sec(5.0))):
+            rospy.loginfo("Waiting for the move_base action server to come up")
         present_tour_id = PresentGoal()
-        present_tour_id.description = tour_id
+
+        present_tour_id.description = tour_id.description
+        publisher.publish(str(present_tour_id))
+        cache_file = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/log.txt", "w+")
+        cache_file.write(str(present_tour_id))
+        publisher.publish("Sending to tour_func action server..")
+        
         # tour_info = requests.get(web_server_local + '/server/tour/info', params={"tour_id": tour_id}).json()
-        ac = actionlib.SimpleActionClient('tour_functionality', PresentAction)
-        ac.send_goal_and_wait(present_tour_id)
-        return {"success": True, msg: "ayy lmao"}
+        publisher.publish("Sending to tour_func action server after waiting.")
+        ROS_INFO("Waiting for server")
+        ac.send_goal_and_wait(present_tour_id,execute_timeout=rospy.Duration(60))
+        publisher.publish("Sent to tour_func action server after waiting.")
+        #ac.wait_for_result()
+        return {"success": True, "msg": "ayy lmao"}
     except:
-        return {"success": False, msg: "Couldn't reach server"}
+        return {"success": False, "msg": "Couldn't reach server"}
 
 
 @app.route('/', methods=['GET'])

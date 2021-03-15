@@ -7,18 +7,20 @@ from math import radians, degrees
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Point
 from robotic_docent_core.msg import Piece, MotionAction, MotionGoal,  PresentAction, PresentGoal
+from std_msgs.msg import String
 
 class map_navigation:
   def __init__(self):
     # initiliaze
     self.server = actionlib.SimpleActionServer("map_navigation", MotionAction, self.navigate, False)
+    self.map_navigation_publisher = rospy.Publisher("map_navigation_publisher", String, queue_size=1)
     self.server.start()
 
   def navigate(self, nav):
       #define a client for to send goal requests to the move_base server through a SimpleActionClient
-      
+      self.map_navigation_publisher.publish("In map navigation")
       ac = actionlib.SimpleActionClient("move_base", MoveBaseAction)
-      
+      self.map_navigation_publisher.publish("Connecting to move base")
       #wait for the action server to come up
       while(not ac.wait_for_server(rospy.Duration.from_sec(5.0))):
               rospy.loginfo("Waiting for the move_base action server to come up")
@@ -32,12 +34,12 @@ class map_navigation:
 
       # moving towards the goal
 
-      goal.target_pose.pose.position =  nav   
+      goal.target_pose.pose.position = Point(nav.goal_x, nav.goal_y, 0)   
       goal.target_pose.pose.orientation.x = 0.0
       goal.target_pose.pose.orientation.y = 0.0
       goal.target_pose.pose.orientation.z = 0.0
       goal.target_pose.pose.orientation.w = 1.0
-
+      self.map_navigation_publisher.publish("Sending goal to move base")
       rospy.loginfo("Sending goal location ...")
       ac.send_goal_and_wait(goal)
       # ac.wait_for_result(rospy.Duration(60))

@@ -87,7 +87,7 @@ class PieceValidate(BaseModel):
     @validator('exhibit_id')
     def valid_id(cls, v):
         if len(v) <= 0 or len(v) > 128:
-            raise ValueError('Museum name must be within 1-128 characters')
+            raise ValueError('Exhibit ID is not valid')
         return v
 
     @validator('title')

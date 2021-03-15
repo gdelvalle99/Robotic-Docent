@@ -10,12 +10,12 @@ class PresentState:
     def __init__(self):
         self.server = actionlib.SimpleActionServer('present_state', PresentAction, self.execute, False)
         self.server.start()
-        self.publisher = rospy.Publisher('present', String)
+        self.publisher = rospy.Publisher('present', String, queue_size=1)
     
     def execute(self, goal):
         # Send goal to phone
         # Send goal to voice module
-        self.publisher.publish(goal)
+        self.publisher.publish(goal.description)
         self.server.set_succeeded()
 
 rospy.init_node("present_state_server")
