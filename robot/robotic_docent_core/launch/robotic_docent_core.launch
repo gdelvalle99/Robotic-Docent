@@ -1,0 +1,16 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find robotic_docent_core)/stage_config/maps/museum-test.pgm .025"
+        respawn="true"/>
+
+    <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic_docent_core)/stage_config/worlds/museum-test.world"
+        output="screen"/>
+
+    <include file="$(find robotic_docent_core)/move_base_config/amcl_node.xml"/> 
+    <include file="$(find robotic_docent_core)/move_base_config/move_base.xml"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotic_docent_core)/single_robot.rviz" />
+    <node name="tour" pkg="robotic_docent_core" type="tour_functionality.py" />
+    <node name="tour_server" pkg="robotic_docent_core" type="server.py" />
+    <node name="map_navigation" pkg="robotic_docent_core" type="map_navigation.py" />
+    <include file="$(find robotic_docent_core)/launch/robotic_docent_state.launch" />
+</launch>

@@ -1,0 +1,8 @@
+# Define the goal
+string description
+---
+# Define the result
+string finished
+---
+# Define a feedback message
+string current_word

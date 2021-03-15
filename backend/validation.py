@@ -44,10 +44,17 @@ class ExhibitValidate(BaseModel):
 
     @validator('floor_id')
     def id_valid(cls, v):
+<<<<<<< HEAD
         if len(v) <= 0 or len(v) > 128:
             raise ValueError('Floor ID is not valid')
+=======
+        print(len(v))
+        print(v)
+        if len(v) <= 0 or len(v) > 128:
+            raise ValueError('Museum ID must be within 1-128 characters')
+>>>>>>> 71681a1a1c4b899c943d610f5fb172eab4b2a57a
         return v
-
+    
     @validator('title')
     def title_valid(cls, v):
         if len(v) <= 0 or len(v)>32:
@@ -87,7 +94,11 @@ class PieceValidate(BaseModel):
     @validator('exhibit_id')
     def valid_id(cls, v):
         if len(v) <= 0 or len(v) > 128:
+<<<<<<< HEAD
             raise ValueError('Exhibit ID is not valid')
+=======
+            raise ValueError('Museum name must be within 1-128 characters')
+>>>>>>> 71681a1a1c4b899c943d610f5fb172eab4b2a57a
         return v
 
     @validator('title')
