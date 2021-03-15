@@ -9,12 +9,15 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from math import radians, degrees
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Point
+import json
 
 from robotic_docent_core.msg import Piece, MotionAction, MotionGoal, PresentAction, PresentGoal
 
 class Tour:
     def __init__(self):
         # initiliaze
+        self.init_publisher = rospy.Publisher("init_publisher", String, queue_size=1)
+        print("Initializing tour")
         self.server = actionlib.SimpleActionServer("tour_functionality", PresentAction, self.execute, False)
         self.server.start()
     
@@ -28,21 +31,25 @@ class Tour:
     #     return tours
 
     def execute(self, tour_id):
+        print("Executing")
         current_piece = 0
-
-        status_publisher = rospy.Publisher('status', String, queue_size=1)
+        print("Starting states")
+        status_publisher = rospy.Publisher('tour_status_func', String, queue_size=1)
+        #self.init_publisher.publish("Initializing states")
         start_client = actionlib.SimpleActionClient('start_state', PresentAction)
         move_client = actionlib.SimpleActionClient('move_state', MotionAction)
         present_client = actionlib.SimpleActionClient('present_state', PresentAction)
         interactive_client = actionlib.SimpleActionClient('interactive_state', PresentAction)
-
         # Start state
         piece_msg = PresentGoal()
         start_msg = "Hello! The tour will be starting soon."
-        status_publisher.publish("Starting up tour.")
-    
-        params = {"tour_id": tour_id}
-        tour_info = requests.get('http://localhost:5000/tour/info', params=params)
+        self.init_publisher.publish("Starting up tour.")
+        print("Sending requests")
+        params = {"tour_id": tour_id.description}
+        tour_info = requests.get('http://fcd554554b1a.ngrok.io/tour/info', params=params)
+        cache_file = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/log.txt", "w+")
+        cache_file.write(str(tour_info.text))
+
         tour_length = len(tour_info['pieces'])
         start_client.send_goal_and_wait(start_msg)
         piece_coordinates = MotionGoal()
@@ -50,7 +57,7 @@ class Tour:
         # Loop for exhibits
         for step in range(tour_length):
             piece_params = {"tour_id": tour_id, "piece_count": step}
-            next_piece = requests.get('http://localhost:5000/server/piece', params = piece_params)
+            next_piece = requests.get('http://fcd554554b1a.ngrok.io/tour/piece', params = piece_params)
             piece_coordinates.goal_x = next_piece['coordinates'][0]
             piece_coordinates.goal_y = next_piece['coordinates'][1]
             piece_msg.description = next_piece['description']
@@ -58,6 +65,7 @@ class Tour:
             present_client.send_goal_and_wait(piece_msg)
             self.cache_questions(piece_msg.questions, piece_msg.answers)
             interactive_client.send_goal_and_wait(piece_msg)
+        self.server.set_succeeded()
 
     def cache_questions(self, piece_questions, piece_answers):
         data = {}
@@ -70,7 +78,8 @@ class Tour:
 
 rospy.init_node('main_docent')
 tour_server = Tour()
-
+main_docent_publisher = rospy.Publisher("main_docent_publisher", String, queue_size=1)
+main_docent_publisher.publish("Node is activated")
 # try:
 #     tour = Tour()
 #     tours = tour.initialize()
