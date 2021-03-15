@@ -1,14 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import roslib
-roslib.load_manifest('robotic-docent-core')
 import rospy
 import actionlib
-from std_msgs import String
+from std_msgs.msg import String
+from robotic_docent_core.msg import Piece, MotionAction, MotionGoal, PresentAction, PresentGoal
 
 class IdleState:
     def __init__(self):
-        self.server = actionlib.SimpleActionServer('idle_state', String, self.execute, False)
+        self.server = actionlib.SimpleActionServer('idle_state', PresentAction, self.execute, False)
         self.server.start()
     
     def execute(self, goal):

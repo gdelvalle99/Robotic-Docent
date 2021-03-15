@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>robotic-docent-core</name>
+  <name>robotic_docent_core</name>
   <version>0.0.0</version>
   <description>The robotic-docent-core package</description>
 
@@ -78,6 +78,11 @@
   <exec_depend>tf</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
+  <build_depend>actionlib</build_depend>
+  <exec_depend>actionlib</exec_depend>
+
 
 
 

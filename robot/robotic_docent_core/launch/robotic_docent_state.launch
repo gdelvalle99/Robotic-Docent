@@ -1,0 +1,8 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+    <node name="start_state" pkg="robotic_docent_core" type="start.py" />
+    <node name="motion_state" pkg="robotic_docent_core" type="motion.py" />
+    <node name="interactive_state" pkg="robotic_docent_core" type="interactive.py" />
+    <node name="error_state" pkg="robotic_docent_core" type="error.py" />
+    <node name="present_state" pkg="robotic_docent_core" type="present.py" />
+</launch>
