@@ -1,7 +1,1 @@
-{
-    "QAList": [
-        {"question": "Q4", "answer": "A1"},
-        {"question": "Q5", "answer": "A2"},
-        {"question": "Q6", "answer": "A3"}
-    ]
-}
+{"QAList": []}

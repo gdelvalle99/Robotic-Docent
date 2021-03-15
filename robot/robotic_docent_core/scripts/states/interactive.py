@@ -24,7 +24,7 @@ class InteractiveState:
         t = self.timeout
         ac = actionlib.SimpleActionClient('present_state', PresentAction)
         while t:
-            if len(self.queue) == 0:
+            if len(self.queue.queue) == 0:
                 mins, secs = divmod(t, 60) 
                 timer = '{:02d}:{:02d}'.format(mins, secs)  
                 time.sleep(1)
@@ -33,7 +33,7 @@ class InteractiveState:
                 t = self.timeout
                 ac.send_goal_and_wait(queue.pop())
                     
-        self.server.set_succeeded()
+        self.interactive_server.set_succeeded()
     
     def add_to_queue(self, goal):
         self.queue.put(goal)

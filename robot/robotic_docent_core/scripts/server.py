@@ -14,6 +14,7 @@ web_server = 'http://59dd7ccff6fa.ngrok.io/'
 web_server_local = 'http://127.0.0.1:5001'
 rospy.init_node("server")
 
+
 # Route for all tours of the day
 @app.route('/server/tour', methods=['GET'])
 def museum_tours():
@@ -75,17 +76,23 @@ def start_tour():
     tour_id = request.args.get('tour_id', default="", type = str)
     publisher = rospy.Publisher("start_tour_publisher", String, queue_size=1)
     try:
+        ac = actionlib.SimpleActionClient("tour_functionality", PresentAction)
+        while(not ac.wait_for_server(rospy.Duration.from_sec(5.0))):
+            rospy.loginfo("Waiting for the move_base action server to come up")
         present_tour_id = PresentGoal()
-        present_tour_id.description = tour_id
+
+        present_tour_id.description = tour_id.description
+        publisher.publish(str(present_tour_id))
+        cache_file = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/log.txt", "w+")
+        cache_file.write(str(present_tour_id))
         publisher.publish("Sending to tour_func action server..")
+        
         # tour_info = requests.get(web_server_local + '/server/tour/info', params={"tour_id": tour_id}).json()
-        ac = actionlib.SimpleActionClient('tour_functionality', PresentAction)
-        ac.wait_for_server()
         publisher.publish("Sending to tour_func action server after waiting.")
         ROS_INFO("Waiting for server")
-        ac.send_goal(present_tour_id)
+        ac.send_goal_and_wait(present_tour_id,execute_timeout=rospy.Duration(60))
         publisher.publish("Sent to tour_func action server after waiting.")
-        ac.wait_for_result()
+        #ac.wait_for_result()
         return {"success": True, "msg": "ayy lmao"}
     except:
         return {"success": False, "msg": "Couldn't reach server"}
