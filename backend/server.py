@@ -157,19 +157,19 @@ def get_tours():
         return {"success": False, msg: str(e)}
 
 # Route in progress. Returns the next piece in the tour
-@app.route('/museum/tour/piece', methods=['GET'])
-def get_tour_piece():
-    tour_id = request.args.get('tour_id', default = tour_id, type = int)
-    piece_count = request.args.get('piece_count', default = piece_count, type = int)
-    try:
-        piece_id = db.session.query(Tour).filter(Tour.id == tour_id).select(Tour.pieces)
-        piece_id = piece_id[piece_count]
-        piece = db.session.query(Piece).filter(Piece.id == piece_id)
-        serialized_piece = [i.serialize() for i in piece]
-        return {"success": True, "piece": serialized_piece}
-    except SQLAlchemyError as e:
-        print(type(e), e)
-        return {"success": False, msg: str(e)}
+# @app.route('/museum/tour/piece', methods=['GET'])
+# def get_tour_piece():
+#     tour_id = request.args.get('tour_id', default = tour_id, type = int)
+#     piece_count = request.args.get('piece_count', default = piece_count, type = int)
+#     try:
+#         piece_id = db.session.query(Tour).filter(Tour.id == tour_id).select(Tour.pieces)
+#         piece_id = piece_id[piece_count]
+#         piece = db.session.query(Piece).filter(Piece.id == piece_id)
+#         serialized_piece = [i.serialize() for i in piece]
+#         return {"success": True, "piece": serialized_piece}
+#     except SQLAlchemyError as e:
+#         print(type(e), e)
+#         return {"success": False, msg: str(e)}
 
 # Route in progress. Returns exhibit that belongs to the current
 # piece

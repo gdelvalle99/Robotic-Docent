@@ -19,6 +19,7 @@ from .routes.floor import floor
 from .routes.museum import museum
 from .routes.piece import piece
 from .routes.user import user
+from .routes.tour import tour
 
 def create_app():
     app = Flask(__name__)
@@ -38,6 +39,7 @@ def create_app():
     app.config["museum.db"] = db
     app.config["piece.db"] = db
     app.config["user.db"] = db
+    app.config["tour.db"] = db
 
     # Register Blueprints
     app.register_blueprint(auth)
@@ -46,6 +48,7 @@ def create_app():
     app.register_blueprint(museum)
     app.register_blueprint(piece)
     app.register_blueprint(user)
+    app.register_blueprint(tour)
 
     # Enable CORS
     # cors = CORS(app)
