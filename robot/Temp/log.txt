@@ -1,0 +1,4 @@
+{
+  "msg": "(psycopg2.errors.UndefinedColumn) column tours.pieces does not exist\nLINE 1: ...nt, tours.question_count AS tours_question_count, tours.piec...\n                                                             ^\n\n[SQL: SELECT tours.id AS tours_id, tours.museum_id AS tours_museum_id, tours.robot_id AS tours_robot_id, tours.tour_date AS tours_tour_date, tours.start_time AS tours_start_time, tours.duration AS tours_duration, tours.interaction_count AS tours_interaction_count, tours.question_count AS tours_question_count, tours.pieces AS tours_pieces \nFROM tours \nWHERE tours.id = %(id_1)s]\n[parameters: {'id_1': 'ecc1e478-9ad2-45a1-afa9-06f4e69d565f'}]\n(Background on this error at: http://sqlalche.me/e/13/f405)", 
+  "success": false
+}
