@@ -22,7 +22,7 @@ export const ExhibitSidebar = (props) => {
     }
 
     const setInitialExhibitList = () => {
-        if (props != null) {
+        if (props.exhibitListContainer.exhibits != null) {
             setExhibitList(props.exhibitListContainer.exhibits);
         }  
     }
