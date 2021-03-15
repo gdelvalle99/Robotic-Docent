@@ -5,7 +5,6 @@ const floor_id = "476411ee-df58-4b98-8da6-4514d2fc0433"
 const floorLink = baseLink+"/floor/exhibits?id="+floor_id
 const newExhibitLink = baseLink+"/exhibit/new"
 const existingExhibitLink = baseLink+"/exhibit/update"
-const floorLink = baseLink+"/floor/exhibits?id="
 const demoLink = "http://decd071e058d.ngrok.io/start_tour"
 
 
