@@ -28,7 +28,7 @@ export const Map = (props) => {
  
     const getImage = () => {
         const formData = new FormData();
-        formData.append('floor_id', 'eeef652e-5759-45c8-91ab-045ca40c721a'); // just for testing
+        formData.append('floor_id', '476411ee-df58-4b98-8da6-4514d2fc0433'); // just for testing
 
         const token = localStorage.getItem('auth_token') || "";
         fetch(mapLink

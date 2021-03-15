@@ -8,6 +8,10 @@ import { DialogTitle } from '@material-ui/core';
 import { Divider } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { newExhibitLink } from '../links';
+import { existingExhibitLink } from '../links';
+import { floor_id } from '../links';
+import axios from 'axios';
 
 const convertSimpleISODate = function(dateString) {
     if (dateString) {
@@ -48,22 +52,39 @@ const useStyles = makeStyles((theme) =>
     }),
 );
 
-const question1 = "What's the deal with airline food?";
-const answer1 = "It's pretty plane";
-const question2 = "How are you doing?";
-const answer2 = "I'm good, how are you?";
-const question3 = "How much does this cost?";
-const answer3 = "This costs $300";
-
 export const ExhibitSidebarModal = (props) => {
     const classes = useStyles();
     const [exhibit, setExhibit] = useState(props);
     const [openModal, setOpenModal] = useState(false);
     const [titleFlag, setTitleFlag] = useState(false);
+    const [newFlag, setNewFlag] = useState(true);
+
+    //Handles save and sending post request for new exhibit to add to the floor
+    const handleSaveNewExhibit = () => {
+        let data = {...exhibit, floor_id: floor_id}
+        let r = axios.post(newExhibitLink, data)
+            .then(function (response) {
+                return response.data;
+            }).then(d => {
+                setExhibit({...exhibit, id:d.id})
+            }).catch(e=>console.log(e))
+    }
+
+    const handleSaveExistingExhibit = () => {
+        let r = axios.post(existingExhibitLink, exhibit)
+            .catch(e=>console.log(e))
+    }
 
     //Handles opening and closing of modal with the validation for the title field being required
     const handleCloseModal = () => {
         if (exhibit.title != null && exhibit.title != "") {
+            if (newFlag) {
+                handleSaveNewExhibit();
+                setNewFlag(false);
+            }
+            else {
+                handleSaveExistingExhibit();
+            }
             setTitleFlag(false);
             setOpenModal(false);
         }
@@ -101,6 +122,10 @@ export const ExhibitSidebarModal = (props) => {
     useEffect(() => {
         if (props.title == null) {
             handleOpenModal();
+            setNewFlag(true);
+        }
+        else {
+            setNewFlag(false);
         }
         setInitialExhibit(); 
     }, []);
