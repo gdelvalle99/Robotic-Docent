@@ -6,6 +6,7 @@ import { DialogActions } from '@material-ui/core';
 import { DialogTitle } from '@material-ui/core';
 import { demoLink } from '../links';
 import NavigationIcon from '@material-ui/icons/Navigation';
+import axios from 'axios'
 
 export const Home = () => {
     const [open, setOpen] = useState(false);
@@ -18,24 +19,30 @@ export const Home = () => {
         const data = {};
         console.log(JSON.stringify(data));
 
-        fetch(demoLink
-            , {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+        // fetch(demoLink
+        //     , {
+        //         method: 'GET',
+        //         mode: 'cors',
+        //         headers: {
+        //             'Accept': 'application/json, text/plain, */*',
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(data)
+        //     }
+        // ).then(response => {
+        //     return response.json()
+        // }).then(responseJSON => {
+        //     if(responseJSON.success){
+        //         setOpen(true)
+        //     }
+        // })
+        // .catch(e=>console.log(e))
+
+        axios.get(demoLink, {
+            params: {
+                tour_id: "ecc1e478-9ad2-45a1-afa9-06f4e69d565f"
             }
-        ).then(response => {
-            return response.json()
-        }).then(responseJSON => {
-            if(responseJSON.success){
-                setOpen(true)
-            }
-        })
-        .catch(e=>console.log(e))
+        }).then(r=>console.log(r)).catch(e=>console.log(e))
     }
 
     return (
