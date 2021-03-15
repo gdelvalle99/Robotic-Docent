@@ -81,19 +81,18 @@ def start_tour():
             rospy.loginfo("Waiting for the move_base action server to come up")
         present_tour_id = PresentGoal()
 
-        present_tour_id.description = tour_id.description
+        present_tour_id.description = tour_id
         publisher.publish(str(present_tour_id))
         cache_file = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/log.txt", "w+")
         cache_file.write(str(present_tour_id))
         publisher.publish("Sending to tour_func action server..")
         
-        # tour_info = requests.get(web_server_local + '/server/tour/info', params={"tour_id": tour_id}).json()
         publisher.publish("Sending to tour_func action server after waiting.")
         ROS_INFO("Waiting for server")
-        ac.send_goal_and_wait(present_tour_id,execute_timeout=rospy.Duration(60))
+        ac.send_goal_and_wait(present_tour_id)
         publisher.publish("Sent to tour_func action server after waiting.")
         #ac.wait_for_result()
-        return {"success": True, "msg": "ayy lmao"}
+        return {"success": True, "msg": "Success!"}
     except:
         return {"success": False, "msg": "Couldn't reach server"}
 
