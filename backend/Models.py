@@ -231,4 +231,4 @@ class User(BaseModel, db.Model):
         self.set_password(password)
         self.permission_level = permission_level
         self.museum_id = museum_id
-        self.last_login = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.last_login = datetime.now().strftime("%m/%d/%Y %H:%M:%S")

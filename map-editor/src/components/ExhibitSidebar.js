@@ -7,7 +7,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 const useStyles = makeStyles((theme) =>
     createStyles({
         buttonSidebarStyle: {
-            margin: 5,
+            marginTop: 0,
+            margin: 10,
             border: '2px dashed #EBEBEB'
         }
     }),
