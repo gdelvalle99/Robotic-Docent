@@ -28,8 +28,7 @@ function App() {
     }, []);
 
     return (
-        <div>
-            {/* <div className="map-editor-body"> */}
+        <div className="map-editor-body">
             {loggedIn ? (
                 <NavigationBar />
             ) : (
@@ -37,7 +36,6 @@ function App() {
                     <Login logIn={() => setLoggedIn(true)} />
                 </div>
             )}
-            {/* </div> */}
         </div>
     );
 }

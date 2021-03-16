@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ExhibitModalQuestionSet } from './ExhibitModalQuestionSet';
-import { Box } from '@material-ui/core';
+import { Card } from '@material-ui/core';
+import { CardHeader } from '@material-ui/core'; 
 import { Dialog } from '@material-ui/core';
 import { DialogActions } from '@material-ui/core';
 import { DialogContent } from '@material-ui/core';
@@ -26,11 +27,12 @@ const convertSimpleISODate = function(dateString) {
 
 const useStyles = makeStyles((theme) =>
     createStyles({
-        box: {
-            margin: 1,
-            padding: 10,
+        card: {
+            margin: 10,
+            padding: 5,
             "&:hover": {
                 backgroundColor: '#EBEBEB',
+                transition: 'background-color 0.4s ease',
                 cursor: 'pointer'
             }
         },
@@ -132,10 +134,14 @@ export const ExhibitSidebarModal = (props) => {
 
     return (
         <div id={"exhibit-item-id-" + exhibit.id}>
-            <Box className={classes.box} onClick={handleOpenModal}>
-                <h2>{exhibit.title}</h2>
-                <p>{exhibit.subtitle}</p>
-            </Box>
+            <Card className={classes.card} onClick={handleOpenModal}>
+                <CardHeader 
+                    title={exhibit.title}
+                    titleTypographyProps={{variant: 'h5'}}
+                    subheader={exhibit.subtitle} 
+                    subheaderTypographyProps={{variant: 'body1'}}
+                />
+            </Card>
             <Dialog open={openModal} onClose={handleCloseModal} fullWidth={true}>
                 <DialogTitle>
                     <div className="exhibit-item-header">
