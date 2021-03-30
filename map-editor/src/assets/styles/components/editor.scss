@@ -135,3 +135,14 @@
 .MuiCardHeader-root {
     height: 6rem;
 }
+
+.exhibit-delete-button {
+    margin: 1rem;
+    float: right;
+    .MuiButton-root {
+        background-color: lighten($primary-color, 20%);
+    }
+    button:hover {
+        background-color: $primary-color;
+    }
+}

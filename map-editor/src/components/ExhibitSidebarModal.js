@@ -8,11 +8,8 @@ import { DialogContent } from '@material-ui/core';
 import { DialogTitle } from '@material-ui/core'; 
 import { Divider } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { newExhibitLink } from '../links';
-import { existingExhibitLink } from '../links';
-import { floor_id } from '../links';
-import axios from 'axios';
 
 const convertSimpleISODate = function(dateString) {
     if (dateString) {
@@ -56,36 +53,23 @@ const useStyles = makeStyles((theme) =>
 
 export const ExhibitSidebarModal = (props) => {
     const classes = useStyles();
-    const [exhibit, setExhibit] = useState(props);
+    const [exhibit, setExhibit] = useState(props.exhibit);
     const [openModal, setOpenModal] = useState(false);
     const [titleFlag, setTitleFlag] = useState(false);
     const [newFlag, setNewFlag] = useState(true);
-
-    //Handles save and sending post request for new exhibit to add to the floor
-    const handleSaveNewExhibit = () => {
-        let data = {...exhibit, floor_id: floor_id}
-        let r = axios.post(newExhibitLink, data)
-            .then(function (response) {
-                return response.data;
-            }).then(d => {
-                setExhibit({...exhibit, id:d.id})
-            }).catch(e=>console.log(e))
-    }
-
-    const handleSaveExistingExhibit = () => {
-        let r = axios.post(existingExhibitLink, exhibit)
-            .catch(e=>console.log(e))
-    }
 
     //Handles opening and closing of modal with the validation for the title field being required
     const handleCloseModal = () => {
         if (exhibit.title != null && exhibit.title != "") {
             if (newFlag) {
-                handleSaveNewExhibit();
+                const idPromise = props.handleSaveNewExhibit(exhibit);
+                idPromise.then(d => {
+                    setExhibit({...exhibit, id: d});
+                });
                 setNewFlag(false);
             }
             else {
-                handleSaveExistingExhibit();
+                props.handleSaveExistingExhibit(exhibit);
             }
             setTitleFlag(false);
             setOpenModal(false);
@@ -117,12 +101,12 @@ export const ExhibitSidebarModal = (props) => {
 
     //Initial set for current exhibits
     const setInitialExhibit = () => {
-        setExhibit(props);        
+        setExhibit(props.exhibit);        
     }
 
     //Initial render of existent exhibits and opens modal on instancing new exhibit
     useEffect(() => {
-        if (props.title == null) {
+        if (props.exhibit.title == null) {
             handleOpenModal();
             setNewFlag(true);
         }
@@ -253,6 +237,9 @@ export const ExhibitSidebarModal = (props) => {
                         />
                         <div className="exhibit-item-qna-cards">
                             <ExhibitModalQuestionSet questions={exhibit.questions} answers={exhibit.answers} handleSetUpdate={updateQuestionSet} styleContainer={classes.cardContainer} buttonStyle={classes.buttonQuestionStyle}/>
+                        </div>
+                        <div className="exhibit-delete-button">
+                            <Button onClick={() => props.handleDeleteExhibit(exhibit.id)} variant="outlined">Delete</Button>
                         </div>
                     </div>
                 </DialogContent>
