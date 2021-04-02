@@ -18,6 +18,33 @@ def record(state):
 def before_request():
     valid_login(request)
 
+# Expects json with values [id: str, title: str, subtitle: str, description: str, start_date: date]
+# Returns a json object
+@exhibit.route('/update', methods=['POST'])
+def update_exhibit():
+    if request.method == 'POST':
+
+        data = request.get_json()
+
+        db = current_app.config["exhibit.db"]
+
+        try:
+            existingExhibit = db.session.query(Exhibit).filter(Exhibit.id==data['id']).one()
+            if (existingExhibit is not None):
+                existingExhibit.title = data['title']
+                existingExhibit.subtitle = data['subtitle']
+                existingExhibit.description = data['description']
+                existingExhibit.start_date = data['start_date']
+                db.session.commit()
+                return {"success": True, "msg": "Successfully updated the exhibit"} 
+            else:
+                return {"success": False, "msg": "Exhibit does not exist"}
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
 # Expects json with values [floor_id: str, title: str, subtitle: str, description: str, start_date: date]
 # Returns a json object
 @exhibit.route('/new', methods=['POST'])
@@ -50,14 +77,14 @@ def create_exhibit():
         try:
             db.session.add(exhibit)
             db.session.commit()
-            return {"success": True, "msg": "Successfully created a new exhibit"}  
+            
+            return {"success": True, "msg": "Successfully created a new exhibit", "id": str(exhibit.id)}  
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg": str(e)}
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# DUMMY ROUTE FOR NOW, ONLY RETREIVES PIECES FOR EXHIBITS WITH ID 1, SHOULD CHANGE
 # Returns a json object with a list of exhibits given a set floor
 @exhibit.route('/pieces', methods=['GET'])
 def get_exhibit_pieces():

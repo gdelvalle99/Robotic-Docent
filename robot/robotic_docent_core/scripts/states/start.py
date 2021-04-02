@@ -15,7 +15,7 @@ class StartState:
     def execute(self, goal):
         # Send goal to phone
         # Send goal to voice module
-        self.publisher.publish(goal)
+        self.publisher.publish(goal.description)
         self.server.set_succeeded()
 
 rospy.init_node("start_state_server")

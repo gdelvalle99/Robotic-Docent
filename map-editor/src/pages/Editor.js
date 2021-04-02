@@ -15,7 +15,6 @@ export const Editor = () => {
                 return response;
             }).then(item => {
                 const e = item.data;
-                console.log(e);
                 setExhibitListContainer(e);
             }).catch(e=>console.log(e))
 
