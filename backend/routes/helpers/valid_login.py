@@ -2,6 +2,7 @@ from flask import abort, current_app
 from ...Models import User
 
 def valid_login(request):
+    return
     if request.method == 'OPTIONS':
         return
     if not 'Authentification' in request.headers:
