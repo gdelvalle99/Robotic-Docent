@@ -92,8 +92,8 @@ class PieceValidate(BaseModel):
 
     @validator('title')
     def title_valid(cls, v):
-        if len(v) <= 0 or len(v)>32:
-            raise ValueError('Title must be within 1-32 characters')
+        if len(v) <= 0 or len(v)>128:
+            raise ValueError('Title must be within 1-128 characters')
         return v
     
     @validator('author')
