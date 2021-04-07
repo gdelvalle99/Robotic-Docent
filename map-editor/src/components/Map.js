@@ -31,9 +31,7 @@ export const Map = (props) => {
     const [el, setEl] = useState(null);
     const [loc, setLoc] = useState([]);
     useTraceUpdate({image,open,openPiece,piece,el});
-
-    // console.trace(piece)
-
+    
     const handleClose = () => {
         setOpen(false);
     };
@@ -89,7 +87,7 @@ export const Map = (props) => {
         getImage();
     }, []);
 
-    const places = [
+    const places_arr = [
         {
             title:
                 "The Physical Impossibility of Death in the Mind of Someone Living",
@@ -104,14 +102,12 @@ export const Map = (props) => {
         
     ];
 
-    // var pt = document.getElementById('map').createSVGPoint();  // Created once for document
-
+    const [places, setPlaces] = useState(places_arr)
 
     const [svg,setSvg] = useState(null);
 
     useEffect(()=>{
       let oop = document.getElementById('map')
-      console.log("in affect",oop)
       setSvg(oop)
     }, [])
 
@@ -121,22 +117,30 @@ export const Map = (props) => {
         pt.y = evt.clientY;
     
         // The cursor point, translated into svg coordinates
-        var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
-        console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
+        let cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
         return [cursorpt.x, cursorpt.y]
     }
 
     const handleMouseMove = function(event) {
-      // console.log(event.screenX, event.screenY, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
-      var e = event.target;
-      var dim = e.getBoundingClientRect();
-      var x = event.clientX - dim.left;
-      var y = event.clientY - dim.top;
-      console.log(x,y)
-      let ans = alert_coords(event)   
-      ans[0] -= 3
-      ans[1] -= 6
-      setLoc(ans)
+      if(!editLoc) return;
+      let ans = alert_coords(event);
+      ans[0] -= 3;
+      ans[1] -= 6;
+      setLoc(ans);
+      handleOpenClick();
+      setEditLoc(false);
+    }
+
+    const [editLoc, setEditLoc] = useState(false);
+
+    const handleLocation = () => {
+      setEditLoc(true);
+      handleClose();
+    }
+
+    const addToPlaces = (place) => {
+      setPlaces(prev=>[...prev, {...place, coords: loc}]);
+      setLoc([]); // Since we have a spot, we remove the dot
     }
 
     return (
@@ -211,7 +215,7 @@ export const Map = (props) => {
             >
                 <Add fontSize="large" />
             </Fab>
-            <AddExhibit open={open} handleClose={handleClose} />
+            <AddExhibit open={open} handleClose={handleClose} coords={loc} handleLocation={handleLocation} addToPlaces={addToPlaces}/>
             <PieceModal
                 open={openPiece}
                 handleClose={handlePieceClose}

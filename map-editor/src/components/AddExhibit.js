@@ -16,7 +16,32 @@ import axios from "axios";
 // import { Room } from "@material-ui/icons";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
-export const AddExhibit = ({ open, handleClose }) => {
+export const AddExhibit = ({
+    open,
+    handleClose,
+    coords,
+    handleLocation,
+    addToPlaces,
+}) => {
+    const [p, setP] = useState({
+        title: "",
+        coords,
+        author: "",
+        description: "",
+        img: "",
+    });
+
+    // console.log("in add exhibit", coords, p.coords);
+
+    const handleSave = async () => {
+        // try to save, if success then follow
+        // setP(prev=>{return{...prev, coords}})
+        // setP({title:})
+        addToPlaces(p);
+        // eraseForm();
+        handleClose();
+    };
+
     return (
         <Dialog
             open={open}
@@ -27,23 +52,14 @@ export const AddExhibit = ({ open, handleClose }) => {
                 Add a Museum Display
             </DialogTitle>
             <DialogContent>
-                <InputLabel id="demo-simple-select-label">
-                    Exhibit Location
-                </InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    style={{ width: "100%" }}
-                >
-                    <MenuItem value={10}>Modern Art</MenuItem>
-                    <MenuItem value={30}>Ancient Classical Art</MenuItem>
-                </Select>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="name"
                     label="Title"
                     type="text"
+                    value={p.title}
+                    onChange={(e) => setP({ ...p, title: e.target.value })}
                     fullWidth
                 />
                 <TextField
@@ -52,6 +68,8 @@ export const AddExhibit = ({ open, handleClose }) => {
                     id="name"
                     label="Author"
                     type="text"
+                    value={p.author}
+                    onChange={(e) => setP({ ...p, author: e.target.value })}
                     fullWidth
                 />
                 <TextField
@@ -62,9 +80,36 @@ export const AddExhibit = ({ open, handleClose }) => {
                     type="text"
                     fullWidth
                     multiline
+                    value={p.description}
+                    onChange={(e) =>
+                        setP({ ...p, description: e.target.value })
+                    }
                     rows={3}
                 />
                 <TextField
+                    autoFocus
+                    margin="dense"
+                    label="X Position"
+                    type="number"
+                    value={Math.round(coords[0] * 100) / 100 || 0}
+                    required
+                />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Y Position"
+                    type="number"
+                    value={Math.round(coords[1] * 100) / 100 || 0}
+                    required
+                />
+                <Button
+                    onClick={handleLocation}
+                    variant="contained"
+                    color="primary"
+                >
+                    Choose a spot
+                </Button>
+                {/* <TextField
                     autoFocus
                     margin="dense"
                     id="name"
@@ -79,7 +124,7 @@ export const AddExhibit = ({ open, handleClose }) => {
                     label="Era"
                     type="text"
                     fullWidth
-                />
+                /> */}
                 <InputLabel shrink>Acquisition Date</InputLabel>
                 <TextField
                     autoFocus
@@ -88,13 +133,37 @@ export const AddExhibit = ({ open, handleClose }) => {
                     type="date"
                     fullWidth
                 />
-                <TextField
+                {/* <TextField
                     autoFocus
                     margin="dense"
                     id="name"
                     label="Dimensions"
                     type="text"
                     fullWidth
+                /> */}
+                                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="X"
+                    type="number"
+                    value={Math.round(coords[1] * 100) / 100 || 0}
+                    required
+                />
+                                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Y"
+                    type="number"
+                    value={Math.round(coords[1] * 100) / 100 || 0}
+                    required
+                />
+                                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Z"
+                    type="number"
+                    value={Math.round(coords[1] * 100) / 100 || 0}
+                    required
                 />
                 {/* <TextField
 autoFocus
@@ -109,7 +178,7 @@ fullWidth
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleSave} color="primary">
                     Add
                 </Button>
             </DialogActions>
