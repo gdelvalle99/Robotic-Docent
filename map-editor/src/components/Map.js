@@ -29,6 +29,7 @@ export const Map = (props) => {
     const [openPiece, setOpenPiece] = useState(false);
     const [piece, setPiece] = useState(null);
     const [el, setEl] = useState(null);
+    const [loc, setLoc] = useState([]);
     useTraceUpdate({image,open,openPiece,piece,el});
 
     // console.trace(piece)
@@ -103,16 +104,59 @@ export const Map = (props) => {
         
     ];
 
+    // var pt = document.getElementById('map').createSVGPoint();  // Created once for document
+
+
+    const [svg,setSvg] = useState(null);
+
+    useEffect(()=>{
+      let oop = document.getElementById('map')
+      console.log("in affect",oop)
+      setSvg(oop)
+    }, [])
+
+    function alert_coords(evt) {
+        let pt = svg.createSVGPoint()
+        pt.x = evt.clientX;
+        pt.y = evt.clientY;
+    
+        // The cursor point, translated into svg coordinates
+        var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
+        console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
+        return [cursorpt.x, cursorpt.y]
+    }
+
+    const handleMouseMove = function(event) {
+      // console.log(event.screenX, event.screenY, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+      var e = event.target;
+      var dim = e.getBoundingClientRect();
+      var x = event.clientX - dim.left;
+      var y = event.clientY - dim.top;
+      console.log(x,y)
+      let ans = alert_coords(event)   
+      ans[0] -= 3
+      ans[1] -= 6
+      setLoc(ans)
+    }
+
     return (
         <div className="map-portion">
-            <div className="img-overlay-wrap">
+            <div className="img-overlay-wrap" onClick={handleMouseMove}>
                 {image && <img src={image} className="map-image" alt="iwi" />}
-                <svg className="exhibits" viewBox="0 0 200 250">
+                <svg id="map" className="exhibits" viewBox="0 0 200 250">
                     <defs>
                         <symbol id="pin" className="millet" viewBox="0 0 24 24">
                             <path
                                 id="thePath"
                                 d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                            ></path>
+                            <path d="M0 0h24v24h-24z" fill="none"></path>
+                        </symbol>
+                        <symbol id="red_pin" className="millet" viewBox="0 0 24 24">
+                            <path
+                                id="thePath"
+                                d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                                fill="red"
                             ></path>
                             <path d="M0 0h24v24h-24z" fill="none"></path>
                         </symbol>
@@ -139,6 +183,17 @@ export const Map = (props) => {
                         // <Marker piece={p}/>
                     ))}
                     {/* <Marker/> */}
+                    {loc.length === 2 &&                         <use
+                            onClick={handlePieceOpen}
+                            // onMouseOver={(e)=>handleMouseOver(p,e)}
+                            // onMouseEnter={(e)=>handleMouseOver(p,e)}
+                            // onMouseOut={exitPiece}
+                            xlinkHref="#red_pin"
+                            x={loc[0]}
+                            y={loc[1]}
+                            width="6"
+                            height="6"
+                        />}
                     {piece && <PiecePreviewModal piece={piece} openPiece={handlePieceOpen} anchorEl={el} setAnchor={setEl}/>}
 
                 </svg>
