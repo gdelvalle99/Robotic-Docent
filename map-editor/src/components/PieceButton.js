@@ -14,8 +14,7 @@ import { floorLink } from "../links";
 import axios from 'axios';
 import Add from '@material-ui/icons/Add';
 
-export const PieceButton = () => {
-    const [open, setOpen] = useState(false);
+export const PieceButton = (props) => {
     const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
     const [exhibits, setExhibits] = useState([]);
     const [exhibitName, setExhibitName] = useState("");
@@ -76,23 +75,14 @@ export const PieceButton = () => {
     }
 
     //Handle save, cancel, open, and close
-    const handleSave = () => {
-        console.log(newPiece);
-        handleClose();
+    const handleSave = async () => {
+        props.addToPlaces(newPiece);
+        props.handleClose();
     }
 
     const handleCancel = () => {
-        setExhibitName("");
-        setNewPiece({});
-        handleClose();
-    }
-
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleOpenClick = () => {
-        setOpen(true);
+        props.setLoc([]);
+        props.handleClose();
     }
 
     //Get initial exhibit list
@@ -104,6 +94,8 @@ export const PieceButton = () => {
                 const e = item.data;
                 setExhibits(e.exhibits);
             }).catch(e=>console.log(e))
+
+        setNewPiece({...newPiece, coordinates: props.coordinates});
     }
 
     useEffect(() => { 
@@ -112,13 +104,73 @@ export const PieceButton = () => {
     
     return (
         <div className="map-piece-button">
-            <Fab aria-label="add" className="floating-piece-button" onClick={handleOpenClick}>
+            <Fab aria-label="add" className="floating-piece-button" onClick={props.handleOpenClick}>
                 <Add fontSize='large'/>
             </Fab>
-            <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
+            <Dialog open={props.open} onClose={handleOpenAlert} aria-labelledby="form-dialog-title">
                 <DialogTitle className="piece-modal-title-container">Add a New Piece</DialogTitle>
                 <DialogContent>
                     <div className="piece-modal-content-container">
+                        <TextField
+                            label="Title"
+                            type="text"
+                            variant="outlined"
+                            name="title" 
+                            defaultValue={newPiece.title}
+                            onBlur={handleChange} 
+                            fullWidth
+                            required
+                        />
+                        <TextField
+                            label="Author"
+                            type="text"
+                            variant="outlined"
+                            name="author" 
+                            defaultValue={newPiece.author}
+                            onBlur={handleChange} 
+                            fullWidth
+                        />
+                        <TextField
+                            label="Description"
+                            type="text"
+                            multiline
+                            rows={5}
+                            variant="outlined"
+                            name="description" 
+                            defaultValue={newPiece.description}
+                            onBlur={handleChange} 
+                            fullWidth
+                        />
+                        <div className="piece-modal-content-coordinates-container">
+                            <TextField
+                                label="Coordinates"
+                                placeholder="X"
+                                name="0"
+                                type="number"
+                                defaultValue={Math.round(props.coordinates[0] * 100) / 100 || 0}
+                                variant="outlined"
+                                InputLabelProps={{shrink:true}}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">(</InputAdornment>
+                                }}
+                                onBlur={handleCoordinateChange}
+                            />
+                            <p className="piece-modal-content-coordinates-comma">,</p>
+                            <TextField
+                                placeholder="Y"
+                                name="1"
+                                type="number"
+                                defaultValue={Math.round(props.coordinates[1] * 100) / 100 || 0}
+                                variant="outlined"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">)</InputAdornment>
+                                }}
+                                onBlur={handleCoordinateChange}
+                            />
+                            <Button onClick={props.handleLocation} variant="outlined">
+                                Choose a spot
+                            </Button>
+                        </div>
                         <TextField 
                             select
                             variant="outlined"
@@ -137,53 +189,11 @@ export const PieceButton = () => {
                             ))}
                         </TextField>
                         <TextField
-                            label="Title"
-                            type="text"
-                            variant="outlined"
-                            name="title" 
-                            onBlur={handleChange} 
-                            fullWidth
-                            required
-                        />
-                        <TextField
-                            label="Author"
-                            type="text"
-                            variant="outlined"
-                            name="author" 
-                            onBlur={handleChange} 
-                            fullWidth
-                        />
-                        <TextField
-                            label="Description"
-                            type="text"
-                            multiline
-                            rows={5}
-                            variant="outlined"
-                            name="description" 
-                            onBlur={handleChange} 
-                            fullWidth
-                        />
-                        <TextField
-                            label="Origin"
-                            type="text"
-                            variant="outlined"
-                            name="origin" 
-                            onBlur={handleChange} 
-                            fullWidth
-                        />
-                        <TextField
-                            label="Era"
-                            type="text"
-                            variant="outlined"
-                            name="era" 
-                            onBlur={handleChange} 
-                            fullWidth
-                        />
-                        <TextField
                             label="Acquistion Date"
                             type="date"
                             variant="outlined"
                             name="acquistion_date" 
+                            defaultValue={newPiece.acquisition_date}
                             onBlur={handleChange} 
                             InputLabelProps={{ shrink: true }}
                             fullWidth
@@ -193,6 +203,7 @@ export const PieceButton = () => {
                                 label="Dimensions"
                                 placeholder="Length"
                                 name="0"
+                                defaultValue={newDimension[0] || 0}
                                 type="number"
                                 variant="outlined"
                                 InputProps={{
@@ -205,6 +216,7 @@ export const PieceButton = () => {
                             <TextField
                                 placeholder="Width"
                                 name="1"
+                                defaultValue={newDimension[1] || 0}
                                 type="number"
                                 variant="outlined"
                                 InputProps={{
@@ -216,6 +228,7 @@ export const PieceButton = () => {
                             <TextField
                                 placeholder="Height"
                                 name="2"
+                                defaultValue={newDimension[2] || 0}
                                 type="number"
                                 variant="outlined"
                                 InputProps={{
@@ -224,31 +237,24 @@ export const PieceButton = () => {
                                 onBlur={handleDimensionChange}
                             />
                         </div>
-                        <div className="piece-modal-content-coordinates-container">
-                            <TextField
-                                label="Coordinates"
-                                placeholder="X"
-                                name="0"
-                                type="number"
-                                variant="outlined"
-                                InputLabelProps={{shrink:true}}
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">(</InputAdornment>
-                                }}
-                                onBlur={handleCoordinateChange}
-                            />
-                            <p className="piece-modal-content-coordinates-comma">,</p>
-                            <TextField
-                                placeholder="Y"
-                                name="1"
-                                type="number"
-                                variant="outlined"
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">)</InputAdornment>
-                                }}
-                                onBlur={handleCoordinateChange}
-                            />
-                        </div>
+                        <TextField
+                            label="Origin"
+                            type="text"
+                            variant="outlined"
+                            name="origin" 
+                            defaultValue={newPiece.origin}
+                            onBlur={handleChange} 
+                            fullWidth
+                        />
+                        <TextField
+                            label="Era"
+                            type="text"
+                            variant="outlined"
+                            name="era" 
+                            defaultValue={newPiece.era}
+                            onBlur={handleChange} 
+                            fullWidth
+                        />
                     </div>
                 </DialogContent>
                 <DialogActions>

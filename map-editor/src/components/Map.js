@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Fab } from "@material-ui/core";
 import { mapLink, floor_id } from "../links";
 import Add from "@material-ui/icons/Add";
+import PieceButton from "./PieceButton";
 import AddExhibit from "./AddExhibit";
 import PieceModal from "./PieceModal";
 import PiecePreviewModal from "./PiecePreviewModal";
@@ -140,6 +141,7 @@ export const Map = (props) => {
 
     const addToPlaces = (place) => {
       setPlaces(prev=>[...prev, {...place, coords: loc}]);
+      console.log(places);
       setLoc([]); // Since we have a spot, we remove the dot
     }
 
@@ -207,16 +209,7 @@ export const Map = (props) => {
             Open Modal
           </button> */}
 
-            <PieceButton/>
-            <Fab
-                color="primary"
-                aria-label="add"
-                className="bottom-right"
-                onClick={handleOpenClick}
-            >
-                <Add fontSize="large" />
-            </Fab>
-            <AddExhibit open={open} handleClose={handleClose} coords={loc} handleLocation={handleLocation} addToPlaces={addToPlaces}/>
+            <PieceButton open={open} coordinates={loc} setLoc={setLoc} handleLocation={handleLocation} addToPlaces={addToPlaces} handleOpenClick={handleOpenClick} handleClose={handleClose}/>
             <PieceModal
                 open={openPiece}
                 handleClose={handlePieceClose}

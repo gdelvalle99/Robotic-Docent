@@ -115,7 +115,19 @@ img {
         }
 
         .MuiTextField-root {
-            width: 45%;
+            width: 30%;
+        }
+
+        .MuiButton-root {
+            margin: auto;
+            height: 100%;
+            width: 30%;
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+            button:hover {
+            background-color: $primary-color;
         }
     }
 
