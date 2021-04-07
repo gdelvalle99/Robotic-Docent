@@ -37,10 +37,120 @@
     left: 0%;
 }
 
-.floating-piece-button {
-    position: fixed !important;
-    bottom: 20px;
-    right: 20px;
-    top: auto;
-    left: auto;
+.map-piece-button {
+
+    .floating-piece-button {
+        background-color: $primary-color;
+        position: fixed !important;
+        bottom: 20px;
+        right: 20px;
+        top: auto;
+        left: auto;
+    }
+}
+
+.piece-modal-title-container {
+    background-color: $primary-color;
+    margin-bottom: 0.5rem;
+}
+
+.piece-modal-content-container {
+
+    .piece-modal-content-dimension-container {
+        width: 100%;
+        display: flex;
+
+        .piece-modal-content-dimension-dash {
+            margin: auto;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 30%;
+        }
+    }
+
+    .piece-modal-content-coordinates-container {
+        width: 100%;
+        display: flex;
+
+        .piece-modal-content-coordinates-comma {
+            margin: 0.5rem;
+            margin-top: 3rem;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 45%;
+        }
+    }
+
+    .MuiTextField-root {
+        margin-top: 1rem;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $accent-white;
+    }
+
+     .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.piece-modal-buttons {
+    display: flex;
+
+    .piece-modal-button-cancel {
+        margin: 0.5rem;
+    }
+
+    .piece-modal-button-add {
+        margin: 0.5rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+            button:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+
+.piece-modal-delete-alert-buttons {
+    margin: auto;
+
+    .piece-modal-delete-alert-button-delete {
+
+        margin: 1rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+        button:hover {
+            background-color: $primary-color;
+        }
+    }
+
+    .piece-modal-delete-alert-button-cancel {
+        margin: 1rem;
+
+        .MuiButton-root {
+            text-transform: none;
+        }
+    }
 }

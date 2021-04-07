@@ -65,7 +65,7 @@ export const Map = (props) => {
         <div className="map-portion">
             {/* <div style={{display: 'flex', justifyContent:'center'}}> */}
             {/* {image && <Image className="uwu" imageStyle={{width:"80%", height:"80%"}} src={image}/>} */}
-            {image && <img src={image} className="map-image" alt="iwi"/>}
+            {image && <img src={image} className="map-image" alt="Floor map image"/>}
             {/* <svg className='exhibits' viewBox="0 0 200 250">
                     <polygon
                         style={{opacity: '20%', fill: 'green'}}

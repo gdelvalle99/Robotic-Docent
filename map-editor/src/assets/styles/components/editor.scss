@@ -2,7 +2,6 @@
 //Main Editor Page
 .editor-page {
     display: flex;
-    height: 100%;
 }
 
 //Editor Sidebar
@@ -30,13 +29,23 @@
     background-color: $primary-color;
 }
 
-//Editor Map
-.editor-map {
-    width: 70%;
-    float: right;
+.exhibit-item-card {
+    margin: 1rem;
+    padding: 0.5rem;
+
+    &:hover {
+        background-color: #EBEBEB;
+        transition: background-color 0.4s ease;
+        cursor: pointer;
+    }
 }
 
-.exhibit-sidebar-add-button {
+.exhibit-sidebar-add-button-container {
+    .exhibit-sidebar-add-button {
+        margin-top: 0;
+        margin: 0.5rem;
+        border: 2px dashed #EBEBEB;
+    }
     .MuiButton-root {
         width: 95%;
         padding: 2rem;
@@ -44,105 +53,245 @@
     }
 }
 
+//Editor Map
+.editor-map {
+    width: 70%;
+    float: right;
+}
+
 //Editor Exhibit Modal Items
-.MuiDialogContent-root::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: $accent-white;
-}
+.exhibit-item-header {
 
-.MuiDialogContent-root::-webkit-scrollbar {
-    width: 10px;
-    border-radius: 10px;
-    background-color: $accent-white;
-}
-
-.MuiDialogContent-root::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: $primary-color;
-}
-
-.exhibit-item-summary {
-    flex: none;
-}
-
-.exhibit-item-details {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.exhibit-item-title {
-    input {
-        font-size: 1.5rem;
-        font-weight: bold;
-        padding-left: 1%;
-        padding-top: 0;
-        padding-bottom: 0;
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $white;
     }
-}
 
-.exhibit-item-subtitle {
-    input {
-        font-size: 0.75rem;
-        padding: 1%;
+    .MuiOutlinedInput-input:focus {
+        background-color: #EBEBEB;
+    }
+
+    .exhibit-item-title {
+        input {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-left: 1%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .exhibit-item-subtitle {
+        input {
+            font-size: 0.75rem;
+            padding: 1%;
+        }
     }
 }
 
 .exhibit-item-content-container {
+
     .MuiTextField-root {
         margin-top: 0.75rem;
     }
-}
 
-.exhibit-item-description {
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $white;
+    }
+
+    .MuiOutlinedInput-input:focus {
+        background-color: #EBEBEB;
+    }
+    
     .MuiOutlinedInput-multiline:focus-within {
-        background-color: $accent-white;
+        background-color: #EBEBEB;
     }
 }
 
 .exhibit-item-dates {
     display: inline-flex;
+
     .MuiTextField-root {
         margin: 1rem;
     }
 }
 
 //Editor Exhibit Items Question Set
-.exhibit-item-qna-cards-container {
-    width: 100%;
-    display: flex;
+.exhibit-item-qna-cards {
 
-    .MuiButtonBase-root {
-        width: 31%;
+    .exhibit-item-qna-container {
+
+        .exhibit-item-qna-header {
+
+        }
+
+        .exhibit-item-qna-cards-container {
+            width: 100%;
+            display: flex;
+
+            .exhibit-item-qna-add-button {
+                margin: 0.5rem;
+                border: 2px dashed #EBEBEB;
+            }
+
+            .MuiButtonBase-root {
+                width: 30%;
+            }
+
+            .exhibit-item-qna-card {
+                transition: width 0.25s;
+                margin: 0.25rem;
+
+                .MuiCard-root:hover {
+                    cursor: pointer;
+                }
+
+                .MuiCardHeader-root {
+                    height: 6rem;
+                }
+            }
+
+            .exhibit-item-qna-width-30 {
+                width: 30%;
+            }
+
+            .exhibit-item-qna-width-100 {
+                width: 100%;
+            }   
+        }
     }
 }
 
-.exhibit-item-qna-card {
-    transition: width 0.25s;
-    .MuiCard-root:hover {
-        cursor: pointer;
+.exhibit-item-piece-lists {
+    
+    .exhibit-item-piece-container {
+
+        .exhibit-item-piece-header {
+
+        }
+
+        .exhibit-item-piece-list-container {
+
+        }
     }
 }
 
-.exhibit-item-qna-width-30 {
-    width: 33%;
+.exhibit-piece-modal-header {
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $white;
+    }
+
+    .MuiOutlinedInput-input:focus {
+        background-color: #EBEBEB;
+    }
+
+    .piece-item-title {
+        input {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-left: 1%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .piece-item-author {
+        input {
+            font-size: 0.75rem;
+            padding: 1%;
+        }
+    }
 }
 
-.exhibit-item-qna-width-100 {
-    width: 100%;
-}
+.exhibit-piece-modal-content {
 
-.MuiCardHeader-root {
-    height: 6rem;
+    .exhibit-piece-modal-dimension-container {
+        width: 100%;
+        display: flex;
+
+        .exhibit-piece-modal-dimension-dash {
+            margin: auto;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 30%;
+        }
+    }
+
+    .exhibit-piece-modal-coordinates-container {
+        width: 100%;
+        display: flex;
+
+        .exhibit-piece-modal-coordinates-comma {
+            margin: 0.5rem;
+            margin-top: 3rem;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 45%;
+        }
+    }
+
+    .MuiTextField-root {
+        margin-top: 1rem;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $white;
+    }
+
+     .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
 
 .exhibit-delete-button {
     margin: 1rem;
     float: right;
+
     .MuiButton-root {
         background-color: lighten($primary-color, 20%);
     }
+
     button:hover {
         background-color: $primary-color;
+    }
+}
+
+.exhibit-delete-alert-buttons {
+    margin: auto;
+
+    .exhibit-delete-alert-button-delete {
+
+        margin: 1rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+        button:hover {
+            background-color: $primary-color;
+        }
+    }
+
+    .exhibit-delete-alert-button-cancel {
+        margin: 1rem;
+
+        .MuiButton-root {
+            text-transform: none;
+        }
     }
 }

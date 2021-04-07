@@ -9,19 +9,8 @@ import { existingExhibitLink } from '../links';
 import { floor_id } from '../links';
 import axios from 'axios';
 
-const useStyles = makeStyles((theme) =>
-    createStyles({
-        buttonSidebarStyle: {
-            marginTop: 0,
-            margin: 10,
-            border: '2px dashed #EBEBEB'
-        }
-    }),
-);
-
 export const ExhibitSidebar = (props) => {
     const [exhibitList, setExhibitList] = useState([]);
-    const classes = useStyles();
 
     //Handles save and sending post request for new exhibit to add to the floor
     const handleSaveNewExhibit = (exhibit) => {
@@ -89,8 +78,8 @@ export const ExhibitSidebar = (props) => {
                         })
                 )
             }
-            <div className="exhibit-sidebar-add-button">
-                <Button className={classes.buttonSidebarStyle} onClick={addExhibit}>
+            <div className="exhibit-sidebar-add-button-container">
+                <Button className="exhibit-sidebar-add-button" onClick={addExhibit}>
                     <AddCircleOutlineIcon fontSize='large' />
                 </Button>
             </div>
