@@ -4,9 +4,9 @@ import { CircularProgress } from "@material-ui/core";
 
 export default function DailyInfo() {
     return (
-        <div style={{ display: "flex", maxWidth: 900 }}>
-                        <Chart
-                width={1000}
+        <div style={{ display: "flex", maxWidth: 900, marginTop: 20 }}>
+            <Chart
+                width={600}
                 height={350}
                 chartType="Calendar"
                 loader={<CircularProgress />}
@@ -31,9 +31,10 @@ export default function DailyInfo() {
                 ]}
                 options={{
                     title: "Daily Interactions",
+                    calendar: { cellSize: 10 },
                 }}
                 rootProps={{ "data-testid": "1" }}
             />
         </div>
     );
-};
+}

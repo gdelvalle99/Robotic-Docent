@@ -3,6 +3,23 @@ import Chart from "react-google-charts";
 import { CircularProgress } from "@material-ui/core";
 
 export default function ExhibitInfo() {
+    const data = [
+        ["Date", "Exhibit 1", "Exhibit 2"],
+        ["3/23", 19, 23],
+        ["3/24", 21, 20],
+        ["3/25", 27, 21],
+        ["3/26", 16, 31],
+        ["3/27", 44, 33],
+        ["3/28", 0, 0],
+        ["3/29", 7, 12],
+        ["3/30", 21, 23],
+        ["3/31", 19, 56],
+        ["4/1", 21, 23],
+        ["4/2", 29, 19],
+        ["4/3", 36, 11],
+        ["4/4", 10, 25],
+    ]
+
     return (
         <div style={{ display: "flex", maxWidth: 900 }}>
            <Chart
@@ -10,24 +27,9 @@ export default function ExhibitInfo() {
                 height={"300px"}
                 chartType="AreaChart"
                 loader={<CircularProgress />}
-                data={[
-                    ["Date", "Exhibit 1", "Exhibit 2"],
-                    ["3/23", 19, 23],
-                    ["3/24", 21, 20],
-                    ["3/25", 27, 21],
-                    ["3/26", 16, 31],
-                    ["3/27", 44, 33],
-                    ["3/28", 0, 0],
-                    ["3/29", 7, 12],
-                    ["3/30", 21, 23],
-                    ["3/31", 19, 56],
-                    ["4/1", 21, 23],
-                    ["4/2", 29, 19],
-                    ["4/3", 36, 11],
-                    ["4/4", 10, 25],
-                ]}
+                data={data}
                 options={{
-                    title: "Interactions throughout Exhibits",
+                    title: "Questions Asked in Exhibits",
                     hAxis: {
                         title: "Date - 2021",
                         titleTextStyle: { color: "#333" },

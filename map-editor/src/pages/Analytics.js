@@ -51,7 +51,7 @@ export const Analytics = () => {
                     }}
                     legendToggle
                 /> */}
-                <FormDisplay display={display} handleChange={handleChange}/>
+                <FormDisplay display={display} handleChange={handleChange} style={{maxWidth: 1000, minWidth: 800}}/>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
                 {display === "Exhibit Information" && <ExhibitInfo />}
