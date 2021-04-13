@@ -65,3 +65,43 @@ def create_piece():
             return {"success": False, "msg": str(e)}
 
     return {"success": False, "msg": "404 No Existing Route"}
+
+# Expects json with values [exhibit_id: int]
+# Returns a json object
+@piece.route('', methods=['GET'])
+def get_piece():
+    piece_id = request.args.get('piece_id', default = "", type = str)
+    db = current_app.config["piece.db"]
+    try:
+        piece = db.session.query(Piece).filter(Piece.id == piece_id).first()
+        serialized_piece = piece.serialize()
+        return {"success": True, "piece": serialized_piece}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+
+@piece.route('/question/add', methods=['POST'])
+def add_question():
+    db = current_app.config["piece.db"]
+    try:
+        data = request.get_json()
+        if(data is None):
+            raise ValueError("Data is empty")
+        piece_id = data['piece_id']
+        question = data['question']
+        answer = data['answer']
+        if(question == "" or answer == ""):
+            raise ValueError("Question and Answer must both be filled out")
+        piece = db.session.query(Piece).filter(Piece.id == piece_id).first()
+        piece.questions.append(question)
+        piece.answers.append(answer)
+        setattr(piece, 'questions', piece.questions)
+        setattr(piece, 'answers', piece.answers)
+        db.session.commit()
+        return {"success": True, "msg": "Successfully added question and answer", "data": {"question": question, "answer": answer}}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+    except Exception as e:
+        print(e)
+        return {"success": False, "msg": str(e)}

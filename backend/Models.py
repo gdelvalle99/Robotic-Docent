@@ -9,6 +9,36 @@ import random
 import string
 import uuid
 
+from sqlalchemy.ext.mutable import Mutable
+
+class MutableList(Mutable, list):
+
+    def __setitem__(self, key, value):
+        list.__setitem__(self, key, value)
+        self.changed()
+
+    def __delitem__(self, key):
+        list.__delitem__(self, key)
+        self.changed()
+
+    def append(self, value):
+        list.append(self, value)
+        self.changed()
+
+    def pop(self, index=0):
+        value = list.pop(self, index)
+        self.changed()
+        return value
+
+    @classmethod
+    def coerce(cls, key, value):
+        if not isinstance(value, MutableList):
+            if isinstance(value, list):
+                return MutableList(value)
+            return Mutable.coerce(key, value)
+        else:
+            return value
+
 db = SQLAlchemy()
 
 class BaseModel(db.Model):
@@ -124,8 +154,14 @@ class Piece(BaseModel, db.Model):
     dimension = db.Column(db.ARRAY(db.Float))
     coordinates = db.Column(db.ARRAY(db.Float))
     notes = db.Column(db.ARRAY(db.String))
-    questions = db.Column(db.ARRAY(db.String))
-    answers = db.Column(db.ARRAY(db.String))
+    questions = db.Column(
+    MutableList.as_mutable(db.ARRAY(db.String())),
+    server_default="{}"
+    )
+    answers = db.Column(
+    MutableList.as_mutable(db.ARRAY(db.String())),
+    server_default="{}"
+    )
 
     def __init__(self,exhibit_id,title,author,description,origin,era,acquisition_date,dimension,coordinates):
         try:
@@ -163,6 +199,23 @@ class Tour(BaseModel, db.Model):
     duration = db.Column(db.Interval)
     interaction_count = db.Column(db.Integer)
     question_count = db.Column(db.Integer)
+
+    # This needs to be refactored, here just for demo
+    def __init__(self):
+        self.interaction_count = 0
+        self.question_count = 0
+
+# Association Table
+class TourPieces(BaseModel, db.Model):
+    __tablename__ = 'tourpieces'
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
+    tour_id = db.Column(UUID(as_uuid=True), db.ForeignKey('tours.id'))
+    piece_id = db.Column(UUID(as_uuid=True), db.ForeignKey('pieces.id'))
+
+    def __init__(self, tour_id, piece_id):
+        self.tour_id = tour_id
+        self.piece_id = piece_id
 
 
 class Robot(BaseModel, db.Model):

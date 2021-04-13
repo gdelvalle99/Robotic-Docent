@@ -50,3 +50,15 @@ def create_museum():
             print(type(e), e)
             return {"success": False, "msg": str(e)}
     return {"success": False, "msg": "404 - No Route Found"}
+
+@museum.route('', methods=['GET'])
+def get_museum():
+    museum_name = request.args.get('name', default = "", type = str)
+    db = current_app.config["museum.db"]
+    try:
+        museum = db.session.query(Museum).filter(Museum.name == museum_name).first()
+        serialized_museum = museum.serialize()
+        return {"success": True, "museum": serialized_museum}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}

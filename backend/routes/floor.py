@@ -1,5 +1,5 @@
 from flask import current_app, request, make_response, Blueprint
-from ..Models import Floor, Exhibit
+from ..Models import Museum, Floor, Exhibit
 from ..validation import FloorValidate
 from .helpers.valid_login import valid_login
 from sqlalchemy.exc import SQLAlchemyError
@@ -118,5 +118,23 @@ def get_exhibits():
         serialized_exhibits = [i.serialize() for i in exhibits]
         return {"success": True, "exhibits": serialized_exhibits}
     except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+        
+@floor.route('', methods=['GET'])
+def get_floor():
+    museum_name = request.args.get('museum_name', default = "", type = str)
+    level = request.args.get('level', default = "", type = str)
+    db = current_app.config["floor.db"]
+    try:
+        museum = db.session.query(Museum).filter(Museum.name==museum_name).first()
+        print("hello",museum_name)
+        if(museum is None):
+            raise ValueError("The museum does not exist")
+
+        floor = db.session.query(Floor).filter(Floor.museum_id == museum.id and Floor.level == level).first()
+        serialized_floor = floor.serialize()
+        return {"success": True, "floor": serialized_floor}
+    except Exception as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
