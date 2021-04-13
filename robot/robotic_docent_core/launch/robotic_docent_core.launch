@@ -13,4 +13,5 @@
     <node name="tour_server" pkg="robotic_docent_core" type="server.py" />
     <node name="map_navigation" pkg="robotic_docent_core" type="map_navigation.py" />
     <include file="$(find robotic_docent_core)/launch/robotic_docent_state.launch" />
+    <include file="$(find robotic_docent_core)/launch/robotic_docent_voice.launch" />
 </launch>

@@ -1,13 +1,13 @@
 <launch>
     <!-- Start the template publisher ROS node.-->
-    <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic-docent-core)/stage_config/worlds/museum.world"
+    <node name="simulation_1" pkg="stage_ros" type="stageros" args="$(find robotic_docent_core)/stage_config/worlds/museum.world"
         output="screen"/>
-    <include file="$(find robotic-docent-core)/move_base_config/slam_gmapping.xml"/>  
+    <include file="$(find robotic_docent_core)/move_base_config/slam_gmapping.xml"/>  
     <node name="joystick_1" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="base_controller /command:=cmd_vel"
         output="screen"/>
 
-    <node name="bagging_1" pkg="rosbag" type="record" args="-O $(find robotic-docent-core)/docent-laser-data /base_scan /tf"
+    <node name="bagging_1" pkg="rosbag" type="record" args="-O $(find robotic_docent_core)/docent-laser-data /base_scan /tf"
         output="screen"/>
-        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotic-docent-core)/single_robot.rviz" />
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robotic_docent_core)/single_robot.rviz" />
     
 </launch>

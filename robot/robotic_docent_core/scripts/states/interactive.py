@@ -6,13 +6,14 @@ import actionlib
 from std_msgs.msg import String
 import time
 import queue
-from robotic_docent_core.msg import Piece, MotionAction, MotionGoal, PresentAction, PresentGoal
+from robotic_docent_core.msg import Piece, QAAction, QAGoal, MotionAction, MotionGoal, PresentAction, PresentGoal
+
 
 class InteractiveState:
     def __init__(self, timeout):
         self.interactive_server = actionlib.SimpleActionServer('interactive_state', PresentAction, self.execute, False)
         self.queue = queue.Queue()
-        self.queue_server = actionlib.SimpleActionServer('queue_server', PresentAction, self.add_to_queue, False)
+        self.queue_server = actionlib.SimpleActionServer('queue_server', QAAction, self.add_to_queue, False)
         self.interactive_server.start()
         self.queue_server.start()
         # timeout parameter is to let museum operators decide how
@@ -31,12 +32,20 @@ class InteractiveState:
                 t -= 1
             else:
                 t = self.timeout
-                ac.send_goal_and_wait(queue.pop())
+                current_qa = self.queue.get()
+                current_interaction = PresentGoal()
+                current_interaction.text = ''.join(["You asked the question ", current_qa.question])
+                ac.send_goal(current_interaction)
+                ac.wait_for_result()
+                current_interaction.text = ''.join(["The answer is ", current_qa.answer])
+                ac.send_goal(current_interaction)
+                ac.wait_for_result()
                     
         self.interactive_server.set_succeeded()
     
     def add_to_queue(self, goal):
         self.queue.put(goal)
+        self.queue_server.set_succeeded()
 
 rospy.init_node("interactive_state_server")
 server = InteractiveState(60)

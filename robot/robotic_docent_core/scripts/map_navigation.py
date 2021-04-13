@@ -41,9 +41,12 @@ class map_navigation:
       goal.target_pose.pose.orientation.w = 1.0
       self.map_navigation_publisher.publish("Sending goal to move base")
       rospy.loginfo("Sending goal location ...")
-      ac.send_goal_and_wait(goal)
-      # ac.wait_for_result(rospy.Duration(60))
+      ac.send_goal(goal)
+      ac.wait_for_result()
+      #if ac.get_state() == actionlib.SimpleGoalState.SUCCEEDED:
       self.server.set_succeeded()
+      #else:
+      #  self.server.set_aborted()
 
 rospy.init_node('map_navigation', anonymous=False)
 server = map_navigation()
