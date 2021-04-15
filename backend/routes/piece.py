@@ -18,6 +18,29 @@ def record(state):
 def before_request():
     valid_login(request)
 
+# Expects json with values [id: str]
+@piece.route('/delete', methods=['GET'])
+def delete_piece():
+    if request.method == 'GET':
+        
+        id = request.args.get('id', default = "", type = str)
+
+        db = current_app.config["piece.db"]
+
+        try:
+            existingPiece = db.session.query(Piece).filter(Piece.id==id).one()
+            if (existingPiece is not None):
+                db.session.delete(existingPiece)
+                db.session.commit()
+                return {"success": True, "msg": "Successfully deleted the piece"} 
+            else:
+                return {"success": False, "msg": "Piece does not exist"}
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
 # Expects json with values [exhibit_id: int]
 # Returns a json object
 @piece.route('/new', methods=['POST'])
@@ -59,7 +82,7 @@ def create_piece():
         try:
             db.session.add(piece)
             db.session.commit()
-            return {"success": True, "msg": "Successfully created a new piece"}  
+            return {"success": True, "msg": "Successfully created a new piece", "id": str(piece.id)}  
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg": str(e)}

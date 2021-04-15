@@ -9,10 +9,43 @@
     // align-items: stretch;
     // flex-direction:column;
 }
-  
+
+img {
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.millie:hover {
+  transform: rotate( 15deg );
+}
+
+.img-overlay-wrap {
+    position: relative;
+    display: inline-block; /* <= shrinks container to image size */
+    transition: transform 150ms ease-in-out;
+}
+
+.img-overlay-wrap img { /* <= optional, for responsiveness */
+   display: block;
+   max-width: 100%;
+   height: auto;
+}
+
+.img-overlay-wrap svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+// .img-overlay-wrap:hover {
+//   transform: rotate( 15deg );
+// }
+
 .uwu {
     // max-width: 80%;
-    max-height: 60%;
     padding: 2.5% 2.5%;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -38,10 +71,163 @@
     left: 0%;
 }
 
-.bottom-right {
-    position: fixed !important;
-    bottom: 20px;
-    right: 20px;
-    top: auto;
-    left: auto;
+.map-piece-button {
+
+    .floating-piece-button {
+        background-color: $primary-color;
+        position: fixed !important;
+        bottom: 20px;
+        right: 20px;
+        top: auto;
+        left: auto;
+    }
+}
+
+.exhibit-piece-modal-header {
+    .piece-item-title {
+        textarea {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-left: 1%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .MuiOutlinedInput-multiline {
+        padding: 0.25rem;
+    }
+
+    .exhibit-item-subtitle {
+        input {
+            font-size: 0.75rem;
+            padding: 1%;
+        }
+    }
+
+    .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+}
+
+.piece-modal-title-container {
+    background-color: $primary-color;
+    margin-bottom: 0.5rem;
+}
+
+.piece-modal-content-container {
+
+    .piece-modal-content-dimension-container {
+        width: 100%;
+        display: flex;
+
+        .piece-modal-content-dimension-dash {
+            margin: auto;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 30%;
+        }
+    }
+
+    .piece-modal-content-coordinates-container {
+        width: 100%;
+        display: flex;
+
+        .piece-modal-content-coordinates-comma {
+            margin: 0.5rem;
+            margin-top: 3rem;
+            font-size: 1rem;
+        }
+
+        .MuiTextField-root {
+            width: 30%;
+        }
+
+        .MuiButton-root {
+            margin: auto;
+            height: 100%;
+            width: 30%;
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+            button:hover {
+            background-color: $primary-color;
+        }
+    }
+
+    .MuiTextField-root {
+        margin-top: 1rem;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $accent-white;
+    }
+
+    .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.piece-modal-buttons {
+    display: flex;
+
+    .piece-modal-button-cancel {
+        margin: 0.5rem;
+    }
+
+    .piece-modal-button-add {
+        margin: 0.5rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+            button:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+
+.piece-modal-delete-alert-buttons {
+    margin: auto;
+
+    .piece-modal-delete-alert-button-delete {
+
+        margin: 1rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+        button:hover {
+            background-color: $primary-color;
+        }
+    }
+
+    .piece-modal-delete-alert-button-cancel {
+        margin: 1rem;
+
+        .MuiButton-root {
+            text-transform: none;
+        }
+    }
 }

@@ -89,7 +89,7 @@ export const ExhibitModalQuestionCard = (props) => {
 
     return(
         <div key={"exhibit-item-qna-card" + (index+1)} id={"exhibit-item-qna-card-" + (index+1)} className={"exhibit-item-qna-card " + widthClass} ref={refCheck}>
-            <Card className={props.styleContainer} >
+            <Card>
                 <CardHeader 
                     title={"Question Set " + (index+1)} 
                     titleTypographyProps={{variant: 'body1'}}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ExhibitModalQuestionSet } from './ExhibitModalQuestionSet';
+import { ExhibitModalPieceSet } from './ExhibitModalPieceSet';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core'; 
 import { Dialog } from '@material-ui/core';
@@ -8,11 +9,8 @@ import { DialogContent } from '@material-ui/core';
 import { DialogTitle } from '@material-ui/core'; 
 import { Divider } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { newExhibitLink } from '../links';
-import { existingExhibitLink } from '../links';
-import { floor_id } from '../links';
-import axios from 'axios';
+import { Button } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const convertSimpleISODate = function(dateString) {
     if (dateString) {
@@ -25,67 +23,44 @@ const convertSimpleISODate = function(dateString) {
     }
 }
 
-const useStyles = makeStyles((theme) =>
-    createStyles({
-        card: {
-            margin: 10,
-            padding: 5,
-            "&:hover": {
-                backgroundColor: '#EBEBEB',
-                transition: 'background-color 0.4s ease',
-                cursor: 'pointer'
-            }
-        },
-        notchedOutline: {
-            borderColor: 'white',
-        },
-        textFieldColor: {
-            "&:focus": {
-                backgroundColor: '#EBEBEB',
-            }
-        },
-        cardContainer: {
-            margin: 5,
-        },
-        buttonQuestionStyle: {
-            margin: 5,
-            border: '2px dashed #EBEBEB'
-        }
-    }),
-);
-
 export const ExhibitSidebarModal = (props) => {
-    const classes = useStyles();
-    const [exhibit, setExhibit] = useState(props);
+    const [exhibit, setExhibit] = useState(props.exhibit);
     const [openModal, setOpenModal] = useState(false);
+    const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
     const [titleFlag, setTitleFlag] = useState(false);
     const [newFlag, setNewFlag] = useState(true);
 
-    //Handles save and sending post request for new exhibit to add to the floor
-    const handleSaveNewExhibit = () => {
-        let data = {...exhibit, floor_id: floor_id}
-        let r = axios.post(newExhibitLink, data)
-            .then(function (response) {
-                return response.data;
-            }).then(d => {
-                setExhibit({...exhibit, id:d.id})
-            }).catch(e=>console.log(e))
+    //Handles alert for delete
+    const handleOpenAlert = () => {
+        if (exhibit.title != null && exhibit.title != "") {
+            setOpenDeleteAlert(true);
+        }
+        else {
+            props.handleDeleteExhibit(exhibit.id);
+        }
     }
 
-    const handleSaveExistingExhibit = () => {
-        let r = axios.post(existingExhibitLink, exhibit)
-            .catch(e=>console.log(e))
+    const handleCloseAlert = () => {
+        setOpenDeleteAlert(false);
+    }
+
+    const handleDeleteClick = () => {
+        props.handleDeleteExhibit(exhibit.id);
+        handleCloseAlert();
     }
 
     //Handles opening and closing of modal with the validation for the title field being required
     const handleCloseModal = () => {
         if (exhibit.title != null && exhibit.title != "") {
             if (newFlag) {
-                handleSaveNewExhibit();
+                const idPromise = props.handleSaveNewExhibit(exhibit);
+                idPromise.then(d => {
+                    setExhibit({...exhibit, id: d});
+                });
                 setNewFlag(false);
             }
             else {
-                handleSaveExistingExhibit();
+                props.handleSaveExistingExhibit(exhibit);
             }
             setTitleFlag(false);
             setOpenModal(false);
@@ -117,12 +92,12 @@ export const ExhibitSidebarModal = (props) => {
 
     //Initial set for current exhibits
     const setInitialExhibit = () => {
-        setExhibit(props);        
+        setExhibit(props.exhibit);        
     }
 
     //Initial render of existent exhibits and opens modal on instancing new exhibit
     useEffect(() => {
-        if (props.title == null) {
+        if (props.exhibit.title == null) {
             handleOpenModal();
             setNewFlag(true);
         }
@@ -133,8 +108,8 @@ export const ExhibitSidebarModal = (props) => {
     }, []);
 
     return (
-        <div id={"exhibit-item-id-" + exhibit.id}>
-            <Card className={classes.card} onClick={handleOpenModal}>
+        <div id={"exhibit-item-id-" + exhibit.id} className="exhibit-item-container">
+            <Card className="exhibit-item-card" onClick={handleOpenModal}>
                 <CardHeader 
                     title={exhibit.title}
                     titleTypographyProps={{variant: 'h5'}}
@@ -148,13 +123,7 @@ export const ExhibitSidebarModal = (props) => {
                         <TextField
                             error={titleFlag}
                             required={true} 
-                            className="exhibit-item-title" 
-                            InputProps={{
-                                classes: {
-                                    notchedOutline: classes.notchedOutline,
-                                    input: classes.textFieldColor
-                                }
-                            }}
+                            className="exhibit-item-title"
                             placeholder="Title" 
                             variant="outlined" 
                             name="title" 
@@ -164,12 +133,6 @@ export const ExhibitSidebarModal = (props) => {
                         />
                         <TextField 
                             className="exhibit-item-subtitle"
-                            InputProps={{
-                                classes: {
-                                    notchedOutline: classes.notchedOutline,
-                                    input: classes.textFieldColor
-                                }
-                            }}
                             placeholder="Subtitle" 
                             size={"small"}
                             variant="outlined" 
@@ -185,12 +148,6 @@ export const ExhibitSidebarModal = (props) => {
                     <div className="exhibit-item-content-container">
                         <TextField 
                             className="exhibit-item-description"
-                            InputProps={{
-                                classes: {
-                                    notchedOutline: classes.notchedOutline,
-                                    focused: classes.textFieldColor
-                                }
-                            }}  
                             label="Description" 
                             variant="outlined" 
                             multiline 
@@ -203,12 +160,6 @@ export const ExhibitSidebarModal = (props) => {
                         <div className="exhibit-item-dates">
                             <TextField 
                                 className="exhibit-item-startdate" 
-                                InputProps={{
-                                    classes: {
-                                        notchedOutline: classes.notchedOutline,
-                                        input: classes.textFieldColor
-                                    }
-                                }}  
                                 label="Start Date" 
                                 variant="outlined" 
                                 type="date" 
@@ -220,12 +171,6 @@ export const ExhibitSidebarModal = (props) => {
                             />
                             <TextField 
                                 className="exhibit-item-enddate" 
-                                InputProps={{
-                                    classes: {
-                                        notchedOutline: classes.notchedOutline,
-                                        input: classes.textFieldColor
-                                    }
-                                }}  
                                 label="End Date" 
                                 variant="outlined" 
                                 type="date" 
@@ -238,12 +183,6 @@ export const ExhibitSidebarModal = (props) => {
                         </div>
                         <TextField 
                             className="exhibit-item-theme" 
-                            InputProps={{
-                                classes: {
-                                    notchedOutline: classes.notchedOutline,
-                                    input: classes.textFieldColor
-                                }
-                            }}  
                             label="Theme" 
                             variant="outlined"
                             name="theme" 
@@ -252,12 +191,36 @@ export const ExhibitSidebarModal = (props) => {
                             fullWidth 
                         />
                         <div className="exhibit-item-qna-cards">
-                            <ExhibitModalQuestionSet questions={exhibit.questions} answers={exhibit.answers} handleSetUpdate={updateQuestionSet} styleContainer={classes.cardContainer} buttonStyle={classes.buttonQuestionStyle}/>
+                            <ExhibitModalQuestionSet questions={exhibit.questions} answers={exhibit.answers} handleSetUpdate={updateQuestionSet} />
+                        </div>
+                        <div className="exhibit-item-piece-lists">
+                            <ExhibitModalPieceSet exhibit_id={exhibit.id}/>
                         </div>
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    
+                    <div className="exhibit-delete-button">
+                        <Button onClick={handleOpenAlert} variant="outlined">
+                            <DeleteIcon fontSize='small'/>
+                        </Button>
+                    </div>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openDeleteAlert} onClose={handleCloseAlert}>
+                <DialogTitle>Delete this exhibit?</DialogTitle>
+                <DialogActions>
+                    <div className="exhibit-delete-alert-buttons">
+                        <div className="exhibit-delete-alert-button-delete">
+                            <Button onClick={handleDeleteClick} variant="outlined">
+                            Delete
+                            </Button>
+                        </div>
+                        <div className="exhibit-delete-alert-button-cancel">
+                            <Button onClick={handleCloseAlert} variant="outlined">
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
                 </DialogActions>
             </Dialog>
         </div>

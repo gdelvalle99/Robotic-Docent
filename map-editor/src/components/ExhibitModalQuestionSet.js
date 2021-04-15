@@ -67,12 +67,12 @@ export const ExhibitModalQuestionSet = (props) => {
                     {questionSet.length > 0 && (
                             questionSet.map((set, index) => {
                                 return (
-                                    <ExhibitModalQuestionCard key={index} question={set.question} answer={set.answer} updatePSidebarItem={updateSidebarItem} handleNewCardUpdate={newCard} index={index} styleContainer={props.styleContainer}/>
+                                    <ExhibitModalQuestionCard key={index} question={set.question} answer={set.answer} updatePSidebarItem={updateSidebarItem}/>
                                 );
                             })
                         )
                     }
-                    <Button className={props.buttonStyle} onClick={handleAddClick}>
+                    <Button className="exhibit-item-qna-add-button" onClick={handleAddClick}>
                         <AddCircleOutlineIcon fontSize='large' />
                     </Button>
                 </Grid>

@@ -9,8 +9,8 @@ def valid_login(request):
         print(request.headers)
         abort(401, description="Resource not found")
 
-    # s = current_app.config.get('SECRET_KEY')
-    # auth = User.decode_auth_token(request.headers['Authentification'], s)
-    # if not auth['success']:
-    #     print(auth['msg'])
-    #     abort(401, description="Resource not found")
+    s = current_app.config.get('SECRET_KEY')
+    auth = User.decode_auth_token(request.headers['Authentification'], s)
+    if not auth['success']:
+        print(auth['msg'])
+        abort(401, description="Resource not found")

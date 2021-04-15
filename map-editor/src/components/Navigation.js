@@ -5,6 +5,8 @@ import { Button } from '@material-ui/core';
 import { Home } from '../pages/Home';
 import { Analytics } from '../pages/Analytics';
 import { Editor } from '../pages/Editor';
+import ProfileIcon from "./ProfileIcon";
+// import { ProfileIcon } from './ProfileIcon'
 
 export const NavigationBar = (props) => {
     return (
@@ -23,6 +25,9 @@ export const NavigationBar = (props) => {
                         <Button className="navigation-button" variant="contained" href="/">Home</Button>
                         <Button className="navigation-button" variant="contained" href="/map-editor">Editor</Button>
                         <Button className="navigation-button" variant="contained" href="/analytics">Analytics</Button>
+                    </div>
+                    <div className="navigation-profile">
+                    <   ProfileIcon/>
                     </div>
                 </nav>
 
