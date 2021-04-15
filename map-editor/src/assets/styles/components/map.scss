@@ -83,6 +83,37 @@ img {
     }
 }
 
+.exhibit-piece-modal-header {
+    .piece-item-title {
+        textarea {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-left: 1%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .MuiOutlinedInput-multiline {
+        padding: 0.25rem;
+    }
+
+    .exhibit-item-subtitle {
+        input {
+            font-size: 0.75rem;
+            padding: 1%;
+        }
+    }
+
+    .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+}
+
 .piece-modal-title-container {
     background-color: $primary-color;
     margin-bottom: 0.5rem;
@@ -139,7 +170,7 @@ img {
         border-color: $accent-white;
     }
 
-     .MuiInputBase-formControl:focus-within {
+    .MuiInputBase-formControl:focus-within {
         background-color: #EBEBEB;
     }
     

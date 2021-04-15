@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const getDescription = (desc) => {
     const length = 80;
+    if (desc == undefined || desc == null) return "";
     if (desc.length <= length) return desc;
     for (let i = length; i >= 0; i--) {
         let char = desc[i];
@@ -36,7 +37,7 @@ const getDescription = (desc) => {
 };
 
 export default function PiecePreviewModal({ piece, openPiece, anchorEl, setAnchor }) {
-    console.log(piece)
+    // console.log(piece)
     const classes = useStyles();
     // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = useState(getModalStyle);
@@ -47,17 +48,20 @@ export default function PiecePreviewModal({ piece, openPiece, anchorEl, setAncho
             <p id="simple-modal-description">
                 {getDescription(piece.description)}
             </p>
+            <div>
             <img
                 src={piece.img}
                 alt={"Photo of " + piece.title}
-                width={771/2}
-                height={534/2}
+                style={{margin: 'auto'}}
+                width={600/2}
+                height={500/2}
             />
+            </div>
         </div>
     );
 
     const open = Boolean(anchorEl);
-    console.log("open is", open)
+    //console.log("open is", open)
 
     return (
         <div>

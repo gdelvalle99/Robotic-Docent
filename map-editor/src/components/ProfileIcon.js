@@ -52,7 +52,7 @@ export default function ProfileIcon() {
 
   return (
     <div>
-      <Avatar onClick={handleClick} style={{backgroundColor: "#1f5d87"}}>KR</Avatar>
+      <Avatar onClick={handleClick} style={{backgroundColor: "#1f5d87"}}>SL</Avatar>
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}

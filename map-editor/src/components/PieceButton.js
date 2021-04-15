@@ -9,8 +9,10 @@ import { DialogTitle } from '@material-ui/core';
 import { Select } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { InputLabel } from '@material-ui/core';
+import { Input } from '@material-ui/core';
 import { InputAdornment } from '@material-ui/core';
 import { floorLink } from "../links";
+import { newPieceLink } from "../links";
 import axios from 'axios';
 import Add from '@material-ui/icons/Add';
 
@@ -21,6 +23,12 @@ export const PieceButton = (props) => {
     const [newDimension, setNewDimension] = useState([]);
     const [newCoordinates, setNewCoordinates] = useState([]);
     const [newPiece, setNewPiece] = useState({});
+
+    const handleBeforeSubmit = () => {
+        const data = newPiece;
+        data['coordinates'] = props.coordinates;
+        let r = axios.post(newPieceLink, data).catch(e=>console.log(e));
+    }
 
     //Handles alert for delete
     const handleOpenAlert = () => {
@@ -50,17 +58,21 @@ export const PieceButton = (props) => {
         const newDim = newDimension;
         newDim[parseInt(event.target.name)] = event.target.value;
         setNewDimension(newDim);
+        const dimNumified = [];
+        dimNumified[0] = parseInt(newDim[0]);
+        dimNumified[1] = parseInt(newDim[1]);
+        dimNumified[2] = parseInt(newDim[2]);
         handleAllChanges(newPiece, {
-            dimension: newDimension
+            dimension: dimNumified
         })
     }
 
     const handleCoordinateChange = (event) => {
-        const newCoord = newCoordinates;
-        newCoord[parseInt(event.target.name)] = event.target.value;
-        setNewCoordinates(newCoord);
+        const newCoords = newCoordinates;
+        newCoords[parseInt(event.target.name)] = event.target.value;
+        setNewCoordinates(newCoords);
         handleAllChanges(newPiece, {
-            coordinates: newCoordinates
+            coordinates: newCoords
         })
     }
 
@@ -75,13 +87,18 @@ export const PieceButton = (props) => {
     }
 
     //Handle save, cancel, open, and close
-    const handleSave = async () => {
+    const handleSave = () => {
+        handleBeforeSubmit();
         props.addToPlaces(newPiece);
+        setNewPiece({});
+        setExhibitName("");
         props.handleClose();
     }
 
     const handleCancel = () => {
         props.setLoc([]);
+        setNewPiece({});
+        setExhibitName("");
         props.handleClose();
     }
 
@@ -95,7 +112,7 @@ export const PieceButton = (props) => {
                 setExhibits(e.exhibits);
             }).catch(e=>console.log(e))
 
-        setNewPiece({...newPiece, coordinates: props.coordinates});
+        //setNewPiece({...newPiece, coordinates: props.coordinates});
     }
 
     useEffect(() => { 
@@ -104,7 +121,7 @@ export const PieceButton = (props) => {
     
     return (
         <div className="map-piece-button">
-            <Fab aria-label="add" className="floating-piece-button" onClick={props.handleOpenClick}>
+            <Fab aria-label="add" className="floating-piece-button" onClick={() => {props.handleOpenClick(); getExhibits();}}>
                 <Add fontSize='large'/>
             </Fab>
             <Dialog open={props.open} onClose={handleOpenAlert} aria-labelledby="form-dialog-title">
@@ -118,6 +135,7 @@ export const PieceButton = (props) => {
                             name="title" 
                             defaultValue={newPiece.title}
                             onBlur={handleChange} 
+                            multiline
                             fullWidth
                             required
                         />
@@ -192,7 +210,7 @@ export const PieceButton = (props) => {
                             label="Acquistion Date"
                             type="date"
                             variant="outlined"
-                            name="acquistion_date" 
+                            name="acquisition_date" 
                             defaultValue={newPiece.acquisition_date}
                             onBlur={handleChange} 
                             InputLabelProps={{ shrink: true }}

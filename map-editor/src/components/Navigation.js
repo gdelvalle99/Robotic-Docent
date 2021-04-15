@@ -24,7 +24,6 @@ export const NavigationBar = (props) => {
                     <div className="navigation-button-container">
                         <Button className="navigation-button" variant="contained" href="/">Home</Button>
                         <Button className="navigation-button" variant="contained" href="/map-editor">Editor</Button>
-                        <Button className="navigation-button" variant="contained" href="/tours">Tours</Button>
                         <Button className="navigation-button" variant="contained" href="/analytics">Analytics</Button>
                     </div>
                     <div className="navigation-profile">

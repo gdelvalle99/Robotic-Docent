@@ -4,6 +4,7 @@ import { CardHeader } from "@material-ui/core";
 import { CardContent } from "@material-ui/core";
 import { CardMedia } from "@material-ui/core";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import RobotInfo from '../components/Temp';
 import MapImage from "../assets/images/isometric_stock_map.jpg";
 import axios from 'axios'
 
@@ -66,7 +67,10 @@ export const Home = () => {
             </div>
             <div className="home-analytics-card">
                 <Card>
-                    <CardHeader title="Today's Analytics"/>
+                    <CardHeader title="Recent Analytics"/>
+                    <CardContent style={{margin: 'auto', display: 'flex', justifyContent: 'center'}}>
+                        <RobotInfo />
+                    </CardContent>
                 </Card>
             </div>
         </div>

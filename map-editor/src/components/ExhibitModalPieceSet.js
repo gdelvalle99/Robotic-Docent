@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { ExhibitModalPiece } from './ExhibitModalPiece';
 import { List } from '@material-ui/core';
+import { ListItem } from '@material-ui/core';
+import { ListItemText } from '@material-ui/core';
 import { exhibitLink } from '../links';
 import axios from 'axios';
 
 export const ExhibitModalPieceSet = (props) => {
     const [pieceList, setPieceList] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
 
     const setInitialPieceList = () => {
         let r = axios.get(exhibitLink+props.exhibit_id).
@@ -28,10 +39,15 @@ export const ExhibitModalPieceSet = (props) => {
             </div>
             <div className="exhibit-item-piece-list-container">
                 <List>
-                    {pieceList.length > 0 && (
+                    {pieceList && (
                             pieceList.map((piece, index) => {
-                                return (
-                                    <ExhibitModalPiece key={index} piece={piece}/>
+                                return (                         
+                                    <div className="exhibit-piece-item-modal">
+                                        <ListItem button onClick={handleOpen}>
+                                            <ListItemText primary={piece.title} secondary={piece.author}/>
+                                        </ListItem>
+                                        <ExhibitModalPiece key={index} piece={piece} open={open} handleClose={handleClose}/>
+                                    </div>
                                 );
                             })
                         )

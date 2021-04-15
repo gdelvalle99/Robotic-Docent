@@ -7,10 +7,11 @@ const newExhibitLink = baseLink+"/exhibit/new"
 const existingExhibitLink = baseLink+"/exhibit/update"
 const deleteExhibitLink = baseLink+"/exhibit/delete?id="
 const exhibitLink = baseLink+"/exhibit/pieces?id="
+const newPieceLink = baseLink+"/piece/new"
 const demoLink = "http://decd071e058d.ngrok.io/start_tour"
 
 
 const validateLink = baseLink + "/auth/validate"
 
 
-export {baseLink, mapLink, tourLink, floorLink, floor_id, newExhibitLink, existingExhibitLink, deleteExhibitLink, exhibitLink, demoLink, validateLink}
+export {baseLink, mapLink, tourLink, floorLink, floor_id, newExhibitLink, existingExhibitLink, deleteExhibitLink, exhibitLink, newPieceLink, demoLink, validateLink}
