@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Fab } from "@material-ui/core";
 import { mapLink, floor_id } from "../links";
+import { ExhibitModalPiece } from "./ExhibitModalPiece";
 import Add from "@material-ui/icons/Add";
-import AddExhibit from "./AddExhibit";
-import PieceModal from "./PieceModal";
+import PieceButton from "./PieceButton";
 import PiecePreviewModal from "./PiecePreviewModal";
 
-function useTraceUpdate(props) {
-  const prev = useRef(props);
-  useEffect(() => {
-    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-      if (prev.current[k] !== v) {
-        ps[k] = [prev.current[k], v];
-      }
-      return ps;
-    }, {});
-    if (Object.keys(changedProps).length > 0) {
-      console.log('Changed props:', changedProps);
-    }
-    prev.current = props;
-  });
-}
+// function useTraceUpdate(props) {
+//   const prev = useRef(props);
+//   useEffect(() => {
+//     const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
+//       if (prev.current[k] !== v) {
+//         ps[k] = [prev.current[k], v];
+//       }
+//       return ps;
+//     }, {});
+//     // if (Object.keys(changedProps).length > 0) {
+//     //   console.log('Changed props:', changedProps);
+//     // }
+//     prev.current = props;
+//   });
+// }
 
 export const Map = (props) => {
     
@@ -30,14 +30,13 @@ export const Map = (props) => {
     const [piece, setPiece] = useState(null);
     const [el, setEl] = useState(null);
     const [loc, setLoc] = useState([]);
-    useTraceUpdate({image,open,openPiece,piece,el});
+    // useTraceUpdate({image,open,openPiece,piece,el});
     
     const handleClose = () => {
         setOpen(false);
     };
 
     const handleMouseOver = (piece, event) => {
-      console.log("mouse over", piece)
       setPiece(piece);
       setEl(event.currentTarget);
     }
@@ -47,7 +46,6 @@ export const Map = (props) => {
     };
 
     const handlePieceOpen = () => {
-        console.log("ayo, we clicked")
         setOpenPiece(true);
     };
 
@@ -89,16 +87,19 @@ export const Map = (props) => {
 
     const places_arr = [
         {
-            title:
-                "The Physical Impossibility of Death in the Mind of Someone Living",
+            title: "The Physical Impossibility of Death in the Mind of Someone Living",
             author: "Damien Hirst",
             description: "Conserved in formaldehyde, the work The Physical Impossibility of Death in the Mind of Someone Living by Damien Hirst is still today one of the most controversial pieces of contemporary art.",
-            coords: [20, 89],
+            coordinates: [45, 50],
             img: "https://www.damienhirst.com/images/hirstimage/DHS76_771_0.jpg"
         },
-        { title: "(Untitled)", author: "Keith Haring", 
-        description: "From his beginnings as a graffiti artist in the New York subway, Keith Haring began his career with his immediately recognizable figures and patterns. One of his most commonly represented symbols is the heart.",
-        coords: [31, 85],img: "https://imgc.artprintimages.com/img/print/untitled-c-1988_u-l-f4y1ut0.jpg?h=550&p=0&w=550&background=fbfbfb" },
+        { 
+            title: "(Untitled)", 
+            author: "Keith Haring", 
+            description: "From his beginnings as a graffiti artist in the New York subway, Keith Haring began his career with his immediately recognizable figures and patterns. One of his most commonly represented symbols is the heart.",
+            coordinates: [25, 85],
+            img: "https://imgc.artprintimages.com/img/print/untitled-c-1988_u-l-f4y1ut0.jpg?h=550&p=0&w=550&background=fbfbfb" 
+        },
         
     ];
 
@@ -139,7 +140,7 @@ export const Map = (props) => {
     }
 
     const addToPlaces = (place) => {
-      setPlaces(prev=>[...prev, {...place, coords: loc}]);
+      setPlaces(prev=>[...prev, {...place, coordinates: loc}]);
       setLoc([]); // Since we have a spot, we remove the dot
     }
 
@@ -168,9 +169,16 @@ export const Map = (props) => {
 
                     {/* {piece && <MapPopUp piece={piece} />} */}
                     <polygon
-                        onClick={() => console.log("exhibit click")}
-                        style={{ opacity: "20%", fill: "green" }}
+                        style={{ opacity: "20%", fill: "blue" }}
                         points="10,80.5 46,80.5 45.5,104 9.7,103"
+                    />
+                    <polygon
+                        style={{ opacity: "20%", fill: "green" }}
+                        points="30,42.5 63,44.5 62,62 30,61"
+                    />
+                    <polygon
+                        style={{ opacity: "20%", fill: "yellow" }}
+                        points="135.5,62.3 95.4,62.4 95.5,100.2 135.5,100.5"
                     />
                     {places.map((p) => (
                         <use
@@ -179,8 +187,8 @@ export const Map = (props) => {
                             onMouseEnter={(e)=>handleMouseOver(p,e)}
                             // onMouseOut={exitPiece}
                             xlinkHref="#pin"
-                            x={p.coords[0]}
-                            y={p.coords[1]}
+                            x={p.coordinates[0]}
+                            y={p.coordinates[1]}
                             width="6"
                             height="6"
                         />
@@ -207,16 +215,8 @@ export const Map = (props) => {
             Open Modal
           </button> */}
 
-            <Fab
-                color="primary"
-                aria-label="add"
-                className="bottom-right"
-                onClick={handleOpenClick}
-            >
-                <Add fontSize="large" />
-            </Fab>
-            <AddExhibit open={open} handleClose={handleClose} coords={loc} handleLocation={handleLocation} addToPlaces={addToPlaces}/>
-            <PieceModal
+            <PieceButton open={open} coordinates={loc} setLoc={setLoc} handleLocation={handleLocation} addToPlaces={addToPlaces} handleOpenClick={handleOpenClick} handleClose={handleClose}/>
+            <ExhibitModalPiece
                 open={openPiece}
                 handleClose={handlePieceClose}
                 piece={piece}

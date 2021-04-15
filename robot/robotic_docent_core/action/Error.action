@@ -1,0 +1,12 @@
+# Define the goal
+string text
+float32 current_position_x
+float32 current_position_y
+float32 goal_x
+float32 goal_y
+---
+# Define the result
+string finished
+---
+# Define a feedback message
+string current_word

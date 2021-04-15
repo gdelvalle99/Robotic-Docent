@@ -18,6 +18,32 @@ def record(state):
 def before_request():
     valid_login(request)
 
+
+# Expects json with values [id: str]
+@exhibit.route('/delete', methods=['GET'])
+def delete_exhibit():
+    if request.method == 'GET':
+        
+        id = request.args.get('id', default = "", type = str)
+
+        db = current_app.config["exhibit.db"]
+
+        try:
+            existingExhibit = db.session.query(Exhibit).filter(Exhibit.id==id).one()
+            if (existingExhibit is not None):
+                db.session.delete(existingExhibit)
+                db.session.commit()
+                return {"success": True, "msg": "Successfully deleted the exhibit"} 
+            else:
+                return {"success": False, "msg": "Exhibit does not exist"}
+        except SQLAlchemyError as e:
+            print(type(e), e)
+            return {"success": False, "msg": str(e)}
+
+    return {"success": False, "msg": "404 No Existing Route"}
+
+
+
 # Expects json with values [id: str, title: str, subtitle: str, description: str, start_date: date]
 # Returns a json object
 @exhibit.route('/update', methods=['POST'])
@@ -85,7 +111,7 @@ def create_exhibit():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# Returns a json object with a list of exhibits given a set floor
+# Returns a json object with a list of pieces given a set floor
 @exhibit.route('/pieces', methods=['GET'])
 def get_exhibit_pieces():
     id = request.args.get('id', default = "", type = str)
