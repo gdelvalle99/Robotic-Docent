@@ -8,6 +8,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import OutlinedCard from "./OutlinedCard";
+import Set1 from "./Set1";
+import Set2 from "./Set2";
+import Set3 from "./Set3";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -24,14 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FormDisplay({ display, handleChange }) {
     const classes = useStyles();
-
-    const body = (
-        <div>
-            The most frequently asked question:
-            <br />
-            What do you like about chicken?
-        </div>
-    );
 
     return (
         <div>
@@ -54,52 +49,9 @@ export default function FormDisplay({ display, handleChange }) {
                     </MenuItem>
                 </Select>
             </FormControl>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <OutlinedCard
-                        title="Maximum Number of Interactions"
-                        fact={56}
-                        subfact="Interactions"
-                        body={body}
-                    />
-                    <OutlinedCard
-                        title="Minimum Number of Interactions"
-                        fact={0}
-                        subfact="Interactions"
-                        body={body}
-                    />
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <OutlinedCard
-                        title="Median Number of Interactions"
-                        fact={21}
-                        subfact="Interactions"
-                        body={body}
-                    />
-                    <OutlinedCard
-                        title="Average Number of Interactions"
-                        fact={21.81}
-                        subfact="Interactions"
-                        body={body}
-                    />
-                </div>
-            </div>
+            {display === "Exhibit Information" && <Set1/>}
+            {display === "Robot Information" && <Set2 />}
+            {display === "Daily Information" && <Set3 />}
         </div>
     );
 }
