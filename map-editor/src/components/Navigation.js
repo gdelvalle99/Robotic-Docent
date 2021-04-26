@@ -6,6 +6,7 @@ import { Home } from '../pages/Home';
 import { Analytics } from '../pages/Analytics';
 import { Editor } from '../pages/Editor';
 import ProfileIcon from "./ProfileIcon";
+import { Tours } from "../pages/Tours";
 // import { ProfileIcon } from './ProfileIcon'
 
 export const NavigationBar = (props) => {
@@ -25,6 +26,7 @@ export const NavigationBar = (props) => {
                         <Button className="navigation-button" variant="contained" href="/">Home</Button>
                         <Button className="navigation-button" variant="contained" href="/map-editor">Editor</Button>
                         <Button className="navigation-button" variant="contained" href="/analytics">Analytics</Button>
+                        <Button className="navigation-button" variant="contained" href="/tours">Tours</Button>
                     </div>
                     <div className="navigation-profile">
                     <   ProfileIcon/>
@@ -34,6 +36,7 @@ export const NavigationBar = (props) => {
                 <Route path="/" exact component={Home} />
                 <Route path="/map-editor" exact component={Editor} />
                 <Route path="/analytics" exact component={Analytics} />
+                <Route path="/tours" exact component={Tours} />
 
             </div>
         </Router>
