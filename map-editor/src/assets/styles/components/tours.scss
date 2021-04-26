@@ -1,3 +1,10 @@
 .tours-page {
-    
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.tours-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
