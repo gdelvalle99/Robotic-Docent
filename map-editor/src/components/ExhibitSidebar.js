@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ExhibitSidebarModal } from './ExhibitSidebarModal';
 import { Button } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { deleteExhibitLink } from '../links';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { newExhibitLink } from '../links';
@@ -9,8 +8,7 @@ import { existingExhibitLink } from '../links';
 import { floor_id } from '../links';
 import axios from 'axios';
 
-export const ExhibitSidebar = (props) => {
-    const [exhibitList, setExhibitList] = useState([]);
+export const ExhibitSidebar = ({exhibitList, setExhibitList}) => {
 
     //Handles save and sending post request for new exhibit to add to the floor
     const handleSaveNewExhibit = (exhibit) => {
@@ -57,16 +55,6 @@ export const ExhibitSidebar = (props) => {
         const emptyExhibit = {}
         setExhibitList(exhibitList => [...exhibitList, emptyExhibit])
     }
-
-    const setInitialExhibitList = () => {
-        if (props.exhibitListContainer.exhibits != null) {
-            setExhibitList(props.exhibitListContainer.exhibits);
-        }  
-    }
-
-    useEffect(() => { 
-        setInitialExhibitList();
-    }, [props]);
 
     return (
         <div className="exhibit-sidebar-container">

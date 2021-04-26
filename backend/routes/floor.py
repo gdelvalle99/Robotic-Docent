@@ -105,7 +105,6 @@ def floor_update():
 
     return {"success": False, "msg": "404 No Existing Route"}
 
-# DUMMY ROUTE FOR NOW, ONLY RETREIVES EXHIBITS FOR FLOORS WITH ID 2, SHOULD CHANGE
 # Returns a json object with a list of exhibits given a set floor
 @floor.route('/exhibits', methods=['GET'])
 def get_exhibits():
