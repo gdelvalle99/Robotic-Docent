@@ -106,7 +106,7 @@ export const TourModalPiece = (props) => {
                 <CardHeader 
                     title={tour.title}
                     titleTypographyProps={{variant: 'h5'}}
-                    subheader={tour.subtitle} 
+                    subheader={tour.start_date} 
                     subheaderTypographyProps={{variant: 'body1'}}
                 />
             </Card>
