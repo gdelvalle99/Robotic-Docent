@@ -124,7 +124,7 @@ def create_tour_floor():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
-        
+
 @tour.route('/analytics/interaction', methods=['POST'])
 def add_interaction_count():
     db = current_app.config["tour.db"]
@@ -138,7 +138,7 @@ def add_interaction_count():
             tour.interaction_count = interaction_count
             db.session.commit()
 
-        return {"success": True, "msg": "Successfully linked piece to a tour"}
+        return {"success": True, "msg": "Successfully captured interaction count"}
     except Exception as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
