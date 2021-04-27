@@ -4,11 +4,26 @@ import { List } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 import { ListItemText } from '@material-ui/core';
 import { exhibitLink } from '../links';
+import { deletePieceLink } from '../links';
 import axios from 'axios';
 
 export const ExhibitModalPieceSet = (props) => {
     const [pieceList, setPieceList] = useState([]);
     const [open, setOpen] = useState(false);
+
+    const handleDeletePiece = (piece_id) => {
+        if (piece_id !== undefined) {
+            let link = deletePieceLink + piece_id;
+            let r = axios.get(link)
+                .catch(e=>console.log(e))
+            const updatedList = pieceList.filter(item => item.id !== piece_id);
+            setPieceList(updatedList);
+        }
+        else {
+            const updatedList = pieceList.filter(item => item.id !== undefined);
+            setPieceList(updatedList);
+        }
+    }
 
     const handleOpen = () => {
         setOpen(true);
@@ -46,7 +61,7 @@ export const ExhibitModalPieceSet = (props) => {
                                         <ListItem button onClick={handleOpen}>
                                             <ListItemText primary={piece.title} secondary={piece.author}/>
                                         </ListItem>
-                                        <ExhibitModalPiece key={index} piece={piece} open={open} handleClose={handleClose}/>
+                                        <ExhibitModalPiece key={index} piece={piece} open={open} handleClose={handleClose} handleDeletePiece={handleDeletePiece}/>
                                     </div>
                                 );
                             })
