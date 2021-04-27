@@ -27,10 +27,10 @@ class MotionState:
         self.motionstate_publisher.publish("Sending " + str(goal) + " to map_navigation")
         ac.send_goal(goal)
         ac.wait_for_result()
-        if ac.get_state() == 1:
-            self.server.set_succeeded()
-        else:
+        if ac.get_state() == 4:
             self.server.set_aborted()
+        else:
+            self.server.set_succeeded()
 
         # self.navigate(goal)
 
@@ -64,10 +64,10 @@ class MotionState:
         rospy.loginfo("Sending goal location ...")
         ac.send_goal(goal)
         ac.wait_for_result()
-        if ac.get_state() == actionlib.SimpleGoalState.SUCCEEDED:
-            self.server.set_succeeded()
-        else:
+        if ac.get_state() == 4:
             self.server.set_aborted()
+        else:
+            self.server.set_succeeded()
 
 rospy.init_node("motion_state_server")
 server = MotionState()

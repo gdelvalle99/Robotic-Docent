@@ -1,5 +1,5 @@
 from flask import current_app, request, make_response, Blueprint
-from ..Models import Museum, Floor, Exhibit
+from ..Models import Museum, Floor, Exhibit, Piece
 from ..validation import FloorValidate
 from .helpers.valid_login import valid_login
 from sqlalchemy.exc import SQLAlchemyError
@@ -116,6 +116,24 @@ def get_exhibits():
         exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
         serialized_exhibits = [i.serialize() for i in exhibits]
         return {"success": True, "exhibits": serialized_exhibits}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+
+# Returns a json object with a list of pieces given a set floor
+@floor.route('/pieces', methods=['GET'])
+def get_pieces():
+    id = request.args.get('id', default = "", type = str)
+    db = current_app.config["floor.db"]
+    print("hello:",id,request.args)
+    try:
+        exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
+        serialized_exhibits = [i.serialize() for i in exhibits]
+        serialized_pieces = []
+        for exhibit in serialized_exhibits:
+            pieces = db.session.query(Piece).filter(Piece.exhibit_id==exhibit["id"]).all()
+            serialized_pieces += [i.serialize() for i in pieces]
+        return {"success": True, "pieces": serialized_pieces}
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}

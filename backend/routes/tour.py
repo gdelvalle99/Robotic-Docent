@@ -53,7 +53,6 @@ def get_tour_info():
         print(e, tour_id)
         return {"success": False, "msg": str(e)}
 
-
 @tour.route('/piece/add', methods=['POST'])
 def add_tourpiece():
     db = current_app.config["tour.db"]
@@ -89,5 +88,57 @@ def get_tour_piece():
         serialized_piece = [i.serialize() for i in piece]
         return {"success": True, "piece": serialized_piece}
     except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+
+# Add everything on a floor
+@tour.route('/create/addFloor', methods=['POST'])
+def create_tour_floor():
+    db = current_app.config["exhibit.db"]
+
+    data = request.get_json()
+    id = data['floor_id']
+
+    try:
+        # Validate floor and find exhibits
+        exhibits = db.session.query(Exhibit).filter(Exhibit.floor_id==id).all()
+        serialized_exhibits = [i.serialize() for i in exhibits]
+
+        # Create tour
+        tour = Tour()
+        tour_id = tour.id
+        db.session.add(tour)
+        db.session.commit()
+
+        # Connect pieces to tours
+        for exhibit in serialized_exhibits:
+            pieces = db.session.query(Piece).filter(Piece.exhibit_id==exhibit["id"]).all()
+            serialized_pieces = [i.serialize() for i in pieces]
+            for piece in serialized_pieces:
+                piece = db.session.query(Piece).filter(Piece.id==piece['id']).first()
+                if(tour is not None and piece is not None):
+                    tour_piece = TourPieces(tour_id, piece['id'])
+                    db.session.add(tour_piece) 
+                    db.session.commit()
+        return {"success": True, "msg": "everything was connected properly"}
+    except SQLAlchemyError as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
+        
+@tour.route('/analytics/interaction', methods=['POST'])
+def add_interaction_count():
+    db = current_app.config["tour.db"]
+    try:
+        data = request.get_json()
+        tour_id = data['tour_id']
+        interaction_count = data['interaction_count']
+
+        tour = db.session.query(Tour).filter(Tour.id==tour_id).first()
+        if(tour is not None):
+            tour.interaction_count = interaction_count
+            db.session.commit()
+
+        return {"success": True, "msg": "Successfully linked piece to a tour"}
+    except Exception as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}

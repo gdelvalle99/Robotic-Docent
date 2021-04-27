@@ -202,6 +202,7 @@ class Tour(BaseModel, db.Model):
 
     # This needs to be refactored, here just for demo
     def __init__(self):
+        self.id = uuid.uuid4()
         self.interaction_count = 0
         self.question_count = 0
 
