@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Fab } from "@material-ui/core";
-import { mapLink, floor_id } from "../links";
+import { mapLink, piecesLink, floor_id } from "../links";
 import { ExhibitModalPiece } from "./ExhibitModalPiece";
 import Add from "@material-ui/icons/Add";
 import PieceButton from "./PieceButton";
 import PiecePreviewModal from "./PiecePreviewModal";
+import axios from 'axios';
 
 // function useTraceUpdate(props) {
 //   const prev = useRef(props);
@@ -30,6 +31,7 @@ export const Map = (props) => {
     const [piece, setPiece] = useState(null);
     const [el, setEl] = useState(null);
     const [loc, setLoc] = useState([]);
+    const [places, setPlaces] = useState([])
     // useTraceUpdate({image,open,openPiece,piece,el});
     
     const handleClose = () => {
@@ -81,36 +83,86 @@ export const Map = (props) => {
             })
             .catch((e) => console.log(e));
     };
+
+    const getPieces = () => {
+        // const token = localStorage.getItem("auth_token") || "";
+        // fetch(piecesLink + new URLSearchParams({
+        //     id: floor_id,
+        // }), {
+        //     method: "GET",
+        //     headers: {
+        //         Accept: "application/json, text/plain, */*",
+        //         Authentification: token,
+        //         credentials: true,
+        //     },
+        // })
+        //     .then((response) => {
+        //         return response.json();
+        //     })
+        //     .then((json) => {
+        //         console.log(json)
+        //         if(json["success"]) setPlaces(json["pieces"]);
+        //     })
+        //     .catch((e) => console.log(e));
+        axios.get(piecesLink+"?id="+floor_id).then(function (response) {
+            return response;
+        }).then(item => {
+            const items = item.data.pieces;
+
+            const changeX = (x) => {
+                // return 159/59*x - (162 * 59/159);
+                // return (x+0.8679293)/0.289309996;
+                return x*125/46.0 - 6;
+            }
+            const changeY = (y) => {
+                // return 126/46*y - 46/126;
+                // return (y-58.531746)/-0.468253968;
+                return y/64*126 - 1;
+            }
+            
+            for(let item of items){
+                let newX = changeX(item.coordinates[0]);
+                let newY = changeY(item.coordinates[1]);
+                console.log(item.title, item.coordinates, newX, newY);
+                item.coordinates = [newX,newY]
+            }
+
+            setPlaces(item.data.pieces)
+        }).catch(e=>console.log(e))  
+    }
+
     useEffect(() => {
         getImage();
     }, []);
 
-    const places_arr = [
-        {
-            title: "The Physical Impossibility of Death in the Mind of Someone Living",
-            author: "Damien Hirst",
-            description: "Conserved in formaldehyde, the work The Physical Impossibility of Death in the Mind of Someone Living by Damien Hirst is still today one of the most controversial pieces of contemporary art.",
-            coordinates: [45, 50],
-            img: "https://www.damienhirst.com/images/hirstimage/DHS76_771_0.jpg"
-        },
-        { 
-            title: "(Untitled)", 
-            author: "Keith Haring", 
-            description: "From his beginnings as a graffiti artist in the New York subway, Keith Haring began his career with his immediately recognizable figures and patterns. One of his most commonly represented symbols is the heart.",
-            coordinates: [25, 85],
-            img: "https://imgc.artprintimages.com/img/print/untitled-c-1988_u-l-f4y1ut0.jpg?h=550&p=0&w=550&background=fbfbfb" 
-        },
-        
-    ];
-
-    const [places, setPlaces] = useState(places_arr)
-
-    const [svg,setSvg] = useState(null);
+    useEffect(()=>{
+        let oop = document.getElementById('map')
+        setSvg(oop)
+      }, [])
 
     useEffect(()=>{
-      let oop = document.getElementById('map')
-      setSvg(oop)
+        getPieces();
     }, [])
+
+    // const places_arr = [
+    //     {
+    //         title: "The Physical Impossibility of Death in the Mind of Someone Living",
+    //         author: "Damien Hirst",
+    //         description: "Conserved in formaldehyde, the work The Physical Impossibility of Death in the Mind of Someone Living by Damien Hirst is still today one of the most controversial pieces of contemporary art.",
+    //         coordinates: [45, 50],
+    //         img: "https://www.damienhirst.com/images/hirstimage/DHS76_771_0.jpg"
+    //     },
+    //     { 
+    //         title: "(Untitled)", 
+    //         author: "Keith Haring", 
+    //         description: "From his beginnings as a graffiti artist in the New York subway, Keith Haring began his career with his immediately recognizable figures and patterns. One of his most commonly represented symbols is the heart.",
+    //         coordinates: [25, 85],
+    //         img: "https://imgc.artprintimages.com/img/print/untitled-c-1988_u-l-f4y1ut0.jpg?h=550&p=0&w=550&background=fbfbfb" 
+    //     },
+        
+    // ];
+
+    const [svg,setSvg] = useState(null);
 
     function alert_coords(evt) {
         let pt = svg.createSVGPoint()
