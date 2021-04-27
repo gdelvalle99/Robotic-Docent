@@ -7,8 +7,11 @@ import json
 import actionlib
 from robotic_docent_core.msg import Piece, MotionAction, MotionGoal, PresentAction, PresentGoal, QAAction, QAGoal
 from std_msgs.msg import String
-
+from flask_cors import CORS
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "*"}}, expose_headers='Authorization')
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 web_server = 'http://59dd7ccff6fa.ngrok.io/'
 web_server_local = 'http://127.0.0.1:5001'
@@ -22,7 +25,7 @@ queue_ac.wait_for_server()
 @app.route('/send_answer', methods=['POST'])
 def send_answer():
     qa_answer = request.get_json()
-    f = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/log.txt", "a")
+    f = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/robotic_docent_core/temp/log.txt", "a")
     f.write(str(qa_answer))
     try:
         robot_answer = QAGoal()
@@ -36,21 +39,23 @@ def send_answer():
 
 @app.route('/server/qa', methods=['GET'])
 def send_questions():
-    f = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/Temp/testqa.json")
+    f = open("/home/memo/catkin_ws/src/Robotic-Docent/robot/robotic_docent_core/temp/testqa.json")
     data = json.load(f)
     f.close()
     return data
 
-@app.route('/start_tour', methods=['GET'])
+
+@app.route('/start_tour', methods=['POST'])
 def start_tour():
     tour_id = request.args.get('tour_id', default="", type = str)
     try:
         present_tour_id = PresentGoal()
-        # publisher.publish("Sending to tour_func action server..")
+        rospy.loginfo(str(tour_id))
+        #publisher.publish("Sending to tour_func action server..")
         present_tour_id.text = tour_id
-        publisher.publish("Sending to tour_func action server after waiting.")
+        # publisher.publish("Sending to tour_func action server after waiting.")
         tour_ac.send_goal(present_tour_id)
-        publisher.publish("Sent to tour_func action server after waiting.")
+        # publisher.publish("Sent to tour_func action server after waiting.")
         tour_ac.wait_for_result()
         return {"success": True, "msg": "Success!"}
     except:

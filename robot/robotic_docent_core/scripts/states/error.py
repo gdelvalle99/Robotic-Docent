@@ -25,14 +25,16 @@ class ErrorState:
         if goal.text == "navigation":
             error_message.text = f"Error in navigation. Robot obstructed, will retry. If you're in the way, please move. {retries} remaining." 
             retry_navigation.goal_x = goal.goal_x
-            retry_navigation.goal_y = goal.goal_y
+            retry_navigation.goal_y = goal.goal_y 
             while fixed == False:
                 if retries > 0:
                     self.voice_client.send_goal(error_message)
                     self.voice_client.wait_for_result()
                     retries -= 1
                     self.motion_client.send_goal(retry_navigation)
-                    if ac.get_state() == actionlib.SimpleGoalState.SUCCEEDED:
+                    if self.motion_client.get_state() != 4:
+                        error_message.text = "Successfully fixed"
+                        self.voice_client.send_goal(error_message) 
                         fixed = True
                         break
                 else:
@@ -43,8 +45,6 @@ class ErrorState:
             if fixed == True:
                 self.server.set_succeeded() 
 
-        elif goal.text == "interactive":  
-            pass
 
 rospy.init_node("error_state_server")
 server = ErrorState()

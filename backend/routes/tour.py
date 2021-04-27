@@ -91,3 +91,21 @@ def get_tour_piece():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
+
+@tour.route('/analytics/interaction', methods=['POST'])
+def add_interaction_count():
+    db = current_app.config["tour.db"]
+    try:
+        data = request.get_json()
+        tour_id = data['tour_id']
+        interaction_count = data['interaction_count']
+
+        tour = db.session.query(Tour).filter(Tour.id==tour_id).first()
+        if(tour is not None):
+            tour.interaction_count = interaction_count
+            db.session.commit()
+
+        return {"success": True, "msg": "Successfully linked piece to a tour"}
+    except Exception as e:
+        print(type(e), e)
+        return {"success": False, "msg": str(e)}
