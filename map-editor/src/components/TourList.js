@@ -33,19 +33,19 @@ export const TourList = ({tourList}) => {
     return (
         <div className="tour-list-container">
             <div className="tour-list-today">
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                 Today's Tours
                 </Typography>
                 {today.map(t => <TourModalPiece key={t.id} tour={t}/>)}
             </div>
             <div className="tour-list-upcoming">
-                <Typography  variant="h5" gutterBottom>
+                <Typography  variant="h4" gutterBottom>
                 Upcoming Tours
                 </Typography>
                 {future.map(t => <TourModalPiece key={t.id} tour={t}/>)}
             </div>
             <div className="tour-list-past">
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                 Past Tours
                 </Typography>
                 {prev.map(t => <TourModalPiece key={t.id} tour={t}/>)}
