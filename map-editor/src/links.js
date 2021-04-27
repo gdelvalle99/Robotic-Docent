@@ -14,8 +14,6 @@ const piecesLink = baseLink + "/floor/pieces";
 const validateLink = baseLink + "/auth/validate";
 const demoLink = "http://c919533a64ec.ngrok.io/start_tour?tour_id="
 
-const validateLink = baseLink + "/auth/validate"
-
 export {
     baseLink,
     mapLink,
