@@ -9,7 +9,7 @@ export const TourList = ({tourList}) => {
     const [today, setToday] = useState([])
 
     useEffect(() => {
-        console.log(tourList);
+        // console.log(tourList);
         const today = new Date()
         let previous = tourList.filter(x=>new Date(x.start_date) < today);
         setPrev(previous)

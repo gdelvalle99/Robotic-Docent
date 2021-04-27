@@ -23,7 +23,7 @@ export default function ExhibitInfo() {
     return (
         <div style={{ display: "flex", maxWidth: 900 }}>
            <Chart
-                width={800}
+                width={700}
                 height={"300px"}
                 chartType="AreaChart"
                 loader={<CircularProgress />}

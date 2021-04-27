@@ -6,7 +6,7 @@ import { validateLink } from "./links";
 import "./assets/styles/site.scss";
 
 function App() {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("auth_token") || "";

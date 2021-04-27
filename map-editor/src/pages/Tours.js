@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TourList } from "../components/TourList";
-import { newTourLink } from "../links";
+import { newTourLink, demoLink } from "../links";
 import axios from "axios";
 import { Fab } from "@material-ui/core";
 import { Dialog } from "@material-ui/core";
@@ -24,12 +24,12 @@ const convertSimpleISODate = function (dateString) {
     }
 };
 
-const mockList = [{title: "Tour 1", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 26 2021 14:41:56 GMT-0700"},
-{title: "Tour 2", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 27 2021 14:41:56 GMT-0700"},
-{title: "Tour 3", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 25 2021 14:41:56 GMT-0700"},
-{title: "Tour 4", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 22 2021 14:41:56 GMT-0700"},
-{title: "Tour 5", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"},
-{title: "Tour 6", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"}];
+const mockList = [{title: "Tour of France", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 26 2021 14:41:56 GMT-0700"},
+{title: "Tour of Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 27 2021 14:41:56 GMT-0700"},
+{title: "Tour of Minerals", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 25 2021 14:41:56 GMT-0700"},
+{title: "Tour of Contemporary Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 22 2021 14:41:56 GMT-0700"},
+{title: "Tour of More Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"},
+{title: "Tour of Test", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"}];
 
 export const Tours = () => {
     const [tourList, setTourList] = useState([]);
@@ -38,16 +38,18 @@ export const Tours = () => {
     const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
 
     const handleClick = () => {
-        console.log("ayo");
+        const id = "dbfee438-e5dd-4056-ae2d-4b7a876d351f";
+        let r = axios.post(demoLink+id)
+            .catch(e=>console.log(e));
     };
 
     const handleSave = () => {
         // let r = axios.post(newTourLink, tour)
-        // .then(function (response) {
-        //     return response.data;
-        // }).then(d => {
-        //     setTour({...tour, id: d.id});
-        // }).catch(e=>console.log(e));
+        //     .then(function (response) {
+        //         return response.data;
+        //     }).then(d => {
+        //         setTour({...tour, id: d.id});
+        //     }).catch(e=>console.log(e));
         setTourList([...tourList, tour]);
         handleCloseModal();
         setTour({});
