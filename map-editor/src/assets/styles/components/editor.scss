@@ -262,11 +262,24 @@
     float: right;
 
     .MuiButton-root {
-        background-color: lighten($primary-color, 20%);
+        background-color: lighten($alert, 20%);
     }
 
     button:hover {
-        background-color: $primary-color;
+        background-color: $alert;
+    }
+}
+
+.exhibit-piece-delete-button {
+    margin: 1rem;
+    float: right;
+
+    .MuiButton-root {
+        background-color: lighten($alert, 20%);
+    }
+
+    button:hover {
+        background-color: $alert;
     }
 }
 
@@ -278,16 +291,42 @@
         margin: 1rem;
 
         .MuiButton-root {
-            background-color: lighten($primary-color, 20%);
+            background-color: lighten($alert, 20%);
             text-transform: none;
         }
 
         button:hover {
-            background-color: $primary-color;
+            background-color: $alert;
         }
     }
 
     .exhibit-delete-alert-button-cancel {
+        margin: 1rem;
+
+        .MuiButton-root {
+            text-transform: none;
+        }
+    }
+}
+
+.exhibit-piece-delete-alert-buttons {
+    margin: auto;
+
+    .exhibit-piece-delete-alert-button-delete {
+
+        margin: 1rem;
+
+        .MuiButton-root {
+            background-color: lighten($alert, 20%);
+            text-transform: none;
+        }
+
+        button:hover {
+            background-color: $alert;
+        }
+    }
+
+    .exhibit-piece-delete-alert-button-cancel {
         margin: 1rem;
 
         .MuiButton-root {

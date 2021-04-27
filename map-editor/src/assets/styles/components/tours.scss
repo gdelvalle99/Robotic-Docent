@@ -1,10 +1,121 @@
 .tours-page {
-    display: flex;
-    justify-content: space-evenly;
+    height: 100%;
+
+    .tours-buttons {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        right: 12rem;
+        top: 8rem;
+    }
+
+    .MuiButtonBase-root {
+        height: auto;
+        margin: 2rem;
+        padding: 3rem;
+    }
+
+
+    .tour-list-container {
+        float: left;
+        width: 50%;
+        margin: auto;
+        
+        .MuiTypography-root {
+            text-align: center;
+        }
+
+        .tour-list-today {
+            margin: 1rem;
+        }
+        
+        .tour-list-upcoming {
+            margin: 1rem;
+        }
+
+        .tour-list-past {
+            margin: 1rem;   
+        }
+
+        .tour-item-container {
+            
+            .MuiCard-root {
+                width: 75%;
+                margin-top: 1rem;
+                margin-left: auto;
+                margin-right: auto;
+
+            }
+        }
+
+    }    
 }
 
-.tours-buttons {
+.tour-item-title-container {
+    background-color: $primary-color;
+    margin-bottom: 0.5rem;
+}
+
+.tour-item-content-container {
+    .MuiTextField-root {
+        margin-top: 1rem;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+        border-color: $accent-white;
+    }
+
+    .MuiInputBase-formControl:focus-within {
+        background-color: #EBEBEB;
+    }
+    
+    .MuiOutlinedInput-multiline:focus-within {
+        background-color: #EBEBEB;
+    }
+}
+
+.tour-buttons {
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+
+    .tour-button-cancel {
+        margin: 0.5rem;
+    }
+
+    .tour-button-add {
+        margin: 0.5rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+            button:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+
+.tour-delete-alert-buttons {
+    margin: auto;
+
+    .tour-delete-alert-button-delete {
+        margin: 1rem;
+
+        .MuiButton-root {
+            background-color: lighten($primary-color, 20%);
+            text-transform: none;
+        }
+
+        button:hover {
+            background-color: $primary-color;
+        }
+    }
+
+    .tour-delete-alert-button-cancel {
+        margin: 1rem;
+
+        .MuiButton-root {
+            text-transform: none;
+        }
+    }
 }

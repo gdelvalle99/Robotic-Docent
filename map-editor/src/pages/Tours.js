@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TourList } from "../components/TourList";
-import { floorLink } from "../links";
+import { newTourLink, demoLink } from "../links";
 import axios from "axios";
 import { Fab } from "@material-ui/core";
 import { Dialog } from "@material-ui/core";
@@ -24,15 +24,38 @@ const convertSimpleISODate = function (dateString) {
     }
 };
 
+const mockList = [{title: "Tour of France", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 26 2021 14:41:56 GMT-0700"},
+{title: "Tour of Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 27 2021 14:41:56 GMT-0700"},
+{title: "Tour of Minerals", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 25 2021 14:41:56 GMT-0700"},
+{title: "Tour of Contemporary Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 22 2021 14:41:56 GMT-0700"},
+{title: "Tour of More Art", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"},
+{title: "Tour of Test", id: "437829174fdios", subtitle: "this is first tour", start_date: "Mon Apr 28 2021 14:41:56 GMT-0700"}];
+
 export const Tours = () => {
+    const [tourList, setTourList] = useState([]);
+    const [tour, setTour] = useState({});
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
 
     const handleClick = () => {
-        console.log("ayo");
+        const id = "dbfee438-e5dd-4056-ae2d-4b7a876d351f";
+        let r = axios.post(demoLink+id)
+            .catch(e=>console.log(e));
     };
 
-    const createTour = () => {
+    const handleSave = () => {
+        // let r = axios.post(newTourLink, tour)
+        //     .then(function (response) {
+        //         return response.data;
+        //     }).then(d => {
+        //         setTour({...tour, id: d.id});
+        //     }).catch(e=>console.log(e));
+        setTourList([...tourList, tour]);
+        handleCloseModal();
+        setTour({});
+    }
+
+    const handleOpenModal = () => {
         setOpenModal(true);
     };
 
@@ -45,26 +68,56 @@ export const Tours = () => {
     };
 
     const handleOpenAlert = () => {
-        setOpenDeleteAlert(true);
+        if (tour.title != null && tour.title != "") {
+            setOpenDeleteAlert(true);
+        }
+        else {
+            setOpenModal(false);
+        }
+        
     };
 
     const handleDeleteClick = () => {
-        console.log("delete");
+        handleCloseAlert();
+        handleCloseModal();
+        setTour({});
     };
 
-    const handleChange = () => {
-        console.log("we change");
-    };
+    const handleChange = (event) => {
+        handleAllChanges(tour, {
+            [event.target.name]: event.target.value
+        });
+    }
+    
+    const handleAllChanges = (tour, diff) => {
+        setTour({...tour, ...diff});
+    }
+
+    const getTours = () => {
+        // let r = axios.get(floorLink).
+        //     then(function (response) {
+        //         return response;
+        //     }).then(item => {
+        //         const e = item.data;
+        //         setTours(e.tours);
+        //     }).catch(e=>console.log(e))
+
+        //DUMMY DATA PLEASE CHANGE LATER
+        setTourList(mockList);
+    }
+
+    useEffect(() => { 
+        getTours(); 
+    }, []);
 
     return (
         <div className="tours-page">
-            <TourList />
+            <TourList tourList={tourList}/>
             <div className="tours-buttons">
                 <Fab
                     variant="extended"
                     size="large"
-                    style={{ height: "auto", width: "400px", padding: "50px" }}
-                    onClick={createTour}
+                    onClick={handleOpenModal}
                 >
                     <AddIcon />
                     Create New Tour
@@ -72,7 +125,6 @@ export const Tours = () => {
                 <Fab
                     variant="extended"
                     size="large"
-                    style={{ height: "auto", width: "400px", padding: "50px" }}
                     onClick={handleClick}
                 >
                     <NavigationIcon />
@@ -84,12 +136,12 @@ export const Tours = () => {
                 onClose={handleCloseModal}
                 fullWidth={true}
             >
-                <DialogTitle>
-                    <div className="tour-item-header">
+                <DialogTitle className="tour-item-title-container">Add a New Tour</DialogTitle>
+                <DialogContent>
+                    <div className="tour-item-content-container">
                         <TextField
-                            required={true}
                             className="tour-item-title"
-                            placeholder="Title"
+                            label="Title"
                             variant="outlined"
                             name="title"
                             onBlur={handleChange}
@@ -98,32 +150,14 @@ export const Tours = () => {
                         />
                         <TextField
                             className="tour-item-subtitle"
-                            placeholder="Subtitle"
-                            size={"small"}
+                            label="Subtitle"
                             variant="outlined"
                             name="subtitle"
                             onBlur={handleChange}
                             defaultValue=" "
                             fullWidth
                         />
-                        <Divider variant="middle" />
-                    </div>
-                </DialogTitle>
-                <DialogContent>
-                    <div className="tour-item-content-container">
                         <TextField
-                            className="tour-item-description"
-                            label="Description"
-                            variant="outlined"
-                            multiline
-                            rows={5}
-                            name="description"
-                            onBlur={handleChange}
-                            defaultValue=" "
-                            fullWidth
-                        />
-                        <div className="tour-item-dates">
-                            <TextField
                                 className="tour-item-startdate"
                                 label="Start Date"
                                 variant="outlined"
@@ -134,34 +168,31 @@ export const Tours = () => {
                                 InputLabelProps={{ shrink: true }}
                                 fullWidth
                             />
-                            <TextField
-                                className="tour-item-enddate"
-                                label="End Date"
-                                variant="outlined"
-                                type="date"
-                                name="end_date"
-                                onBlur={handleChange}
-                                defaultValue={convertSimpleISODate(new Date())}
-                                InputLabelProps={{ shrink: true }}
-                                fullWidth
-                            />
-                        </div>
                         <TextField
-                            className="tour-item-theme"
-                            label="Theme"
+                            className="tour-item-starttime"
+                            label="Start Time"
                             variant="outlined"
-                            name="theme"
+                            type="time"
+                            name="start_time"
                             onBlur={handleChange}
-                            defaultValue=" "
+                            defaultValue={convertSimpleISODate(new Date())}
+                            InputLabelProps={{ shrink: true }}
                             fullWidth
                         />
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <div className="tour-delete-button">
-                        <Button onClick={handleOpenAlert} variant="outlined">
-                            <DeleteIcon fontSize="small" />
-                        </Button>
+                    <div className="tour-buttons">
+                        <div className="tour-button-cancel">
+                            <Button onClick={handleOpenAlert} variant="outlined">
+                                Cancel
+                            </Button>
+                        </div>
+                        <div className="tour-button-add">
+                            <Button onClick={handleSave} variant="outlined">
+                                Add
+                            </Button>
+                        </div>
                     </div>
                 </DialogActions>
             </Dialog>

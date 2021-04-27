@@ -25,7 +25,7 @@ def create_tour():
         tour = Tour()
         db.session.add(tour)
         db.session.commit()
-        return {"success": True, "msg": "Successfully created a new tour"}  
+        return {"success": True, "msg": "Successfully created a new tour", "id": tour.id}  
     except Exception as e:
         return {"success": False, "msg": str(e)}
 

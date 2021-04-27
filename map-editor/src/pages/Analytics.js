@@ -19,12 +19,11 @@ export const Analytics = () => {
         <div
             style={{
                 display: "flex",
-                justifyContent: "space-around",
                 // alignItems: "center",
                 // flexDirection: "column",
             }}
         >
-            <div style={{ display: "flex", maxWidth: 900 }}>
+            <div style={{ display: "flex", width: '100%' }}>
                 {/* <Chart
                     width={400}
                     height={300}
