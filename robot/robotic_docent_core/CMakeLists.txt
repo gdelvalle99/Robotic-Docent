@@ -70,6 +70,8 @@ add_action_files(
   FILES
   Motion.action
   Present.action
+  Error.action
+  QA.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -212,3 +214,4 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

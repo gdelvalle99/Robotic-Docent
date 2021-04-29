@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core'; 
 import { CardContent} from '@material-ui/core';
@@ -89,7 +88,7 @@ export const ExhibitModalQuestionCard = (props) => {
 
     return(
         <div key={"exhibit-item-qna-card" + (index+1)} id={"exhibit-item-qna-card-" + (index+1)} className={"exhibit-item-qna-card " + widthClass} ref={refCheck}>
-            <Card className={props.styleContainer} >
+            <Card>
                 <CardHeader 
                     title={"Question Set " + (index+1)} 
                     titleTypographyProps={{variant: 'body1'}}

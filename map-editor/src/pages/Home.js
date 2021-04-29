@@ -1,64 +1,78 @@
 import React, { useState } from "react";
-import { Fab } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import { Dialog } from '@material-ui/core';
-import { DialogActions } from '@material-ui/core';
-import { DialogTitle } from '@material-ui/core';
-import { demoLink } from '../links';
-import NavigationIcon from '@material-ui/icons/Navigation';
+import { Card } from "@material-ui/core";
+import { CardHeader } from "@material-ui/core";
+import { CardContent } from "@material-ui/core";
+import { CardMedia } from "@material-ui/core";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import RobotInfo from '../components/Temp';
+import MapImage from "../assets/images/isometric_stock_map.jpg";
 import axios from 'axios'
 
+const userActivity = [
+    {
+        name: "Guillermo Del Valle",
+        activity: "17 seconds ago"
+    },
+    {
+        name: "Matthew Alighchi",
+        activity: "34 minutes ago"
+    },
+    {
+        name: "Kyle Respicio",
+        activity: "3/14/21 4:23 PM"
+    },
+    {
+        name: "Sherman Lee",
+        activity: "1/23/21 8:20 AM"
+    }
+
+]
+
 export const Home = () => {
-    const [open, setOpen] = useState(false);
-
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleClick = () => {
-        const data = {};
-        console.log(JSON.stringify(data));
-
-        // fetch(demoLink
-        //     , {
-        //         method: 'GET',
-        //         mode: 'cors',
-        //         headers: {
-        //             'Accept': 'application/json, text/plain, */*',
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(data)
-        //     }
-        // ).then(response => {
-        //     return response.json()
-        // }).then(responseJSON => {
-        //     if(responseJSON.success){
-        //         setOpen(true)
-        //     }
-        // })
-        // .catch(e=>console.log(e))
-
-        axios.get(demoLink, {
-            params: {
-                tour_id: "ecc1e478-9ad2-45a1-afa9-06f4e69d565f"
-            }
-        }).then(r=>console.log(r)).catch(e=>console.log(e))
-    }
 
     return (
-        <div style={{height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <Fab variant="extended" size="large" style={{height: 'auto', width: '400px', padding: '50px'}} onClick={handleClick}>
-                <NavigationIcon />
-                Start Tour
-            </Fab>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Tour has been initiated</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <div className="home-page">
+            <div className="home-map-and-profile">
+                    <div className="home-map-card">
+                        <a href="/map-editor">
+                            <Card>
+                                <CardHeader title="Map Editor" subheader="Edit your museum"/>
+                                <CardMedia image={MapImage}/>
+                            </Card>
+                        </a>
+                    </div>
+                <div className="home-profile-card">
+                    <Card>
+                        <CardHeader title="Log History"/>
+                        <CardContent className="home-profile-list">
+                            {userActivity.map(user => {
+                                return (
+                                    <div className="home-profile">
+                                        <AccountCircleIcon fontSize="large"/>
+                                        <div className="home-profile-info-container">
+                                            <div className="home-profile-name">
+                                                {user.name}
+                                            </div>
+                                            <div className="home-profile-activity">
+                                                Last Activity: {user.activity}
+                                            </div>
+                                        </div>
+                                    </div>    
+                                )
+                            })
+                            }
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+            <div className="home-analytics-card">
+                <Card>
+                    <CardHeader title="Recent Analytics"/>
+                    <CardContent style={{margin: 'auto', display: 'flex', justifyContent: 'center'}}>
+                        <RobotInfo />
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

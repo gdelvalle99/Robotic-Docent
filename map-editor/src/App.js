@@ -6,7 +6,7 @@ import { validateLink } from "./links";
 import "./assets/styles/site.scss";
 
 function App() {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("auth_token") || "";
@@ -22,13 +22,16 @@ function App() {
             })
             .then(({ data }) => {
                 if (data.success) {
+                    // console.log("Checked auth before with login state: " + loggedIn);
                     setLoggedIn(true);
+                    // console.log("Checked auth after with login state: " + loggedIn);
                 } else localStorage.removeItem("auth_token")
             });
     }, []);
 
     return (
         <div className="map-editor-body">
+            {/* {console.log("Rerender app with login state: " + loggedIn)} */}
             {loggedIn ? (
                 <NavigationBar />
             ) : (
