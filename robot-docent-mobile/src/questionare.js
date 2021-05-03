@@ -4,7 +4,7 @@ import React from 'react';
 import _ from "lodash";
 import styled from 'styled-components';
 
-const robot_url = "http://d5528505995f.ngrok.io";
+const robot_url = "http://localhost:5000/";
 
 //styles the button ui elements to look nice
 const Button = styled.button` 
@@ -90,9 +90,7 @@ export default class QAGenerator extends React.Component {
           {question: 'Map', answer: null, showAnswerFlag: false}
         ],
         rows: [//default (bunk) questions
-          {question: '"What material is this made out of?"', answer: 'Copper, steel, and various other metals', showAnswerFlag: false},
-          {question: '"Where did the artist make this piece?"', answer: 'Tehran, Iran', showAnswerFlag: false},
-          {question: '"What are the main themes of the piece?"', answer: 'Love, peace, and war', showAnswerFlag: false}
+          {question: '"Sorry! No questions have been loaded', answer: '?', showAnswerFlag: false}
         ],
         oldQA: [], //flag for updating question boxes 
         oldMap: null
