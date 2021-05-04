@@ -2,7 +2,9 @@
 const baseLink = "http://127.0.0.1:5000"
 const mapLink = baseLink+"/floor/map/get"
 const tourLink = baseLink+"/tour/start"
-const floor_id = "508ac281-29cd-4ec8-b9b9-84046f88aa94"
+const floor_id = "2fe2ff38-cd4d-45b7-a3d2-fc18270f71bc"
+//const floor_id = "476411ee-df58-4b98-8da6-4514d2fc0433" 
+const tour_id = "dbfee438-e5dd-4056-ae2d-4b7a876d351f"
 const floorLink = baseLink+"/floor/exhibits?id="+floor_id
 const newExhibitLink = baseLink+"/exhibit/new"
 const existingExhibitLink = baseLink+"/exhibit/update"
@@ -13,7 +15,8 @@ const deletePieceLink = baseLink+"/piece/delete?id="
 const newTourLink = baseLink+"/tour/new"
 const piecesLink = baseLink + "/floor/pieces";
 const validateLink = baseLink + "/auth/validate";
-const demoLink = "http://c919533a64ec.ngrok.io/start_tour?tour_id="
+const createTourLink = baseLink+"/tour/create/addFloor";
+const demoLink = "http://062b17e2823c.ngrok.io/start_tour?tour_id="
 
 export {
     baseLink,
@@ -21,6 +24,7 @@ export {
     tourLink,
     floorLink,
     floor_id,
+    tour_id,
     newExhibitLink,
     existingExhibitLink,
     deleteExhibitLink,
@@ -31,4 +35,5 @@ export {
     newTourLink,
     validateLink,
     piecesLink,
+    createTourLink,
 };
