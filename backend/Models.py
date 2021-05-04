@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.inspection import inspect
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import and_
 from datetime import datetime, timedelta
 import hashlib
 import jwt
@@ -98,7 +99,7 @@ class Floor(BaseModel, db.Model):
             self.museum_id = museum.id
 
             # Check to see if level exists
-            existing_level = db.session.query(Floor).filter(Floor.level==level).first()
+            existing_level = db.session.query(Floor).filter(and_(Floor.level==level,Floor.museum_id==museum.id)).first()
             if(existing_level is not None):
                 raise ValueError(museum_name+" already has that floor "+level)
             self.level = level

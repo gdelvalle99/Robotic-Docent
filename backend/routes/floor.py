@@ -47,7 +47,7 @@ def create_floor():
             db.session.commit()
             return {"success": True, "msg": "Successfully created a new floor"}
         except SQLAlchemyError as e:
-            print(type(e), e)
+            print(type(e), e, "hey")
             return {"success": False, "msg": str(e)}
     return {"success": False, "msg": "404 No Existing Route"}
 
@@ -58,8 +58,9 @@ def floor_map():
     if request.method == 'POST':
         # Validate Data
         id = str(request.form['floor_id']) or ""
+        print(id, str(request.form['floor_id']))
         if('map' not in request.files):
-            return "there's no map file"
+            return {"success": False, "msg":"there's no map file"}
 
         db = current_app.config["floor.db"]
 
@@ -75,6 +76,9 @@ def floor_map():
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg":e}
+        except Exception as e:
+            print("There was an error here")
+            return {"success": False, "msg":e}
 
     # Get Request
     return {"success": False, "msg": "404 No Existing Route"}
@@ -88,20 +92,22 @@ def floor_update():
         id = str(request.form['floor_id']) or ""
 
         db = current_app.config["floor.db"]
-
         try:
             floor = db.session.query(Floor).filter(Floor.id==id).first()
             if(floor is None):
                 raise ValueError("Floor ID doesn't match")
 
-            # Create a response and send the image
+        #     # Create a response and send the image
             response = make_response(floor.map)
             response.headers.set('Content-Type', 'image/png')
             return response
-            
+
         except SQLAlchemyError as e:
             print(type(e), e)
             return {"success": False, "msg": str(e)}
+        except Exception as e:
+            print("There was an error here")
+            return e
 
     return {"success": False, "msg": "404 No Existing Route"}
 
@@ -145,7 +151,6 @@ def get_floor():
     db = current_app.config["floor.db"]
     try:
         museum = db.session.query(Museum).filter(Museum.name==museum_name).first()
-        print("hello",museum_name)
         if(museum is None):
             raise ValueError("The museum does not exist")
 

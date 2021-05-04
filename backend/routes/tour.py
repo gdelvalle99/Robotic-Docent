@@ -115,12 +115,12 @@ def create_tour_floor():
             pieces = db.session.query(Piece).filter(Piece.exhibit_id==exhibit["id"]).all()
             serialized_pieces = [i.serialize() for i in pieces]
             for piece in serialized_pieces:
-                piece = db.session.query(Piece).filter(Piece.id==piece['id']).first()
+                # piece = db.session.query(Piece).filter(Piece.id==piece['id']).first()
                 if(tour is not None and piece is not None):
                     tour_piece = TourPieces(tour_id, piece['id'])
                     db.session.add(tour_piece) 
                     db.session.commit()
-        return {"success": True, "msg": "everything was connected properly"}
+        return {"success": True, "msg": "everything was connected properly", "id": tour_id}
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}

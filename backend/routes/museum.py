@@ -62,3 +62,5 @@ def get_museum():
     except SQLAlchemyError as e:
         print(type(e), e)
         return {"success": False, "msg": str(e)}
+    except Exception as e:
+       return {"success": False, "msg": str(e)}
