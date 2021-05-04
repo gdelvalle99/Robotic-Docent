@@ -1,28 +1,61 @@
 ﻿Robot Launch Files:
-The robot comes equipped with four launch files: “mapping-generate-bag.launch”, “mapping-generate-map.launch”, “pi_rosaria.launch” and “robotic_docent_core.launch”. 
+The robot comes equipped with four launch files: “mapping-generate-bag.launch”, 
+“mapping-generate-map.launch”, “pi_rosaria.launch” and “robotic_docent_core.launch”. 
 
 
 Main Launch File:
-The “robotic_docent_core.launch” file launches all of the core elements to the program. It launches the navigation stack, alongside with the behaviors that we implemented in the robot. It calls the “robotic_docent_state.launch” and “robotic_docent_voice.launch” files as well. Before launching this file, please keep in mind that two parameters have to be changed. Change the “web_server” variables in scripts/tour_functionality.py and scripts/states/interactive.py to the IP of the database. The “timeout” parameter in scripts/states/interactive.py can also be changed. The default is 60 seconds. This parameter exists to dictate how long the robot should wait for there to be no interactions. This is so the robot can get the information from the database. The “robotic_docent_core.launch” file can also be changed to switch from using a simulation to using a real robot.
+The “robotic_docent_core.launch” file launches all of the core elements to the program. 
+It launches the navigation stack, alongside with the behaviors that we implemented in the 
+robot. It calls the “robotic_docent_state.launch” and “robotic_docent_voice.launch” files
+as well. Before launching this file, please keep in mind that two parameters have to be
+changed. Change the “web_server” variables in scripts/tour_functionality.py and 
+scripts/states/interactive.py to the IP of the database. The “timeout” parameter in 
+scripts/states/interactive.py can also be changed. The default is 60 seconds. This parameter 
+exists to dictate how long the robot should wait for there to be no interactions. This is 
+so the robot can get the information from the database. The “robotic_docent_core.launch” 
+file can also be changed to switch from using a simulation to using a real robot.
 
 
 ROSARIA Launch File:
-The “pi_rosaria.launch” file is created with the purpose of being launched on a Raspberry Pi connected to a Pioneer. It launches the ROSARIA and RPLidar nodes. 
+The “pi_rosaria.launch” file is created with the purpose of being launched on a 
+Raspberry Pi connected to a Pioneer. It launches the ROSARIA and RPLidar nodes. 
 
 
 Configuring text-to-speech:
-As of this moment, AWS’s tts node does not support ROS Noetic. However, it is still possible to be prepared before the support gets rolled out. An Amazon environment is required for the configuration to work. Please take a look at Amazon’s documentation here to see how to configure the Amazon environment on your Ubuntu machine.
+As of this moment, AWS’s tts node does not support ROS Noetic. However, it is 
+still possible to be prepared before the support gets rolled out. An Amazon
+environment is required for the configuration to work. Please take a look at 
+Amazon’s documentation here to see how to configure the Amazon environment on your Ubuntu machine.
 
 
 Robot Mapping:
-Mapping is performed by using the standard ROS mapping library gmapping and the user manually operating the robot around the space that needs to be mapped. “mapping-generate-bag.launch” and “mapping-generate-map.launch” are the two launch files needed to create a map. These two are configured with a simulation in mind, however, one can swap the simulation out for whatever needs to be mapped. In this case, one can remove the simulation and launch the “pi_rosaria.launch” file on a Pioneer robot (given an RP lidar). “mapping-generate-bag.launch” needs to be launched first and it will save the data to a bag named “docent-laser-data”.  “mapping-generate-map.launch” is launched next, and with this you can compile the bag data into a map. You can use the mapping_config/send_map.py file in order to send the map to the database. The command is run as follows: python3 send_map.py <web_server_ip> <map_file_name> <museum_name> <floor_level>
+Mapping is performed by using the standard ROS mapping library gmapping and the user 
+manually operating the robot around the space that needs to be mapped. “mapping-generate-bag.launch” 
+and “mapping-generate-map.launch” are the two launch files needed to create a map. These two 
+are configured with a simulation in mind, however, one can swap the simulation out for whatever 
+needs to be mapped. In this case, one can remove the simulation and launch the “pi_rosaria.launch” 
+file on a Pioneer robot (given an RP lidar). “mapping-generate-bag.launch” needs to be launched first
+and it will save the data to a bag named “docent-laser-data”.  “mapping-generate-map.launch” is launched 
+next, and with this you can compile the bag data into a map. You can use the mapping_config/send_map.py
+file in order to send the map to the database. 
+The command is run as follows: python3 send_map.py <web_server_ip> <map_file_name> <museum_name> <floor_level>
 
 
 
 
 The Behavior States:
-The Robotic Docent comes with five different behavior states. They are made with two things in mind: to modularize the program and to enable easy expansion. The five states are: Error, Interactive, Motion, Present and Start. All of these states are expandable and add extra layers of redundancy in case of failure. Error is in charge of fixing mistakes in navigation, Motion is in charge of sending navigation commands, Interactive is in charge of receiving interactions, Present is in charge presenting information through different publishers and sending information to the text to speech node, and Start is an extra check to make sure everything is initialized.
+The Robotic Docent comes with five different behavior states. They are made with 
+two things in mind: to modularize the program and to enable easy expansion. The five 
+states are: Error, Interactive, Motion, Present and Start. All of these states are 
+expandable and add extra layers of redundancy in case of failure. Error is in charge of 
+fixing mistakes in navigation, Motion is in charge of sending navigation commands, Interactive 
+is in charge of receiving interactions, Present is in charge presenting information through 
+different publishers and sending information to the text to speech node, and Start is an extra 
+check to make sure everything is initialized.
 
 
 AMCL and Costmap Settings:
-In move_base_config you can configure different settings for the navigation stack. The one worth noting is “amcl_node.xml”. Here, whenever you create or use a new map, you want to make sure that you change the initial_pose_x and initial_pose_y of the robot. “Costmap_common_params.yaml” also has various settings that may need to be changed, for example the footprint of the robot and the associated padding.
+In move_base_config you can configure different settings for the navigation stack. The one worth 
+noting is “amcl_node.xml”. Here, whenever you create or use a new map, you want to make sure that 
+you change the initial_pose_x and initial_pose_y of the robot. “Costmap_common_params.yaml” also 
+has various settings that may need to be changed, for example the footprint of the robot and the associated padding.
