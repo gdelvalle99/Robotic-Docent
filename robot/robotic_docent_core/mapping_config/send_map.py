@@ -8,20 +8,29 @@ map_file_name = sys.argv[2]
 museum_name = sys.argv[3]
 floor_id = sys.argv[4]
 
+print(server_route)
 web_museum = requests.get(server_route + 'museum', params= {"name": museum_name})
-if web_museum.json().get("success") == False:
-    check = requests.post(web_museum + "museum/new", data={"name": museum_name, "floor_count": floor_id})
-    if check.json().get("success") == False:
+#print(web_museum.json)
+if web_museum.json()["success"] == False:
+    check = requests.post(server_route + "museum/new", json={"name": museum_name, "floor_count": floor_id})
+    print(check.json)
+    if check.json()["success"] == False:
         print("Something went wrong when creating the museum, please check the server connection.")
-        return
+        
 
 web_floor = requests.get(server_route + 'floor', params={"museum_name": museum_name})
-if web_museum.json().get("success") == False:
-    check = requests.post(server_route + 'floor/new', data={"museum_name": museum_name, "level": floor_id}) 
-    if check.json().get("success") == False:
+print(web_floor.json()['success'])
+print(floor_id)
+if web_floor.json()['success'] == False:
+    check = requests.post(server_route + 'floor/new', json={"museum_name": museum_name, "level": floor_id}) 
+    print(check)
+    if check.json()['success'] == False:
         print("Something went wrong when creating the floor, please check the server connection.")
-        return
+        
 
 web_floor = requests.get(server_route + 'floor', params={"museum_name": museum_name, "level": floor_id})
-data = {"map": open(map_file_name, "rb"), "floor_id": web_floor.json().get("floor_id")}
-requests.post(server_route + 'map/set', data=data)
+print(web_floor.json())
+files = {"map": open(map_file_name, "rb")} 
+data = {"floor_id": web_floor.json()["floor"]["id"]}
+result = requests.post(server_route + 'floor/map/set', data=data, files=files)
+print(result.json())

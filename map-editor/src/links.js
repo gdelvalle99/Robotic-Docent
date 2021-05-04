@@ -1,5 +1,5 @@
-const baseLink = "http://738e20ddd67c.ngrok.io"
-//const baseLink = "http://127.0.0.1:5000"
+// const baseLink = "http://97e9aa8a6eb2.ngrok.io"
+const baseLink = "http://127.0.0.1:5000"
 const mapLink = baseLink+"/floor/map/get"
 const tourLink = baseLink+"/tour/start"
 const floor_id = "2fe2ff38-cd4d-45b7-a3d2-fc18270f71bc"

@@ -3,27 +3,50 @@ import axios from 'axios';
 import React from 'react';
 import _ from "lodash";
 import styled from 'styled-components';
-/*
 
-*/
+const robot_url = "http://localhost:5000/";
 
 //styles the button ui elements to look nice
 const Button = styled.button` 
-  background-color: black;
+  background-color: #55AD74;
   color: white;
   font-size: 20px;
-  padding: 10px 60px;
+  padding: 10px 90px;
   border-radius: 5px;
   margin: 10px 0px;
   cursor: pointer;
 `;
 
+const MButton = styled.button` 
+  background-color: royalblue;
+  color: white;
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  cursor: pointer;
+`;
+
+const QButton = styled.button` 
+  background-color: #1E5D88;
+  color: white;
+  font-size: 20px;
+  width: 240px;
+  min-height: 50px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  padding: 15px 15px;
+  cursor: pointer;
+`;
+
 //Button that controls the dispay of the current questions/answer for the tour
 const QuestionPingButton = function(props){
-    const {text, onClick} = props;
+    const {text, onClick, displayFlag} = props;
     return(
         <div>
+          {displayFlag &&
             <Button onClick={onClick}>{text}</Button>
+          }
         </div>
     );
 }
@@ -34,9 +57,23 @@ const Row = function(props){
     const {question, answer, onClick, showAnswerFlag} = props;
     return (
       <div>
-        <Button onClick={onClick}>{question}</Button>
+        <QButton onClick={onClick}>{question}</QButton>
+        <br></br>
         {showAnswerFlag && (
             <box>{answer}</box>
+        )}
+      </div>
+    );
+  }
+
+const MRow = function(props){
+    const {question, answer, onClick, showAnswerFlag} = props;
+    return (
+      <div>
+        <MButton onClick={onClick}>{question}</MButton>
+        <br></br>
+        {showAnswerFlag && (
+            <mbox>{answer}</mbox>
         )}
       </div>
     );
@@ -47,21 +84,23 @@ export default class QAGenerator extends React.Component {
       super(props);
       this.state = {
         qbutton: [
-            {showQuestionsFlag: false, qButtonText: '"I Have A Question!"'}
+            {showQuestionsFlag: false, qButtonText: '"I Have A Question!"', displayFlag: true}
+        ],
+        mapbutton: [
+          {question: 'Map', answer: null, showAnswerFlag: false}
         ],
         rows: [//default (bunk) questions
-          {question: '"Question 1"', answer: 'Answer 1', showAnswerFlag: false},
-          {question: '"Question 2"', answer: 'Answer 2', showAnswerFlag: false},
-          {question: '"Question 3"', answer: 'Answer 3', showAnswerFlag: false}
+          {question: '"Sorry! No questions have been loaded', answer: '?', showAnswerFlag: false}
         ],
-        oldQA: [] //flag for updating question boxes 
+        oldQA: [], //flag for updating question boxes 
+        oldMap: null
       };
 
     }
     componentDidMount() {
       this.refreshQA = setInterval( //pings robot every second
         () => this.updateList(),
-        1000
+        5000
       );
     }
     componentWillUnmount() {
@@ -86,7 +125,7 @@ export default class QAGenerator extends React.Component {
     }
 
     updateList = async () => {
-      var newQA = await axios.get(`http://127.0.0.1:5001/server/qa`). //robot server
+      var newQA = await axios.get(robot_url + `/server/qa`). //robot server
         catch( newQA => newQA);
       const robot_not_found = newQA instanceof Error; //error only occurs when robot server not found
       if(!robot_not_found && !_.isEqual(newQA.data, this.state.oldQA)){//checks that new QA data was pulled from robot server
@@ -107,6 +146,11 @@ export default class QAGenerator extends React.Component {
     showAnswer = (idx) => {
       const rows = [...this.state.rows];
       rows[idx].showAnswerFlag = !rows[idx].showAnswerFlag;
+      const data = {Q: rows[idx].question, A: rows[idx].answer};
+      if(rows[idx].showAnswerFlag){
+        const text2speech = axios.post(robot_url + `/send_answer`, data);
+      }
+      
       this.setState({
           rows: rows
       });
@@ -131,17 +175,55 @@ export default class QAGenerator extends React.Component {
             qbutton: qbutton
         });
     }
+
+
+
+    displayMap = async () => {
+      const mapbutton = [...this.state.mapbutton];
+      /*var museum_map = await axios.get(`http://127.0.0.1:5001/server/qa`)
+        catch( museum_map => museum_map);*/
+      const robot_not_found = false//museum_map instanceof Error; //error only occurs when robot server not found
+      if(robot_not_found){
+        mapbutton[0].answer = React.createElement(
+          "img",
+          {
+            src: process.env.PUBLIC_URL + '/map_not_found',
+            width: "303px",
+            height: "220px"
+          });
+      }
+      else{
+        mapbutton[0].answer = React.createElement(
+          "img",
+          {
+            src: process.env.PUBLIC_URL + '/map.png',
+            width: "303px",
+            height: "220px"
+          });
+      }
+      mapbutton[0].showAnswerFlag = !mapbutton[0].showAnswerFlag;
+      this.setState({
+        //oldMap: museum_map,
+        mapbutton: mapbutton
+
+      });
+    }
     
     //handles real-time rendering of new QA
     //handles proper placement of UI elements
     render(){
       return(
         <div>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
             {this.state.qbutton.map((button) => {
                 return(
                     <QuestionPingButton
                             text={button.qButtonText}
                             onClick={this.showQuestions}
+                            displayFlag={button.displayFlag}
                     />
                 )
                 })
@@ -161,6 +243,23 @@ export default class QAGenerator extends React.Component {
               )
           })
           }
+          <br></br>
+          <br></br>
+          <br></br>
+          {this.state.mapbutton.map((row, idx) => {
+            return(
+                <div>
+                    {(<MRow 
+                        key={idx} 
+                        question={row.question}
+                        answer={row.answer}
+                        onClick={() => this.displayMap(idx)}
+                        showAnswerFlag={row.showAnswerFlag}
+                    />)} 
+                </div>
+                )
+              })
+            }
         </div>
       );
     }

@@ -50,7 +50,7 @@ class Tour:
         tour_info = requests.get(self.server_route + 'tour/info', params=params)
         tour_info = tour_info.json()
         tour_length = len(tour_info["tours"]['pieces'])            
-
+        # self.analytics_client.send_goal(tour_id)
         # Loop for exhibits
         for step in range(tour_length):
             self.init_publisher.publish("At piece " + str(step))
@@ -58,7 +58,7 @@ class Tour:
             next_piece = requests.get(self.server_route + 'piece', params = piece_params).json()
 
             piece_coordinates.goal_x = next_piece['piece']['coordinates'][0]
-            piece_coordinates.goal_y = next_piece['piece']['coordinates'][1]
+            piece_coordinates.goal_y = -next_piece['piece']['coordinates'][1]
             piece_msg.text = next_piece['piece']['description']
 
             self.init_publisher.publish("Sending motion instructions")
@@ -66,13 +66,13 @@ class Tour:
             self.move_client.wait_for_result()  
             if self.move_client.get_state() == 4:    
                 self.init_publisher.publish("In error state")
-                self.init_publisher.publish(str(self.curr_coord_x) + " " + str(self.curr_coord_y))
+                # self.init_publisher.publish(str(self.curr_coord_x) + " " + str(self.curr_coord_y))
                 error_message = ErrorGoal()
                 error_message.current_position_x = self.curr_coord_x
                 error_message.current_position_y = self.curr_coord_y
                 error_message.text = 'navigation'
                 error_message.goal_x = piece_coordinates.goal_x
-                error_message.goal_y = piece_coordinates.goal_y
+                error_message.goal_y = -piece_coordinates.goal_y
                 self.error_client.send_goal(error_message)
                 self.error_client.wait_for_result()
 
@@ -82,7 +82,7 @@ class Tour:
 
             self.cache_questions(next_piece['piece']['questions'], next_piece['piece']['answers'])
             self.interactive_client.send_goal_and_wait(piece_msg)
-        self.analytics_client.send_goal(piece_msg)
+        self.analytics_client.send_goal(tour_id)
         self.move_client.send_goal(self.start_position)
         self.move_client.wait_for_result()  
         if self.move_client.get_state() == 4:    
@@ -110,10 +110,10 @@ class Tour:
         self.curr_coord_x = goal.pose.position.x 
         self.curr_coord_y = goal.pose.position.y
 
-web_server = 'http://97e9aa8a6eb2.ngrok.io/'
+web_server = 'http://738e20ddd67c.ngrok.io/'
 start_coordinates = MotionGoal()
-start_coordinates.goal_x = 12
-start_coordinates.goal_y = 26
+start_coordinates.goal_x = 77
+start_coordinates.goal_y = -67
 
 rospy.init_node('main_docent')
 tour_server = Tour(web_server, start_coordinates)

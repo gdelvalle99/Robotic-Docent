@@ -11,13 +11,14 @@ import requests
 
 class InteractiveState:
     def __init__(self, timeout, server):
-        self.server = server + "analytics/interaction"
+        self.server = server + "tour/analytics/interaction"
         self.interactive_server = actionlib.SimpleActionServer('interactive_state', PresentAction, self.execute, False)
         self.queue = queue.Queue()
         self.queue_server = actionlib.SimpleActionServer('queue_server', QAAction, self.add_to_queue, False)
         self.analytics_server = actionlib.SimpleActionServer('analytics_server',PresentAction, self.push_analytics, False)
         self.interactive_server.start()
         self.queue_server.start()
+        self.analytics_server.start()
         # timeout parameter is to let museum operators decide how
         # long will they let the robot idle in this phase
         self.timeout = timeout
@@ -52,9 +53,10 @@ class InteractiveState:
         self.queue_server.set_succeeded()
     
     def push_analytics(self, goal):
-        requests.post(self.server, data={"interaction_count": self.interaction_count})
+        requests.post(self.server, json={"interaction_count": self.interaction_count, "tour_id": goal.text})
         self.interaction_count = 0
+        self.analytics_server.set_succeeded()
 
 rospy.init_node("interactive_state_server")
-server = InteractiveState(30, "http://97e9aa8a6eb2.ngrok.io/")
+server = InteractiveState(60, "http://738e20ddd67c.ngrok.io/")
 rospy.spin()
