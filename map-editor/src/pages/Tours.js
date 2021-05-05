@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TourList } from "../components/TourList";
-import { newTourLink, demoLink } from "../links";
+import { newTourLink, demoLink, floor_id, createTourLink, tour_id } from "../links";
 import axios from "axios";
 import { Fab } from "@material-ui/core";
 import { Dialog } from "@material-ui/core";
@@ -34,12 +34,12 @@ const mockList = [{title: "Tour of France", id: "437829174fdios", subtitle: "thi
 export const Tours = () => {
     const [tourList, setTourList] = useState([]);
     const [tour, setTour] = useState({});
+    const [tourId, setTourId] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
 
     const handleClick = () => {
-        const id = "dbfee438-e5dd-4056-ae2d-4b7a876d351f";
-        let r = axios.post(demoLink+id)
+        let r2 = axios.post(demoLink+tourId)
             .catch(e=>console.log(e));
     };
 
@@ -51,6 +51,17 @@ export const Tours = () => {
         //         setTour({...tour, id: d.id});
         //     }).catch(e=>console.log(e));
         setTourList([...tourList, tour]);
+        const data = {
+            floor_id: floor_id
+        };
+        
+        let r = axios.post(createTourLink, data)
+            .then(function (response) {
+                return response;
+            }).then(item => {
+                const e = item.data;
+                setTourId(e.id);
+            }).catch(e=>console.log(e))
         handleCloseModal();
         setTour({});
     }
