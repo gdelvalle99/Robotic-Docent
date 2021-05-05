@@ -57,6 +57,7 @@ class InteractiveState:
         self.interaction_count = 0
         self.analytics_server.set_succeeded()
 
+web_server = "http://738e20ddd67c.ngrok.io/"
 rospy.init_node("interactive_state_server")
-server = InteractiveState(60, "http://738e20ddd67c.ngrok.io/")
+server = InteractiveState(60, web_server)
 rospy.spin()
